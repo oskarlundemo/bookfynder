@@ -1,6 +1,6 @@
 import * as React from "react";
-
-
+import "@/styles/Auth.css";
+import "@/app/globals.css"
 
 interface Props {
     children: React.ReactNode;
@@ -8,17 +8,15 @@ interface Props {
 
 export const AuthUI = ({children}:Props) => {
 
-    const sectionStyles = "w-1/2 flex justify-center items-center h-screen";
-
     return (
-        <main className="flex flex-row">
-            <section style={{
-                background: "var(--secondary)" }}
-                     className={sectionStyles}>
-                <h1>Left container</h1>
+
+        <main className="h-screen flex flex-row">
+            <section
+                className={'left-section'}>
             </section>
 
-            <section style={{ background: "var(--primary)" }} className={sectionStyles}>
+            <section
+                className={'right-section'}>
                 {children}
             </section>
         </main>
