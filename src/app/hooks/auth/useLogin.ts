@@ -23,7 +23,7 @@ export default function useLogin() {
             router.push("/books");
             toast.success('Login successfully');
         },
-        onError: (err) => {
+        onError: (err:any) => {
             const errorCode = err.response.status || 500;
             const errorMessage = err.response.data.message || 'An error occurred while logging in';
             toast.error(`Error ${errorCode}: ` + errorMessage);

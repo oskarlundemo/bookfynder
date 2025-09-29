@@ -13,6 +13,7 @@ export default function AddBookPage () {
     const [pages, setPages] = useState<number>(0);
     const [read, setRead] = useState<boolean>(false);
     const [rating, setRating] = useState<number>(0);
+    const [priority, setPriority] = useState<number>(0);
 
     const [categories, setCategories] = useState<string[]>([
         "Romance",
@@ -54,6 +55,8 @@ export default function AddBookPage () {
                     categories={categories}
                     setRating={setRating}
                     rating={rating}
+                    priority={priority}
+                    setPriority={setPriority}
                 />
 
             </div>

@@ -1,0 +1,30 @@
+
+
+
+.navigation-bar {
+
+    background: var(--secondary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+
+    div {
+        span {
+            color: var(--text-subtle);
+            font-weight: 500;
+        }
+    }
+
+
+    svg {
+        transition: var(--default-transition-duration);
+    }
+}
+
+
+.active-page {
+
+
+    svg {
+        scale: 1.1;
+        fill: var(--accent);
+    }
+}

@@ -25,6 +25,7 @@ export const InputField = ({placeholder, value, name, setValue, icon, type}:Prop
                 placeholder={placeholder}
                 onChange={(e) => setValue(e.target.value)}
                 type={type}
+                name={name}
             />
 
             {icon && (

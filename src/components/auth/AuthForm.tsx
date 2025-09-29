@@ -3,19 +3,17 @@ import {LoadingSpinner} from "@/components/misc/LoadingSpinner";
 
 type Props = {
     children?: React.ReactNode;
-    onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
+    formAction?: any;
     buttonText?: string;
     disabledButton?: boolean;
     isLoading?: boolean;
     title?: string;
 };
 
-
-export const AuthForm = ({onSubmit, buttonText, isLoading, disabledButton, title, children} :Props) => {
+export const AuthForm = ({formAction, buttonText, isLoading, disabledButton, title, children} :Props) => {
 
     return (
         <form
-            onSubmit={onSubmit}
             className={'auth-form flex flex-col gap-5 relative'}
         >
             <h1>{title}</h1>
@@ -26,6 +24,7 @@ export const AuthForm = ({onSubmit, buttonText, isLoading, disabledButton, title
 
             {children}
             <button
+                formAction={formAction}
                 className={'custom-button'}
                 disabled={disabledButton}
                 type="submit">
