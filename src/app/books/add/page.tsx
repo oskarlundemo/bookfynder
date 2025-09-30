@@ -1,10 +1,13 @@
 "use client"
 
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import "@/styles/Book.css"
 import {SearchInput} from "@/components/books/SearchInput";
 import {useEffect, useState} from "react";
-import {BookForm} from "@/components/books/BookForm";
-
+import BookForm from "@/components/books/BookForm";
+import { addBook } from "@/app/books/add/actions";
+import toast from "react-hot-toast";
+import {createClient} from "@/lib/supabase/component";
 
 export default function AddBookPage () {
 
@@ -15,6 +18,19 @@ export default function AddBookPage () {
     const [rating, setRating] = useState<number>(0);
     const [priority, setPriority] = useState<number>(0);
 
+    const supabase = createClient()
+    const [user, setUser] = useState<any>()
+
+    useEffect (() => {
+        supabase.auth.getUser().then((session) => {
+            setUser(session.data.user)
+        });
+    }, [])
+
+    useEffect(() => {
+        console.log(user)
+    }, [user]);
+
     const [categories, setCategories] = useState<string[]>([
         "Romance",
         "Thriller",
@@ -23,13 +39,23 @@ export default function AddBookPage () {
         "Fantasy"
     ]);
 
-    useEffect(() => {
-        console.log(rating);
-    }, [rating])
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    async function handleSubmit (e: React.FormEvent) {
         e.preventDefault();
-        console.log('Sending book')
+
+        if (!user) return;
+
+        const response = await addBook({
+            title,
+            author,
+            pages,
+            userId: user.id
+        });
+
+        setTitle("");
+        setAuthor("");
+        setPages(0);
+
+        response.success ? toast.success(response.message) : toast.error(response.message);
     }
 
     return (

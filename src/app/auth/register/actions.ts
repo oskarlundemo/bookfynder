@@ -28,13 +28,15 @@ export async function signup(formData: FormData) {
     }
 
     const { data: insertData, error: InsertError } = await supabase
-        .from('User')
-        .insert([{ id: data?.user?.id, email: data?.user?.user_metadata?.email }])
+        .from('user')
+        .insert([{ id: data?.user?.id}])
         .select()
 
     if (InsertError) {
         console.error(error)
     }
+
+    console.log('Insert data' + insertData)
 
     revalidatePath('/', 'layout')
     redirect('/books')

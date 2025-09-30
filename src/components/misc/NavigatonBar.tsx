@@ -1,22 +1,12 @@
 "use client"
 import Link from "next/link";
 import "@/styles/NavigationBar.css"
-import {useEffect, useState} from "react";
 import { usePathname } from "next/navigation";
 
 
 export const NavigationBar = () => {
 
     const pathname = usePathname();
-
-    const [currentPage, setCurrentPage] = useState<string>('');
-
-    useEffect(() => {
-        console.log(pathname);
-
-
-    }, [pathname]);
-
 
     return (
         <nav className={'navigation-bar flex w-full flex-row fixed bottom-0 py-10 px-5 flex-grow'}>

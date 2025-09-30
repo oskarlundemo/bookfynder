@@ -1,5 +1,3 @@
-
-
 interface BookProps {
     author: string;
     title: string;
@@ -9,14 +7,13 @@ interface BookProps {
     setRead: (value: boolean) => void;
     setRating: (value: number) => void;
     rating: number;
-
+    handleSubmit: (value: any) => void;
     priority: number;
     setPriority: (value: number) => void;
-    handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     categories: string[];
 }
 
-export const BookForm = ({priority, setPriority, author, rating, setRating, title, setPage, read, handleSubmit, categories, setRead, pages}:BookProps) => {
+export default function BookForm  ({priority, setPriority, author, rating, setRating, title, setPage, read, handleSubmit, categories, setRead, pages}:BookProps) {
 
     return (
         <form onSubmit={handleSubmit} className={'book-form flex-grow flex mt-5 flex-col'}>
@@ -29,6 +26,7 @@ export const BookForm = ({priority, setPriority, author, rating, setRating, titl
                     type="text"
                     id="title"
                     value={title}
+                    readOnly={true}
                     name="title"
                     className="flex-1 p-2 border border-gray-300 rounded"
                 />
@@ -42,6 +40,7 @@ export const BookForm = ({priority, setPriority, author, rating, setRating, titl
                     type="text"
                     id="author"
                     value={author}
+                    readOnly={true}
                     name="author"
                     className="flex-1 p-2 border border-gray-300 rounded"
                 />
@@ -144,17 +143,12 @@ export const BookForm = ({priority, setPriority, author, rating, setRating, titl
                 </>
             )}
 
-
-
             <button
-                className="custom-button self-center mt-auto w-fit items-center mb-4"
+                className="custom-button self-center w-fit items-center"
                 type="submit"
             >
                 Save
             </button>
-
-
         </form>
     )
-
 }
