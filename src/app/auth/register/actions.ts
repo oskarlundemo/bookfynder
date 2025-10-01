@@ -4,6 +4,7 @@ import {createClient} from "@/lib/supabase/server";
 import {redirect} from "next/navigation";
 import {revalidatePath} from "next/cache";
 
+
 export async function signup(formData: FormData) {
     const supabase = await createClient()
 
@@ -20,23 +21,12 @@ export async function signup(formData: FormData) {
         )
     }
 
-    const {error, data} = await supabase.auth.signUp(formValues)
+    const {error, data: signUpData} = await supabase.auth.signUp(formValues)
 
     if (error) {
         console.error(error)
         redirect('/error')
     }
-
-    const { data: insertData, error: InsertError } = await supabase
-        .from('user')
-        .insert([{ id: data?.user?.id}])
-        .select()
-
-    if (InsertError) {
-        console.error(error)
-    }
-
-    console.log('Insert data' + insertData)
 
     revalidatePath('/', 'layout')
     redirect('/books')

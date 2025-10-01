@@ -11,9 +11,10 @@ interface BookProps {
     priority: number;
     setPriority: (value: number) => void;
     categories: string[];
+    buttonText?: string;
 }
 
-export default function BookForm  ({priority, setPriority, author, rating, setRating, title, setPage, read, handleSubmit, categories, setRead, pages}:BookProps) {
+export default function BookForm  ({priority, setPriority, buttonText = 'Save', author, rating, setRating, title, setPage, read, handleSubmit, categories, setRead, pages}:BookProps) {
 
     return (
         <form onSubmit={handleSubmit} className={'book-form flex-grow flex mt-5 flex-col'}>
@@ -147,7 +148,7 @@ export default function BookForm  ({priority, setPriority, author, rating, setRa
                 className="custom-button self-center w-fit items-center"
                 type="submit"
             >
-                Save
+                {buttonText}
             </button>
         </form>
     )
