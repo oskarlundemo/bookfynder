@@ -12,7 +12,7 @@ export const BooksSection = ({data}:Books) => {
 
 
     return (
-        <section className="flex flex-col">
+        <section className="flex gap-2 p-5 flex-col">
             {data.length > 0 && (
                 data.map((book, index) => {
                     return (

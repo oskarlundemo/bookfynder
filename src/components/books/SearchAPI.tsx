@@ -1,5 +1,5 @@
 import axios from "axios";
-import {ChangeEvent, useCallback, useState} from "react";
+import {ChangeEvent, useCallback, useEffect, useState} from "react";
 import {debounce} from "perfect-debounce";
 import {ResultCard} from "@/components/books/ResultCard";
 import "@/styles/Book.css"
@@ -16,24 +16,26 @@ type Props = {
     setAuthorName: (author_name: string) => void;
 }
 
-export const SearchInput = ({setTitle, setAuthorName}:Props) => {
+export const SearchAPI = ({setTitle, setAuthorName}:Props) => {
 
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [results, setResults] = useState<Book[]>([]);
     const [searchFocused, setSearchFocused] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string>();
 
     const handleSearch = async (query: string) => {
 
         if (!query) return;
-
         try {
             const res = await axios.get(
                 `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}`
             );
             setResults(res.data.docs.slice(0, 10));
-            console.log("Search results:", res.data.docs);
         } catch (err) {
             console.error("Error searching books:", err);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -47,6 +49,7 @@ export const SearchInput = ({setTitle, setAuthorName}:Props) => {
     const onChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setSearchQuery(value);
+        setLoading(true);
         debouncedSearch(value);
     };
 
@@ -55,6 +58,10 @@ export const SearchInput = ({setTitle, setAuthorName}:Props) => {
         setAuthorName(author);
         setSearchFocused(false)
     }
+
+    useEffect(() => {
+        console.log(results);
+    }, [results]);
 
     return (
         <section className="flex items-center w-full justify-center">
@@ -72,21 +79,36 @@ export const SearchInput = ({setTitle, setAuthorName}:Props) => {
                         placeholder="Search books..."
                     />
 
-                    {searchFocused && results.length > 0 && (
+
+                    {searchFocused && searchQuery.length > 0 && (
                         <ul
                             className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg z-10 max-h-60 overflow-y-auto"
                             onMouseDown={(e) => e.preventDefault()}
                         >
-                            {results.map((book, index) => (
-                                <ResultCard
-                                    title={book.title}
-                                    author={book.author_name?.[0] || "Unknown"}
-                                    setBook={setBook}
-                                    key={index}
-                                />
-                            ))}
+
+                            {loading && (
+                                <p className={'p-2'}>Loading...</p>
+                            )}
+
+                            {results.length > 0 && !loading && (
+                                (results.map((book, index) => (
+                                        <ResultCard
+                                            title={book.title}
+                                            author={book.author_name?.[0] || "Unknown"}
+                                            setBook={setBook}
+                                            key={index}
+                                        />
+                                    )))
+                            )}
+
+                            {results.length === 0 && !loading && (
+                                <p className={'p-2'}>No books found</p>
+                            )}
+
                         </ul>
                     )}
+
+
                 </div>
 
 

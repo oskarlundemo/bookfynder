@@ -1,6 +1,11 @@
+import {DropDownMenu} from "@/components/misc/DropDownMenu";
+
 interface BookProps {
     author: string;
+    setAuthor?: (author: string) => void;
+
     title: string;
+    setTitle: (title: string) => void;
     pages: number;
     setPage: (page: number) => void;
     read: boolean;
@@ -14,7 +19,7 @@ interface BookProps {
     buttonText?: string;
 }
 
-export default function BookForm  ({priority, setPriority, buttonText = 'Save', author, rating, setRating, title, setPage, read, handleSubmit, categories, setRead, pages}:BookProps) {
+export default function BookForm  ({priority, setPriority, setAuthor, setTitle, buttonText = 'Save', author, rating, setRating, title, setPage, read, handleSubmit, categories, setRead, pages}:BookProps) {
 
     return (
         <form onSubmit={handleSubmit} className={'book-form flex-grow flex mt-5 flex-col'}>
@@ -27,7 +32,7 @@ export default function BookForm  ({priority, setPriority, buttonText = 'Save', 
                     type="text"
                     id="title"
                     value={title}
-                    readOnly={true}
+                    onChange={(e) => setTitle(e.target.value)}
                     name="title"
                     className="flex-1 p-2 border border-gray-300 rounded"
                 />
@@ -41,7 +46,7 @@ export default function BookForm  ({priority, setPriority, buttonText = 'Save', 
                     type="text"
                     id="author"
                     value={author}
-                    readOnly={true}
+                    onChange={(e) => {setAuthor(e.target.value)}}
                     name="author"
                     className="flex-1 p-2 border border-gray-300 rounded"
                 />
@@ -64,22 +69,14 @@ export default function BookForm  ({priority, setPriority, buttonText = 'Save', 
             </div>
 
             {categories.length > 0 && (
-                <div className="flex flex-col mb-4">
-                    <p className="mb-2 font-semibold">Categories</p>
 
-                    <div className="flex flex-wrap gap-2">
-                        {categories.map((category: string, index: number) => (
-                            <button
-                                key={index}
-                                type="button"
-                                className="custom-button"
-                                onClick={() => console.log(`Selected category: ${category}`)}
-                            >
-                                {category}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                <>
+                    <p className="w-24 font-medium">
+                        Category
+                    </p>
+                    <DropDownMenu buttonText={categories[0]} items={categories} />
+                </>
+
             )}
 
             <p className="mb-2 font-semibold">Status</p>

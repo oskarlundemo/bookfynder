@@ -20,23 +20,22 @@ export default async function BooksPage() {
         }
     })
 
-    console.log(books)
-
-
     return (
-        <main className="flex flex-col h-full ">
+        <main style={{backgroundColor: 'var(--secondary)'}} className="flex flex-col h-full ">
 
-            <h1>Welcome to your bookshelf</h1>
+            <header className="w-full flex p-5 flex-row justify-between">
 
+                <h1 className={'text-3xl font-bold'}>Welcome to your bookshelf</h1>
+
+                <button className={'custom-button'} onClick={logout}>Log out</button>
+
+            </header>
 
             {books.length > 0 ? (
                 <BooksSection data={books} />
             ) : (
                 <h2>No books yet</h2>
             )}
-
-
-            <button onClick={logout}>Log out</button>
         </main>
     );
 }

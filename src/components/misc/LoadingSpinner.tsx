@@ -2,11 +2,15 @@
 
 import "@/styles/LoadingSpinner.css"
 
-export const LoadingSpinner = () => {
+
+type Props = {
+    bgColor?: string
+}
+
+export const LoadingSpinner = ({bgColor = true}:Props) => {
 
     return (
-
-        <div className="loading-wrapper">
+        <div style={{backgroundColor: `${bgColor ? bgColor : 'blue'}`}} className="loading-wrapper">
             <div className="loader">
                 <span>{}</span>
             </div>

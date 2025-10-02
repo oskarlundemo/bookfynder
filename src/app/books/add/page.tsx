@@ -1,12 +1,11 @@
 "use client"
 
 import "@/styles/Book.css"
-import {SearchInput} from "@/components/books/SearchInput";
-import {useEffect, useState} from "react";
+import {SearchAPI} from "@/components/books/SearchAPI";
+import {useState} from "react";
 import BookForm from "@/components/books/BookForm";
 import { addBook } from "@/app/books/add/actions";
 import toast from "react-hot-toast";
-import {createClient} from "@/lib/supabase/component";
 
 export default function AddBookPage () {
 
@@ -17,38 +16,32 @@ export default function AddBookPage () {
     const [rating, setRating] = useState<number>(0);
     const [priority, setPriority] = useState<number>(0);
 
-    const supabase = createClient()
-    const [user, setUser] = useState<any>()
-
-    useEffect (() => {
-        supabase.auth.getUser().then((session) => {
-            setUser(session.data.user)
-        });
-    }, [])
-
-    useEffect(() => {
-        console.log(user)
-    }, [user]);
-
-
-    const [categories, setCategories] = useState<string[]>([
-        "Romance",
-        "Thriller",
-        "Classics",
-        "Crime",
-        "Fantasy"
+    const [categories] = useState<string[]>([
+        "Fiction",          // Includes Romance, Thriller, Fantasy, Mystery, Classics, Crime, Historical Fiction
+        "Science Fiction & Fantasy", // SF & Fantasy separate focus
+        "Mystery / Thriller",        // For crime, suspense, detective stories
+        "Romance",          // Popular standalone genre
+        "Biography / Memoir", // Real-life stories
+        "Self-Help / Personal Development",
+        "History / Politics", // Broad nonfiction category
+        "Children / YA",     // All books for kids/teens
+        "Poetry / Drama",    // Literary works
+        "Religion / Spiritual", // Spiritual texts
+        "Other"             // Catch-all for anything outside these
     ]);
+
 
     async function handleSubmit (e: React.FormEvent) {
         e.preventDefault();
-
-        if (!user) return;
 
         const response = await addBook({
             title,
             author,
             pages,
-            userId: user.id
+
+            read,
+            rating,
+            priority,
         });
 
         setTitle("");
@@ -65,24 +58,32 @@ export default function AddBookPage () {
 
                 <h1 className="text-xl font-bold mb-4">Add a new book</h1>
 
-                <SearchInput
+                <SearchAPI
                     setTitle={setTitle}
                     setAuthorName={setAuthor}
                 />
 
                 <BookForm
                     title={title}
+                    setTitle={setTitle}
+
                     author={author}
+                    setAuthor={setAuthor}
+
                     pages={pages}
                     setPage={setPages}
+
                     read={read}
                     setRead={setRead}
-                    handleSubmit={handleSubmit}
-                    categories={categories}
+
                     setRating={setRating}
                     rating={rating}
+
                     priority={priority}
                     setPriority={setPriority}
+
+                    handleSubmit={handleSubmit}
+                    categories={categories}
                 />
 
             </div>

@@ -1,5 +1,7 @@
 import {createClient} from "@/lib/supabase/server";
 import {redirect} from "next/navigation";
+import {logout} from "@/app/auth/login/actions";
+import {BooksSection} from "@/components/books/BooksSection";
 
 
 export default async function StatisticsPag () {
@@ -12,6 +14,16 @@ export default async function StatisticsPag () {
     }
 
     return (
-        <h1>Welcome to the stats page</h1>
+        <main style={{backgroundColor: 'var(--secondary)'}} className="flex flex-col h-full ">
+
+            <header className="w-full flex p-5 flex-row justify-between">
+
+                <h1 className={'text-3xl font-bold'}>Stats</h1>
+
+                <button className={'custom-button'} onClick={logout}>Log out</button>
+
+            </header>
+
+        </main>
     )
 }
