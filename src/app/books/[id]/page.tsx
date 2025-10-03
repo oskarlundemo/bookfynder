@@ -1,13 +1,12 @@
 "use client"
 
 import "@/styles/Book.css"
-import {SearchAPI} from "@/components/books/SearchAPI";
 import {useEffect, useState} from "react";
 import BookForm from "@/components/books/BookForm";
 import toast from "react-hot-toast";
 import { useParams } from "next/navigation";
 import {updateBook, getBook, deleteBook} from "@/app/books/[id]/actions";
-import {Book} from "@prisma/client";
+import {Category} from "@prisma/client";
 import { useRouter } from "next/navigation"
 import {LoadingSpinner} from "@/components/misc/LoadingSpinner";
 
@@ -24,11 +23,13 @@ export default function AddBookPage () {
     const [read, setRead] = useState<boolean>(false);
     const [rating, setRating] = useState<number>(0);
     const [priority, setPriority] = useState<number>(0);
+    const [categories, setCategories] = useState<any>([]);
+    const [disabledBtn, setDisabledBtn] = useState<boolean>(false);
 
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<boolean>(false);
-    const [bookData, setBookData] = useState<Book | null>(null);
+    const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
 
+    const [error, setError] = useState<Error>();
 
     const router = useRouter();
 
@@ -41,16 +42,15 @@ export default function AddBookPage () {
         const fetchBook = async () => {
             try {
 
-                const data = await getBook(bookId);
-
-                setBookData(data.book)
-                setTitle(data.book.title)
-                setAuthor(data.book.author)
-                setPages(data.book.pages)
-                setRead(data.book.hasRead)
-                setPriority(data.book.priority)
-                setRating(data.book.rating)
-                setRead(data.book.rating)
+                const {book} = await getBook(bookId);
+                console.log(book);
+                setTitle(book.title)
+                setAuthor(book.author)
+                setPages(book.pages)
+                setSelectedCategories(book.bookCategories)
+                setCategories(book.categories)
+                setRead(book.hasRead)
+                !!book.hasRead ? setRating(book?.score) : setPriority(book?.score);
 
             } catch (error) {
                 setError(true);
@@ -64,23 +64,22 @@ export default function AddBookPage () {
 
     }, [bookId]);
 
-
-    const [categories, setCategories] = useState<string[]>([
-        "Romance",
-        "Thriller",
-        "Classics",
-        "Crime",
-        "Fantasy"
-    ]);
-
     async function handleSubmit (e: React.FormEvent) {
+
+        if (!bookId) return;
+
         e.preventDefault();
 
         const response = await updateBook({
+             bookId,
             title,
-            bookId,
             author,
             pages,
+
+            read,
+            rating,
+            priority,
+            selectedCategories,
         })
 
         response.success ? toast.success(response.message) : toast.error(response.message);
@@ -123,14 +122,24 @@ export default function AddBookPage () {
 
                     pages={pages}
                     setPage={setPages}
+
                     read={read}
                     setRead={setRead}
-                    handleSubmit={handleSubmit}
-                    categories={categories}
+
                     setRating={setRating}
                     rating={rating}
+
                     priority={priority}
                     setPriority={setPriority}
+
+                    handleSubmit={handleSubmit}
+
+                    categories={categories}
+
+                    selectedCategories={selectedCategories}
+                    setSelectedCategories={setSelectedCategories}
+
+                    disabledBtn={disabledBtn}
                     buttonText={'Update'}
                 />
 

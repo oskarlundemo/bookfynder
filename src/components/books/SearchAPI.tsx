@@ -108,9 +108,7 @@ export const SearchAPI = ({setTitle, setAuthorName}:Props) => {
                         </ul>
                     )}
 
-
                 </div>
-
 
             </div>
         </section>

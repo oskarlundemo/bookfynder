@@ -2,10 +2,12 @@
 
 import "@/styles/Book.css"
 import {SearchAPI} from "@/components/books/SearchAPI";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import BookForm from "@/components/books/BookForm";
-import { addBook } from "@/app/books/add/actions";
+import { addBook, fetchCategories } from "@/app/books/add/actions";
 import toast from "react-hot-toast";
+import {LoadingSpinner} from "@/components/misc/LoadingSpinner";
+import {Category} from "@prisma/client";
 
 export default function AddBookPage () {
 
@@ -15,21 +17,32 @@ export default function AddBookPage () {
     const [read, setRead] = useState<boolean>(false);
     const [rating, setRating] = useState<number>(0);
     const [priority, setPriority] = useState<number>(0);
+    const [categories, setCategories] = useState<any>([]);
+    const [disabledBtn, setDisabledBtn] = useState<boolean>(false);
 
-    const [categories] = useState<string[]>([
-        "Fiction",          // Includes Romance, Thriller, Fantasy, Mystery, Classics, Crime, Historical Fiction
-        "Science Fiction & Fantasy", // SF & Fantasy separate focus
-        "Mystery / Thriller",        // For crime, suspense, detective stories
-        "Romance",          // Popular standalone genre
-        "Biography / Memoir", // Real-life stories
-        "Self-Help / Personal Development",
-        "History / Politics", // Broad nonfiction category
-        "Children / YA",     // All books for kids/teens
-        "Poetry / Drama",    // Literary works
-        "Religion / Spiritual", // Spiritual texts
-        "Other"             // Catch-all for anything outside these
-    ]);
+    const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
 
+    useEffect(() => {
+        setDisabledBtn(
+            !(
+                title.trim().length > 0 && title.trim().length < 200 &&
+                author.trim().length > 0 && author.trim().length < 200 &&
+                selectedCategories.length > 0 && selectedCategories.length <= 5 &&
+                pages > 0 && pages < 10000
+            )
+        );
+    }, [title, author, pages, selectedCategories]);
+
+    useEffect(() => {
+        setLoading(true);
+        async function loadCategories() {
+            const response = await fetchCategories();
+            setCategories(response.categories);
+            setLoading(false);
+        }
+        loadCategories();
+    }, []);
 
     async function handleSubmit (e: React.FormEvent) {
         e.preventDefault();
@@ -42,6 +55,7 @@ export default function AddBookPage () {
             read,
             rating,
             priority,
+            selectedCategories,
         });
 
         setTitle("");
@@ -51,12 +65,19 @@ export default function AddBookPage () {
         response.success ? toast.success(response.message) : toast.error(response.message);
     }
 
+    if (loading) {
+        return <LoadingSpinner bgColor={'var(--secondary)'}/>
+    }
+
     return (
         <main className="flex book-add items-end justify-center h-full w-full">
 
             <div className="flex book-add-wrapper flex-col w-full justify-start">
 
-                <h1 className="text-xl font-bold mb-4">Add a new book</h1>
+                <div className="flex flex-row justify-between">
+                    <h1 className="text-xl font-bold mb-4">Add a new book</h1>
+                    <p style={{color: 'var(--text-subtle)'}} className={'text-right'}>* Mandatory</p>
+                </div>
 
                 <SearchAPI
                     setTitle={setTitle}
@@ -83,7 +104,13 @@ export default function AddBookPage () {
                     setPriority={setPriority}
 
                     handleSubmit={handleSubmit}
+
                     categories={categories}
+
+                    selectedCategories={selectedCategories}
+                    setSelectedCategories={setSelectedCategories}
+
+                    disabledBtn={disabledBtn}
                 />
 
             </div>

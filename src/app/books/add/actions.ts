@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
+import {Category} from "@prisma/client";
 
 export async function addBook(bookData: {
     title: string;
@@ -10,6 +11,7 @@ export async function addBook(bookData: {
     read: boolean;
     rating: number;
     priority: number;
+    categories: Category[];
 }) {
     const supabase = await createClient();
     const { data, error } = await supabase.auth.getUser();
@@ -20,6 +22,7 @@ export async function addBook(bookData: {
             message: "Unauthorized or error retrieving user",
         };
     }
+
 
     try {
         const userId = data.user.id;
@@ -33,6 +36,13 @@ export async function addBook(bookData: {
                     pages: bookData.pages,
                     userId,
                 },
+            });
+
+            await tx.bookCategory.createMany({
+                data: bookData.selectedCategories.map(c => ({
+                    bookId: createdBook.id,
+                    categoryId: c.id,
+                })),
             });
 
             if (bookData.read) {
@@ -67,5 +77,21 @@ export async function addBook(bookData: {
             success: false,
             message: "An error occurred while adding the book",
         };
+    }
+}
+
+
+export async function fetchCategories () {
+
+    const categories = await prisma.category.findMany({
+        orderBy: {
+            name: 'asc'
+        }
+    });
+
+    return {
+        success: true,
+        message: 'Categories have been added successfully.',
+        categories: categories,
     }
 }

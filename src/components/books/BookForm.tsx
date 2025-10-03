@@ -1,4 +1,5 @@
 import {DropDownMenu} from "@/components/misc/DropDownMenu";
+import {Category} from "@prisma/client";
 
 interface BookProps {
     author: string;
@@ -6,27 +7,39 @@ interface BookProps {
 
     title: string;
     setTitle: (title: string) => void;
+
     pages: number;
     setPage: (page: number) => void;
+
     read: boolean;
     setRead: (value: boolean) => void;
+
     setRating: (value: number) => void;
     rating: number;
-    handleSubmit: (value: any) => void;
+
     priority: number;
     setPriority: (value: number) => void;
+
     categories: string[];
+
+    setSelectedCategories: (categories: Category[]) => void;
+    selectedCategories: Category[];
+
     buttonText?: string;
+    handleSubmit: (value: any) => void;
+
+    disabledBtn: boolean;
 }
 
-export default function BookForm  ({priority, setPriority, setAuthor, setTitle, buttonText = 'Save', author, rating, setRating, title, setPage, read, handleSubmit, categories, setRead, pages}:BookProps) {
+export default function BookForm  ({priority, setSelectedCategories, disabledBtn, selectedCategories, setPriority, setAuthor, setTitle, buttonText = 'Save', author, rating, setRating, title, setPage, read, handleSubmit, categories, setRead, pages}:BookProps) {
 
     return (
         <form onSubmit={handleSubmit} className={'book-form flex-grow flex mt-5 flex-col'}>
 
             <div className="flex items-center mb-4">
                 <label htmlFor="title" className="w-24 font-medium">
-                    Title
+                    Title {}
+                    <span style={{color: 'var(--text-subtle)'}}>*</span>
                 </label>
                 <input
                     type="text"
@@ -41,6 +54,8 @@ export default function BookForm  ({priority, setPriority, setAuthor, setTitle, 
             <div className="flex items-center mb-4">
                 <label htmlFor="author" className="w-24 font-medium">
                     Author
+                    {}
+                    <span style={{color: 'var(--text-subtle)'}}> *</span>
                 </label>
                 <input
                     type="text"
@@ -54,7 +69,8 @@ export default function BookForm  ({priority, setPriority, setAuthor, setTitle, 
 
             <div className="flex items-center mb-4">
                 <label htmlFor="pages" className="w-24 font-medium">
-                    Pages
+                    Pages {}
+                    <span style={{color: 'var(--text-subtle)'}}>*</span>
                 </label>
                 <input
                     type="number"
@@ -69,14 +85,29 @@ export default function BookForm  ({priority, setPriority, setAuthor, setTitle, 
             </div>
 
             {categories.length > 0 && (
+                <div className="flex flex-col">
 
-                <>
-                    <p className="w-24 font-medium">
-                        Category
-                    </p>
-                    <DropDownMenu buttonText={categories[0]} items={categories} />
-                </>
+                    <div className="flex justify-between items-between">
+                        <p className="w-24 font-medium">
+                            Categories
+                            <span style={{color: 'var(--text-subtle)'}}> *</span>
+                        </p>
 
+                        <p
+                            style={{color: 'var(--text-subtle)'}}
+                        >
+                            {selectedCategories.length} / 5
+                        </p>
+
+                    </div>
+
+                    <DropDownMenu
+                        selectedCategories={selectedCategories}
+                        categories={categories}
+                        setSelectedCategories={setSelectedCategories}
+                        items={categories}
+                    />
+                </div>
             )}
 
             <p className="mb-2 font-semibold">Status</p>
@@ -144,6 +175,7 @@ export default function BookForm  ({priority, setPriority, setAuthor, setTitle, 
             <button
                 className="custom-button self-center w-fit items-center"
                 type="submit"
+                disabled={disabledBtn}
             >
                 {buttonText}
             </button>
