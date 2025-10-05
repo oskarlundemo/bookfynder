@@ -10,7 +10,7 @@ export const AuthUI = ({children}:Props) => {
 
     return (
 
-        <main className="h-screen flex flex-row">
+        <main className="auth-ui h-screen flex-grow flex">
             <section
                 className={'left-section'}>
             </section>

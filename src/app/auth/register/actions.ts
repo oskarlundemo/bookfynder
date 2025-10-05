@@ -1,33 +1,27 @@
 'use server'
 
 import {createClient} from "@/lib/supabase/server";
-import {redirect} from "next/navigation";
-import {revalidatePath} from "next/cache";
-
 
 export async function signup(formData: FormData) {
     const supabase = await createClient()
 
     // type-casting here for convenience
     // in practice, you should validate your inputs
-    const formValues = {
+    const data = {
         email: formData.get('email') as string,
         password: formData.get('password') as string,
     }
 
-    if (!formValues.email || !formValues.password) {
-        throw new Error(
-            'Fields missing'
-        )
+    if (!data.email || !data.password) {
+        return { success: false, message: 'Missing email or password.' }
     }
 
-    const {error, data: signUpData} = await supabase.auth.signUp(formValues)
+    const {error} = await supabase.auth.signUp(data)
 
     if (error) {
-        console.error(error)
-        redirect('/error')
+        console.error('Register error:', error.message)
+        return { success: false, message: error.message }
     }
 
-    revalidatePath('/', 'layout')
-    redirect('/books')
+    return { success: true, message: 'Register successful.' }
 }

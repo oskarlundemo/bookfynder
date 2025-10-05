@@ -1,11 +1,10 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
-export async function login (formData: FormData) {
 
+export async function login(formData: FormData) {
     const supabase = await createClient()
 
     const data = {
@@ -14,20 +13,17 @@ export async function login (formData: FormData) {
     }
 
     if (!data.email || !data.password) {
-        throw new Error(
-            'Fields missing'
-        )
+        return { success: false, message: 'Missing email or password.' }
     }
 
     const { error } = await supabase.auth.signInWithPassword(data)
 
     if (error) {
-        console.error(error)
-        redirect('/error')
+        console.error('Login error:', error.message)
+        return { success: false, message: error.message }
     }
 
-    revalidatePath('/', 'layout')
-    redirect('/books')
+    return { success: true, message: 'Login successful.' }
 }
 
 

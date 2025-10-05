@@ -1,4 +1,4 @@
-import {DropDownMenu} from "@/components/misc/DropDownMenu";
+import {CategoryDropDown} from "@/components/misc/CategoryDropDown";
 import {Category} from "@prisma/client";
 
 interface BookProps {
@@ -101,7 +101,7 @@ export default function BookForm  ({priority, setSelectedCategories, disabledBtn
 
                     </div>
 
-                    <DropDownMenu
+                    <CategoryDropDown
                         selectedCategories={selectedCategories}
                         categories={categories}
                         setSelectedCategories={setSelectedCategories}

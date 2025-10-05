@@ -1,0 +1,30 @@
+
+
+
+
+.sort-option {
+    transition: var(--default-transition-duration);
+    cursor: pointer;
+
+    &:hover {
+        color: var(--accent);
+    }
+}
+
+.filter-icon {
+    transition: 200ms ease-in-out;
+}
+
+
+.default {
+    transform: rotate(90deg);
+    opacity: 0;
+}
+
+.asc {
+    transform: rotate(90deg);
+}
+
+.desc {
+    transform: rotate(270deg);
+}

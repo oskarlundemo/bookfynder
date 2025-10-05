@@ -9,6 +9,12 @@
     border-radius: 5px;
     padding: 10px;
     text-align: left;
+    transition: var(--default-transition-duration);
+
+    &:focus {
+        border: 2px solid var(--accent);
+        outline: none;
+    }
 }
 
 .drop-down-content {

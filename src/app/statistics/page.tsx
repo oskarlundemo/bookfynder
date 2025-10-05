@@ -20,7 +20,9 @@ export default async function StatisticsPag () {
 
                 <h1 className={'text-3xl font-bold'}>Stats</h1>
 
-                <button className={'custom-button'} onClick={logout}>Log out</button>
+                <h2 className="text-center text-4xl text-[var(--text-subtle)] absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                    In development 👨‍💻
+                </h2>
 
             </header>
 

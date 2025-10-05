@@ -16,9 +16,9 @@ export default async function ProfilePage() {
 
     return (
 
-        <main style={{backgroundColor: 'var(--secondary)'}} className="flex flex-col justify-center items-center h-full ">
+        <main style={{backgroundColor: 'var(--secondary)'}} className="flex flex-col justify-start items-center h-full ">
 
-            <header className="w-full flex p-5 gap-5 flex-col justify-center">
+            <header className="w-full flex p-5 gap-5 flex-col justify-start">
 
                 <button className={'custom-button py-5!'} onClick={logout}>Log out</button>
                 <button className={'custom-button py-5!'} onClick={logout}>Delete account</button>

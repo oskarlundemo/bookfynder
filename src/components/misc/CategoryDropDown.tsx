@@ -8,27 +8,36 @@ type Props = {
     setSelectedCategories: (categories: Category[]) => void;
     selectedCategories: Category[];
     categories: any;
+    allowEmpty?: boolean;
 }
 
 
-export const DropDownMenu = ({activeCategory, selectedCategories, setSelectedCategories, items} : Props) => {
+export const CategoryDropDown = ({activeCategory, allowEmpty = false, selectedCategories, setSelectedCategories, items} : Props) => {
 
     const [label, setLabel] = useState<string>('');
     const [show, setShow] =   useState<boolean>(true);
 
+
     useEffect(() => {
         const labelStr = selectedCategories.map(cat => cat.name).join(", ");
-        setLabel(labelStr || activeCategory);
-    }, [selectedCategories, activeCategory]);
+        setLabel(labelStr);
+    }, [selectedCategories]);
 
     const handleAddCategory = (event: React.MouseEvent<HTMLDivElement>, category: Category) => {
 
         setSelectedCategories(prev => {
+
             const exists = prev.some(cat => cat.id === category.id);
 
-            if (exists && prev.length > 1) {
-                return prev.filter(cat => cat.id !== category.id);
+            if (exists) {
+                const filtered = prev.filter(cat => cat.id !== category.id);
+
+                if (filtered.length === 0 && !allowEmpty) {
+                    return prev;
+                }
+                return filtered;
             }
+
             else if (!exists && prev.length <= 5) {
                 return [...prev, category];
             }

@@ -111,7 +111,7 @@ export default function AddBookPage () {
 
             <div className="flex book-add-wrapper flex-col w-full justify-start">
 
-                <h1 className="text-xl font-bold mb-4">{title}</h1>
+                <h1 className="text-xl font-bold mb-4">Edit book</h1>
 
                 <BookForm
                     title={title}
