@@ -40,8 +40,6 @@ export async function updateBook(bookData: {
             }
         })
 
-        console.log(updatedBook)
-
         // Radera de gamla
         await tx.bookCategory.deleteMany({
             where: {
@@ -51,6 +49,7 @@ export async function updateBook(bookData: {
 
         // Lägg till de nya kategorierna
         await tx.bookCategory.createMany({
+            // @ts-ignore
             data: bookData.selectedCategories.map(c => ({
                 bookId: bookData.bookId,
                 categoryId: c.id,
@@ -160,7 +159,7 @@ export async function getBook(bookId: string) {
 
     const bookCategories = book.BookCategory.map(bc => bc.category);
 
-    let formatedRespons = {
+    const formatedRespons = {
         author: book.author,
         title: book.title,
         priority: readingList?.priority,
