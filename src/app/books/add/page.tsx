@@ -72,11 +72,10 @@ export default function AddBookPage () {
     return (
         <main className="flex book-add items-end justify-center h-full w-full">
 
-            <div className="flex book-add-wrapper flex-col w-full justify-start">
+            <div className="flex book-add-wrapper flex-col w-full mb-35 justify-start">
 
-                <div className="flex flex-row justify-between">
-                    <h1 className="text-xl font-bold mb-4">Add a new book</h1>
-                    <p style={{color: 'var(--text-subtle)'}} className={'text-right'}>* Mandatory</p>
+                <div className="flex flex-row justify-center">
+                    <h1 className="text-2xl text-center font-bold m-5 ">Add book</h1>
                 </div>
 
                 <SearchAPI

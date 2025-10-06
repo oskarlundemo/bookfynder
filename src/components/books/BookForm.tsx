@@ -1,5 +1,6 @@
 import {CategoryDropDown} from "@/components/misc/CategoryDropDown";
 import {Category} from "@prisma/client";
+import "@/styles/BookForm.css"
 
 interface BookProps {
     author: string;
@@ -34,7 +35,7 @@ interface BookProps {
 export default function BookForm  ({priority, setSelectedCategories, disabledBtn, selectedCategories, setPriority, setAuthor, setTitle, buttonText = 'Save', author, rating, setRating, title, setPage, read, handleSubmit, categories, setRead, pages}:BookProps) {
 
     return (
-        <form onSubmit={handleSubmit} className={'book-form flex-grow flex mt-5 flex-col'}>
+        <form onSubmit={handleSubmit} className={'book-form gap-5 flex-grow flex mt-5 flex-col'}>
 
             <div className="flex items-center mb-4">
                 <label htmlFor="title" className="w-24 font-medium">
@@ -85,7 +86,7 @@ export default function BookForm  ({priority, setSelectedCategories, disabledBtn
             </div>
 
             {categories.length > 0 && (
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-2">
 
                     <div className="flex justify-between items-between">
                         <p className="w-24 font-medium">

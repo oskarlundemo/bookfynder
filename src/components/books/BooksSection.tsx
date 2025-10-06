@@ -16,7 +16,7 @@ export const BooksSection = ({data, categories}:Books) => {
 
     return (
 
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col mb-35">
 
             <FilterSection
                 books={data}

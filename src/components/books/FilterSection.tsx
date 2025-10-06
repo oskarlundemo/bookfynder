@@ -112,9 +112,14 @@ export const FilterSection = ({setFilteredBooks, categories, books}:FilterSectio
                     selectedCategories={selectedCategories}
                     categories={categories}
                     allowEmpty={true}
+
+                    fieldSet={true}
+                    fieldSetName={'Categories'}
                 />
 
                 <div className='flex sort-option flex-row gap-2 items-center justify-center'>
+
+                    <p onClick={() => handleOrder()}>Title</p>
 
                     <p onClick={() => handleOrder()}>Scores</p>
 

@@ -43,7 +43,6 @@ export default function AddBookPage () {
             try {
 
                 const {book} = await getBook(bookId);
-                console.log(book);
                 setTitle(book.title)
                 setAuthor(book.author)
                 setPages(book.pages)
@@ -109,9 +108,9 @@ export default function AddBookPage () {
     return (
         <main className="flex book-add items-end justify-center h-full w-full">
 
-            <div className="flex book-add-wrapper flex-col w-full justify-start">
+            <div className="flex book-add-wrapper flex-col w-full mb-35 justify-start">
 
-                <h1 className="text-xl font-bold mb-4">Edit book</h1>
+                <h1 className="text-2xl text-center font-bold m-5 ">Edit book</h1>
 
                 <BookForm
                     title={title}
@@ -144,7 +143,7 @@ export default function AddBookPage () {
                 />
 
                 <button
-                    className={'custom-button self-center w-fit mb-30'}
+                    className={'custom-button self-center w-fit'}
                     onClick={handleDelete}
                 >
                     Delete book

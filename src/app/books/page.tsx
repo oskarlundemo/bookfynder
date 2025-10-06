@@ -30,10 +30,11 @@ export default async function BooksPage() {
 
     const categories = await prisma.category.findMany()
 
-    console.log(books)
-
     return (
-        <main style={{backgroundColor: 'var(--secondary)'}} className="flex overflow-y-scroll h-full flex-col ">
+        <main
+            style={{ backgroundColor: 'var(--secondary)' }}
+            className="flex h-full flex-col overflow-y-auto"
+        >
 
             <header className="w-full flex p-5 flex-row justify-between">
 
