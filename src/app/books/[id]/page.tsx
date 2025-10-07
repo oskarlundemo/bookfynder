@@ -9,7 +9,8 @@ import {updateBook, getBook, deleteBook} from "@/app/books/[id]/actions";
 import {Category} from "@prisma/client";
 import { useRouter } from "next/navigation"
 import {LoadingSpinner} from "@/components/misc/LoadingSpinner";
-
+import {Overlay} from "@/components/misc/Overlay";
+import {PopUpModule} from "@/components/misc/PopUpModule";
 
 
 export default function AddBookPage () {
@@ -17,6 +18,7 @@ export default function AddBookPage () {
     const params = useParams<{ id: string }>();
     const bookId = params.id;
 
+    const [showOverlay, setShowOverlay] = useState<boolean>(false);
     const [title, setTitle] = useState<string>("");
     const [author, setAuthor] = useState<string>("");
     const [pages, setPages] = useState<number>(0);
@@ -144,12 +146,52 @@ export default function AddBookPage () {
 
                 <button
                     className={'custom-button self-center w-fit'}
-                    onClick={handleDelete}
+                    onClick={() => setShowOverlay(true)}
                 >
                     Delete book
                 </button>
 
             </div>
+
+            <Overlay
+                show={showOverlay}
+                setShow={setShowOverlay}
+            />
+
+            <PopUpModule
+                children={
+                    <div className={'delete-container flex-grow justify-center gap-5 flex h-full flex-col'}>
+
+                        <h4 className={'text-xl text-center font-bold'}>Are you sure you want to delete this book?</h4>
+                        <h5 className={'text-center'}>This action <u>can not </u> be undone</h5>
+
+
+                        <div className={'flex gap-2 flex-row'}>
+                            <button
+                                className={'button-cancel w-1/2'}
+                                type="button"
+                                onClick={() => {
+                                    setShowOverlay(false);
+                                }}
+                            >Cancel</button>
+
+                            <button
+                                className={'button-delete w-1/2'}
+                                type="button"
+                                onClick={(e) => {
+                                    setShowOverlay(false);
+                                    handleDelete(e);
+                                }}
+                            >Delete
+                            </button>
+
+                        </div>
+
+                    </div>
+                }
+                show={showOverlay}
+                setShow={setShowOverlay}
+            />
 
         </main>
     );
