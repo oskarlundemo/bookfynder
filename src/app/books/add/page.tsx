@@ -70,9 +70,9 @@ export default function AddBookPage () {
     }
 
     return (
-        <main className="flex book-add items-end justify-center h-full w-full">
+        <main className="flex book-add items-end justify-center">
 
-            <div className="flex book-add-wrapper flex-col w-full mb-35 justify-start">
+            <div style={{maxWidth: 'var(--max-form)'}} className="flex book-add-wrapper flex-col w-full justify-start">
 
                 <div className="flex flex-row justify-center">
                     <h1 className="text-2xl text-center font-bold m-5 ">Add book</h1>

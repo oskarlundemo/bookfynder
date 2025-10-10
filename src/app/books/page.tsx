@@ -35,14 +35,19 @@ export default async function BooksPage() {
             style={{ backgroundColor: 'var(--secondary)' }}
             className="flex h-full flex-col overflow-y-auto"
         >
+            <div
+                style={{maxWidth: 'var(--max-width)'}}
+                className="mx-auto"
+            >
+                <header className="w-full flex p-5 flex-row justify-between">
 
-            <header className="w-full flex p-5 flex-row justify-between">
+                    <h1 className={'text-3xl font-bold'}>Your bookshelf</h1>
 
-                <h1 className={'text-3xl font-bold'}>Your bookshelf</h1>
+                </header>
 
-            </header>
+                <BooksSection categories={categories} data={books}/>
+            </div>
 
-            <BooksSection categories={categories} data={books}/>
 
         </main>
     );
