@@ -1,8 +1,7 @@
 import {createClient} from "@/lib/supabase/server";
 import {redirect} from "next/navigation";
-import {logout} from "@/app/auth/login/actions";
-import {BooksSection} from "@/components/books/BooksSection";
-
+import {BentoGrid} from "@/components/statistics/BentoGrid";
+import {prisma} from "@/lib/prisma";
 
 export default async function StatisticsPag () {
 
@@ -13,6 +12,24 @@ export default async function StatisticsPag () {
         redirect('/auth/login')
     }
 
+    const pieChartData = await prisma.readBook.findMany({
+        where: {
+            userId: data?.user?.id
+        },
+        include: {
+            book: {
+                include: {
+                    BookCategory: {
+                        include: {
+                            category: true
+                        }
+                    }
+                }
+            }
+        }
+    })
+
+
     return (
         <main style={{backgroundColor: 'var(--secondary)'}} className="flex flex-col h-full ">
 
@@ -20,11 +37,11 @@ export default async function StatisticsPag () {
 
                 <h1 className={'text-3xl font-bold'}>Stats</h1>
 
-                <h2 className="text-center text-4xl text-[var(--text-subtle)] absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                    In development 👨‍💻
-                </h2>
-
             </header>
+
+            <BentoGrid
+                pieChartData={pieChartData}
+            />
 
         </main>
     )

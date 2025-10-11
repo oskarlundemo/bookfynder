@@ -1,6 +1,5 @@
-
-
-
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 type Props = {
     placeholder?: string
@@ -8,30 +7,19 @@ type Props = {
     label?: string
     type?: string
     value?: string
-    setValue: (value: string) => void
-    icon?: any
+
+    onBlur?: () => void
+    onFocus?: () => void
 }
 
 
-export const InputField = ({placeholder, value, name, setValue, icon, type}:Props) => {
+export const InputField = ({placeholder, onFocus, onBlur, value, name, setValue, type}:Props) => {
 
     return (
-        <fieldset className="custom-input p-4 rounded-md">
-            <legend className="px-2 text-sm font-medium">{name}</legend>
-            <input
-                id={`input-${name}`}
-                className="custom-input-field"
-                value={value}
-                placeholder={placeholder}
-                onChange={(e) => setValue(e.target.value)}
-                type={type}
-                name={name}
-            />
+        <div className="grid w-full max-w-sm items-center gap-3">
+            <Label htmlFor="picture">{name}</Label>
+            <Input onBlur={onBlur} onFocus={onFocus} type={type} placeholder={placeholder} value={value} onChange={e => setValue(e.target.value)}/>
+        </div>
 
-            {icon && (
-                (icon)
-            )}
-
-        </fieldset>
     )
 }

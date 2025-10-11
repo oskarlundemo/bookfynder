@@ -2,7 +2,6 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import {prisma} from "@/lib/prisma";
 import {BooksSection} from "@/components/books/BooksSection";
-import {FilterSection} from "@/components/books/FilterSection";
 
 export default async function BooksPage() {
 
@@ -32,7 +31,7 @@ export default async function BooksPage() {
 
     return (
         <main
-            style={{ backgroundColor: 'var(--secondary)' }}
+            style={{ backgroundColor: 'var(--background)' }}
             className="flex h-full flex-col overflow-y-auto"
         >
             <div
@@ -46,8 +45,8 @@ export default async function BooksPage() {
                 </header>
 
                 <BooksSection categories={categories} data={books}/>
-            </div>
 
+            </div>
 
         </main>
     );

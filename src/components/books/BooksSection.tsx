@@ -4,6 +4,8 @@ import {Book, Category} from "@prisma/client"
 import {BookCard} from "@/components/books/BookCard";
 import {FilterSection} from "@/components/books/FilterSection";
 import {useState} from "react";
+import {BookTabs} from "@/components/books/BookTabs";
+
 
 interface Books {
     data: Book[];
@@ -24,24 +26,27 @@ export const BooksSection = ({data, categories}:Books) => {
                 categories={categories}
             />
 
+            <BookTabs/>
+
+
             <section className="flex gap-2 p-5 flex-col">
 
-                {filteredBooks.length > 0 ? (
-                    filteredBooks.map((book, index) => (
-                        <BookCard book={book} key={index} />
-                    ))
-                ) : (
-                    <h2 style={{ color: 'var(--text-subtle)' }} className="text-center text-3xl">
-                        No books found
-                    </h2>
-                )}
 
-                {data.length === 0 && (
+                {data.length === 0 ? (
                     <h2 style={{ color: 'var(--text-subtle)' }} className="text-center text-3xl">
                         No books yet
                     </h2>
+                ) : (
+                    (filteredBooks.length > 0 ? (
+                            filteredBooks.map((book, index) => (
+                                <BookCard book={book} key={index} />
+                            ))
+                        ) : (
+                            <h2 style={{ color: 'var(--text-subtle)' }} className="text-center text-3xl">
+                                No books found
+                            </h2>
+                        ))
                 )}
-
 
             </section>
 

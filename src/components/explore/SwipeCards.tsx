@@ -2,13 +2,8 @@
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { useState, useEffect } from "react";
 import {LoadingSpinner} from "@/components/misc/LoadingSpinner";
+import toast from "react-hot-toast";
 
-type CardData = {
-    id: number;
-    title: string;
-    author: string;
-    about: string;
-};
 
 type CardProps = CardData & {
     cards: CardData[];
@@ -21,6 +16,7 @@ type CardData = {
     author: string;
     year: number;
     about: string;
+    zIndex: number;
 };
 
 const cardData: CardData[] = [
@@ -66,24 +62,24 @@ const cardData: CardData[] = [
     },
 ];
 
-
 type Props = {
-    Books: Book[];
+    books: Book[];
 }
 
 const SwipeCards = ({books} :Props) => {
 
-    const [cards, setCards] = useState<CardData[]>([]);
-    const [cachedCards, setCachedCards] = useState<CardData[]>([]);
+    const [cards, setCards] = useState<CardData[]>(cardData);
+    const [cachedCards, setCachedCards] = useState<CardData[]>(cardData);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
+    const [topCard, setTopCard] = useState<any>(null);
+
 
     useEffect(() => {
-        console.log(cards);
-    }, [cards]);
 
-    useEffect(() => {
+        setLoading(true);
+
         const fetchRecommendations = async () => {
 
             setLoading(true);
@@ -109,7 +105,7 @@ const SwipeCards = ({books} :Props) => {
             }
         };
 
-        fetchRecommendations();
+        // fetchRecommendations();
     }, [books]);
 
     const getRecommendations = async (books: any[]) => {
@@ -122,17 +118,27 @@ const SwipeCards = ({books} :Props) => {
         return data.recommendations;
     };
 
+
     const swipeAgain = () => {
         setCards(cachedCards);
     }
 
-    if (loading) {
+    if (!loading) {
         return (
             <div style={{color: 'var(--text-subtle)'}} className="flex flex-grow justify-center items-center flex-col">
-                    <LoadingSpinner bgColor={'var(--secondary)'} />;
-                    <h1>Wainting for a response from OpenAI</h1>
+
+                <LoadingSpinner pulsating={false} bgColor={'transparent'} />;
+
+                <div
+                    style={{
+                        transform: 'translateY(50px)',
+                    }}
+
+                    className="flex flex-row justify-center items-center">
+                    <h1 className="text-2xl">Waiting for a response from OpenAI</h1>
                 </div>
-            )
+            </div>
+        )
     }
 
     if (error) {
@@ -143,50 +149,107 @@ const SwipeCards = ({books} :Props) => {
         )
     }
 
+    useEffect(() => {
+        if (cards.length === 0) {
+            setTopCard(null);
+        } else {
+            setTopCard(cards[cards.length - 1]);
+        }
+    }, [cards]);
+
+    useEffect(() => {
+        console.log(cards)
+    }, [cards])
+
+    useEffect(() => {
+        console.log(topCard)
+    }, [topCard]);
+
     return (
 
         <div className="flex flex-col flex-grow items-center justify-center w-full">
+            <div className=" w-full grid place-items-center relative">
 
-        <div className=" w-full grid place-items-center relative">
-
-            {cards.length > 0 ? (
+             {cards.length > 0 ? (
                 (cards.map((book, index) => (
                         <CardComponent
                             key={book.id}
                             {...book}
                             cards={cards}
                             setCards={setCards}
+                            book={book}
+                            zIndex={index}
                         />
                     )))
             ) : (
-                <h2 onClick={() => swipeAgain()}>You have swiped on all your cards</h2>
+                <h2 onClick={() => swipeAgain()}>You have swiped on all your cards, reset here</h2>
             )}
 
             {cards.length > 0 && (
                 <div className="flex flex-row gap-10 justify-center mt-6">
 
-                    <button style={{transition: '200ms ease-in-out', cursor: 'pointer'}} className="w-16 h-16 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center shadow-lg active:scale-95 transform hover:scale-110 transition-all">
+                    <button
+
+                        onClick={() => {
+                            if (!topCard) return;
+                            setCards((prev) => prev.filter((card) => card.id !== topCard.id));
+                        }}
+
+                        style={{transition: '200ms ease-in-out', cursor: 'pointer'}} className="w-16 h-16 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center shadow-lg active:scale-95 transform hover:scale-110 transition-all">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="white">
                             <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
                         </svg>
                     </button>
 
-                    <button style={{transition: '200ms ease-in-out', cursor: 'pointer'}} className="w-16 h-16 rounded-full bg-green-500 hover:bg-green-600 flex items-center active:scale-95  justify-center shadow-lg transform hover:scale-110 transition-all">
+                    <button
+
+                        onClick={() => {
+                            if (!topCard) return;
+                            setCards((prev) => prev.filter((card) => card.id !== topCard.id));
+                            handleSave(topCard.title, topCard.author, topCard, setCards);
+                        }}
+
+                        style={{transition: '200ms ease-in-out', cursor: 'pointer'}}
+                        className="w-16 h-16 rounded-full bg-green-500 hover:bg-green-600 flex items-center active:scale-95  justify-center shadow-lg transform hover:scale-110 transition-all">
+
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="white">
                             <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Zm0-108q96-86 158-147.5t98-107q36-45.5 50-81t14-70.5q0-60-40-100t-100-40q-47 0-87 26.5T518-680h-76q-15-41-55-67.5T300-774q-60 0-100 40t-40 100q0 35 14 70.5t50 81q36 45.5 98 107T480-228Zm0-273Z"/>
                         </svg>
                     </button>
                 </div>
             )}
-        </div>
-
+            </div>
         </div>
     );
 };
 
 export default SwipeCards;
 
-const CardComponent = ({ id, title, author, cards, setCards, year, about }: CardProps) => {
+
+export const handleSave = async (title:string, author:string, book:object) => {
+    try {
+
+        const res = await fetch("/api/explore/save-book", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title, author }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+            toast.success(`Book "${title}" added successfully!`);
+        } else {
+            toast.error(`An error occurred while adding "${title}".`);
+        }
+    } catch (error) {
+        console.error("Error saving book:", error);
+        toast.error(`Failed to save "${title}". Please try again.`);
+        setCards(prev => [book, ...prev])
+    }
+};
+
+const CardComponent = ({ id, title, book, zIndex, author, cards, setCards, year, about }: CardProps) => {
 
     const x = useMotionValue(0);
     const opacity = useTransform(x, [-150, 0, 150], [0, 1, 0]);
@@ -199,10 +262,17 @@ const CardComponent = ({ id, title, author, cards, setCards, year, about }: Card
         return `${rotateRaw.get() + offset}deg`;
     })
 
-    const handleDragEnd = () => {
-        if (Math.abs(x.get()) > 50) {
-            console.log("Deleting this card: " + id);
+    const handleDragEnd = async () => {
+
+        const swipe = x.get();
+
+        if (swipe > 50) {
             setCards((prev) => prev.filter((card) => card.id !== id));
+            await handleSave(title, author, book)
+        } else if (swipe < -50) {
+            setCards((prev) => prev.filter((card) => card.id !== id));
+        } else {
+            console.log("Not swiped long enough, nothing happened");
         }
     };
 
@@ -219,6 +289,7 @@ const CardComponent = ({ id, title, author, cards, setCards, year, about }: Card
                     ? "0 20px 40px rgba(0, 0, 0, 0.25)"
                     : "0 5px 10px rgba(0, 0, 0, 0.1)",
                 scale: isFront ? 1 : 0.95,
+                zIndex: zIndex,
             }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}

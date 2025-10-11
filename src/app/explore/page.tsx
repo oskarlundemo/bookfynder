@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import SwipeCards from "@/components/explore/SwipeCards";
+import {prisma} from "@/lib/prisma";
 
 
 export default async function ExplorePage() {
@@ -27,8 +28,6 @@ export default async function ExplorePage() {
         },
         take: 5,
     })
-
-    console.log(usersBooks);
 
     return (
         <main

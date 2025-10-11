@@ -14,25 +14,22 @@ export default function AddBookPage () {
     const [title, setTitle] = useState<string>("");
     const [author, setAuthor] = useState<string>("");
     const [pages, setPages] = useState<number>(0);
-    const [read, setRead] = useState<boolean>(false);
+
     const [rating, setRating] = useState<number>(0);
-    const [priority, setPriority] = useState<number>(0);
-    const [categories, setCategories] = useState<any>([]);
-    const [disabledBtn, setDisabledBtn] = useState<boolean>(false);
+    const [categories, setCategories] = useState<Category[]>([]);
+
+    const [bookStatus, setBookStatus] = useState<string>("");
 
     const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+
+    const [disabledBtn, setDisabledBtn] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        setDisabledBtn(
-            !(
-                title.trim().length > 0 && title.trim().length < 200 &&
-                author.trim().length > 0 && author.trim().length < 200 &&
-                selectedCategories.length > 0 && selectedCategories.length <= 5 &&
-                pages > 0 && pages < 10000
-            )
-        );
-    }, [title, author, pages, selectedCategories]);
+        console.log(rating);
+        console.log(bookStatus);
+    }, [rating, bookStatus]);
+
 
     useEffect(() => {
         setLoading(true);
@@ -47,16 +44,29 @@ export default function AddBookPage () {
     async function handleSubmit (e: React.FormEvent) {
         e.preventDefault();
 
-        const response = await addBook({
+        console.log("Adding book:\n", JSON.stringify({
             title,
             author,
             pages,
-
-            read,
+            bookStatus,
             rating,
-            priority,
-            selectedCategories,
-        });
+            selectedCategories
+        }, null, 2));
+
+        /**
+         *     const response = await addBook({
+         *             title,
+         *             author,
+         *             pages,
+         *
+         *             status,
+         *             rating,
+         *             priority,
+         *             selectedCategories
+         *         });
+         *
+         */
+
 
         setTitle("");
         setAuthor("");
@@ -69,10 +79,11 @@ export default function AddBookPage () {
         return <LoadingSpinner bgColor={'var(--secondary)'}/>
     }
 
-    return (
-        <main className="flex book-add items-end justify-center">
 
-            <div style={{maxWidth: 'var(--max-form)'}} className="flex book-add-wrapper flex-col w-full justify-start">
+    return (
+        <main className="add-main flex items-end h-full justify-center">
+
+            <div style={{maxWidth: 'var(--max-form)'}} className="flex book-add-wrapper h-fit! rounded-2xl my-auto flex-col w-full justify-start">
 
                 <div className="flex flex-row justify-center">
                     <h1 className="text-2xl text-center font-bold m-5 ">Add book</h1>
@@ -93,14 +104,11 @@ export default function AddBookPage () {
                     pages={pages}
                     setPage={setPages}
 
-                    read={read}
-                    setRead={setRead}
+                    bookStatus={bookStatus}
+                    setBookStatus={setBookStatus}
 
                     setRating={setRating}
                     rating={rating}
-
-                    priority={priority}
-                    setPriority={setPriority}
 
                     handleSubmit={handleSubmit}
 
@@ -109,7 +117,7 @@ export default function AddBookPage () {
                     selectedCategories={selectedCategories}
                     setSelectedCategories={setSelectedCategories}
 
-                    disabledBtn={disabledBtn}
+                    disabledBtn={false}
                 />
 
             </div>

@@ -1,20 +1,13 @@
-
-.book-add {
-    display: flex;
-    height: 100%;
-    width: 100%;
+.add-main {
     background: var(--secondary);
 }
 
 
 .book-add-wrapper {
-    height: 85%;
-    background: var(--primary);
-    border-radius: 2rem 2rem 0 0 ;
-    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.15);
+    height: 100%;
+    background: var(--card);
     padding: 0.5rem;
 }
-
 
 .book-form {
     input {
@@ -43,11 +36,4 @@
         border-bottom: 2px solid var(--accent);
         outline: none;
     }
-}
-
-
-.starred {
-    fill: gold;
-    scale: 1.1;
-    transition: var(--default-transition-duration);
 }

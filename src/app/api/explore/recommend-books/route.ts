@@ -29,7 +29,6 @@ export async function POST (req: NextRequest) {
 
     const responseText = completion.choices[0].message?.content || "[]";
 
-
     let recommendations = [];
 
     try {

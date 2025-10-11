@@ -5,12 +5,13 @@ import "@/styles/LoadingSpinner.css"
 
 type Props = {
     bgColor?: string
+    pulsating?: boolean
 }
 
-export const LoadingSpinner = ({bgColor = true}:Props) => {
+export const LoadingSpinner = ({bgColor = '', pulsating = true}:Props) => {
 
     return (
-        <div style={{backgroundColor: `${bgColor ? bgColor : 'blue'}`}} className="loading-wrapper">
+        <div style={{animation: pulsating ? 'pulse 1s linear infinite' : 'none',  backgroundColor: `${bgColor ? bgColor : ''}`}} className="loading-wrapper">
             <div className="loader">
                 <span>{}</span>
             </div>

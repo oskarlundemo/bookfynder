@@ -12,7 +12,7 @@ export const BookCard = ({book}:BookCardProps) => {
 
     return (
         <article
-            style={{ backgroundColor: 'var(--primary)' }}
+            style={{ backgroundColor: 'var(--card)' }}
             onClick={() => router.push(`/books/${book.id}`)}
             className="rounded-2xl shadow-lg flex w-full p-10 flex-col h-full cursor-pointer"
         >
