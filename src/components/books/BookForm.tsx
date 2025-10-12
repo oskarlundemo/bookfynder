@@ -2,8 +2,9 @@ import "@/styles/BookForm.css"
 import {InputField} from "@/components/misc/InputField";
 import {SelectCategories} from "@/components/misc/SelectCategories";
 import {Category} from "@prisma/client";
-import {BookStatus} from "@/components/misc/BookStatus";
-import {BookScore} from "@/components/misc/BookScore";
+import {BookStatus} from "@/components/books/BookStatus";
+import {BookScore} from "@/components/books/BookScore";
+import {PageSlider} from "@/components/misc/PageSlider";
 
 
 import {
@@ -70,18 +71,14 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle,
                 name={'Pages'}
             />
 
-            <SelectCategories
-                categories={categories}
-                setSelectedCategories={setSelectedCategories}
-                selectedCategories={selectedCategories}
-            />
+            <div className={'flex flex-row justify-between gap-2 flex-wrap'}>
 
-
-            <div className={'flex flex-row space-between gap-2 flex-wrap'}>
-                <BookStatus
-                    bookStaus={bookStatus}
-                    setBookStatus={setBookStatus}
+                <SelectCategories
+                    categories={categories}
+                    setSelectedCategories={setSelectedCategories}
+                    selectedCategories={selectedCategories}
                 />
+
 
 
                 {(bookStatus === "READ" || bookStatus === "QUEUE") && (
@@ -91,9 +88,15 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle,
                         read={bookStatus === "READ"}
                     />
                 )}
+
             </div>
 
-            <Button disabled={disabledBtn}>{buttonText}</Button>
+            <BookStatus
+                bookStaus={bookStatus}
+                setBookStatus={setBookStatus}
+            />
+
+            <Button className={'w-fit mx-auto'} disabled={disabledBtn}>{buttonText}</Button>
 
         </form>
     )

@@ -26,12 +26,6 @@ export default function AddBookPage () {
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        console.log(rating);
-        console.log(bookStatus);
-    }, [rating, bookStatus]);
-
-
-    useEffect(() => {
         setLoading(true);
         async function loadCategories() {
             const response = await fetchCategories();
@@ -42,35 +36,17 @@ export default function AddBookPage () {
     }, []);
 
     async function handleSubmit (e: React.FormEvent) {
+
         e.preventDefault();
 
-        console.log("Adding book:\n", JSON.stringify({
+        const response = await addBook({
             title,
             author,
             pages,
             bookStatus,
             rating,
             selectedCategories
-        }, null, 2));
-
-        /**
-         *     const response = await addBook({
-         *             title,
-         *             author,
-         *             pages,
-         *
-         *             status,
-         *             rating,
-         *             priority,
-         *             selectedCategories
-         *         });
-         *
-         */
-
-
-        setTitle("");
-        setAuthor("");
-        setPages(0);
+        });
 
         response.success ? toast.success(response.message) : toast.error(response.message);
     }
@@ -79,15 +55,10 @@ export default function AddBookPage () {
         return <LoadingSpinner bgColor={'var(--secondary)'}/>
     }
 
-
     return (
-        <main className="add-main flex items-end h-full justify-center">
+        <main className="flex items-start h-full justify-center">
 
-            <div style={{maxWidth: 'var(--max-form)'}} className="flex book-add-wrapper h-fit! rounded-2xl my-auto flex-col w-full justify-start">
-
-                <div className="flex flex-row justify-center">
-                    <h1 className="text-2xl text-center font-bold m-5 ">Add book</h1>
-                </div>
+            <div style={{maxWidth: 'var(--max-form)'}} className="flex my-10 rounded-2xl flex-col w-full">
 
                 <SearchAPI
                     setTitle={setTitle}
@@ -118,6 +89,7 @@ export default function AddBookPage () {
                     setSelectedCategories={setSelectedCategories}
 
                     disabledBtn={false}
+                    buttonText={"Add"}
                 />
 
             </div>

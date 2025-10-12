@@ -18,35 +18,6 @@ import {
 } from "@/components/ui/popover"
 
 
-const frameworks = [
-
-    {
-        value: "next.js",
-        label: "Next.js",
-    },
-
-    {
-        value: "sveltekit",
-        label: "SvelteKit",
-    },
-
-    {
-        value: "nuxt.js",
-        label: "Nuxt.js",
-    },
-
-    {
-        value: "remix",
-        label: "Remix",
-    },
-    {
-        value: "astro",
-        label: "Astro",
-    },
-
-]
-
-
 type Props = {
     categories: Category[];
     selectedCategories: Category[],
@@ -58,7 +29,7 @@ export function SelectCategories ({categories, setSelectedCategories, selectedCa
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState("")
 
-    const [formattedCategories, setFormattedCategories] = React.useState< { value: string; label: string; selected: boolean }[] >([]);
+    const [formattedCategories, setFormattedCategories] = React.useState< { value: string; label: string;}[] >([]);
 
     React.useEffect(() => {
         const formatted = categories.map((cat) => ({ value: cat.name, label: cat.name, id: cat.id})); setFormattedCategories(formatted);
@@ -71,13 +42,9 @@ export function SelectCategories ({categories, setSelectedCategories, selectedCa
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-[200px] justify-between"
+                    className="w-[200px] justify-between flex-wrap"
                 >
-                    {selectedCategories.length > 0 ? (
-                        selectedCategories.map(cat => cat.value).join(", ")
-                    ) : (
-                        "Select Categories"
-                    )}
+                    Select Categories
                     <ChevronsUpDown className="opacity-50" />
                 </Button>
             </PopoverTrigger>
@@ -96,14 +63,11 @@ export function SelectCategories ({categories, setSelectedCategories, selectedCa
                                         setValue(currentValue === value ? "" : currentValue)
 
                                         setSelectedCategories((prev) => {
-                                            // Check if category is already selected
                                             const exists = prev.some(cat => cat.id === category.id);
 
                                             if (exists) {
-                                                // Remove it
                                                 return prev.filter(cat => cat.id !== category.id);
                                             } else {
-                                                // Add it
                                                 return [...prev, category];
                                             }
                                         });

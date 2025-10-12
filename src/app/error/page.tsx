@@ -6,7 +6,6 @@ export default function ErrorPage() {
 
             <h1 className={'text-4xl font-bold'}>Sorry, something went wrong</h1>
 
-
         </main>
     )
 

@@ -1,49 +1,38 @@
 "use client"
 import Link from "next/link";
-import "@/styles/NavigationBar.css"
 import { usePathname } from "next/navigation";
 
-
-export const NavigationBar = () => {
+export const NavMenu = () => {
 
     const pathname = usePathname();
 
     return (
-        <nav className={'navigation-bar flex w-full fixed flex-row bottom-0 px-5 flex-grow'}>
+        <nav className={'navigation-bar h-full my-5 gap-5 items-start flex w-full flex-col px-5 flex-grow'}>
 
             <Link className={'w-1/2'} href="/books">
-                <div className={`flex items-center flex-col ${pathname === '/books' ? 'active-page' : ''}`}>
+                <div className={`flex justify-start gap-2 flex-row items-center flex-col ${pathname === '/books' ? 'underline!' : ''}`}>
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M80-160v-80h800v80H80Zm80-160v-320h80v320h-80Zm160 0v-480h80v480h-80Zm160 0v-480h80v480h-80Zm280 0L600-600l70-40 160 280-70 40Z"/></svg>
                     <span>Books</span>
                 </div>
             </Link>
 
             <Link className={'w-1/2'} href="/books/add">
-                <div className={`flex items-center flex-col ${pathname === '/books/add' ? 'active-page' : ''}`}>
+                <div className={`flex justify-start gap-2 flex-row items-center flex-col ${pathname === '/books/add' ? 'underline!' : ''}`}>
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z"/></svg>
                     <span>Add book</span>
                 </div>
             </Link>
 
             <Link className={'w-1/2'} href="/explore">
-                <div className={`flex items-center flex-col ${pathname === '/explore' ? 'active-page' : ''}`}>
+                <div className={`flex justify-start gap-2 flex-row items-center flex-col ${pathname === '/explore' ? 'underline' : ''}`}>
                     <svg className={'rotate-180'} xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m608-368 46-166-142-98-46 166 142 98ZM160-207l-33-16q-31-13-42-44.5t3-62.5l72-156v279Zm160 87q-33 0-56.5-24T240-201v-239l107 294q3 7 5 13.5t7 12.5h-39Zm206-5q-31 11-62-3t-42-45L245-662q-11-31 3-61.5t45-41.5l301-110q31-11 61.5 3t41.5 45l178 489q11 31-3 61.5T827-235L526-125Zm-28-75 302-110-179-490-301 110 178 490Zm62-300Z"/></svg>                    <span>Explore</span>
                 </div>
             </Link>
 
-
-
             <Link className={'w-1/2'} href="/statistics">
-                <div className={`flex items-center flex-col ${pathname === '/statistics' ? 'active-page' : ''}`}>
+                <div className={`flex justify-start gap-2 flex-row items-center flex-col ${pathname === '/statistics' ? 'underline!' : ''}`}>
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M640-160v-280h160v280H640Zm-240 0v-640h160v640H400Zm-240 0v-440h160v440H160Z"/></svg>
                     <span>Statistics</span>
-                </div>
-            </Link>
-
-
-            <Link className={'w-1/2'} href="/profile">
-                <div className={`flex items-center flex-col ${pathname === '/profile' ? 'active-page' : ''}`}>
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M234-276q51-39 114-61.5T480-360q69 0 132 22.5T726-276q35-41 54.5-93T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 59 19.5 111t54.5 93Zm246-164q-59 0-99.5-40.5T340-580q0-59 40.5-99.5T480-720q59 0 99.5 40.5T620-580q0 59-40.5 99.5T480-440Zm0 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q53 0 100-15.5t86-44.5q-39-29-86-44.5T480-280q-53 0-100 15.5T294-220q39 29 86 44.5T480-160Zm0-360q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm0-60Zm0 360Z"/></svg>                    <span>Profile</span>
                 </div>
             </Link>
 

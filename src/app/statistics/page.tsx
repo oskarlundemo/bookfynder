@@ -33,12 +33,6 @@ export default async function StatisticsPag () {
     return (
         <main style={{backgroundColor: 'var(--secondary)'}} className="flex flex-col h-full ">
 
-            <header className="w-full flex p-5 flex-row justify-between">
-
-                <h1 className={'text-3xl font-bold'}>Stats</h1>
-
-            </header>
-
             <BentoGrid
                 pieChartData={pieChartData}
             />

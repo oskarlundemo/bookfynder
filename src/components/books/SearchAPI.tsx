@@ -5,6 +5,9 @@ import {ResultCard} from "@/components/books/ResultCard";
 import "@/styles/Book.css"
 import {InputField} from "@/components/misc/InputField";
 
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+
 
 export type Book = {
     title: string;
@@ -28,7 +31,11 @@ export const SearchAPI = ({setTitle, setAuthorName}:Props) => {
 
     const handleSearch = async (query: string) => {
 
-        if (!query) return;
+        if (!query.trim()) {
+            console.log('No query');
+            return;
+        }
+
         try {
             const res = await axios.get(
                 `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}`
@@ -61,42 +68,35 @@ export const SearchAPI = ({setTitle, setAuthorName}:Props) => {
         setSearchFocused(false)
     }
 
-    useEffect(() => {
-        console.log(results);
-    }, [results]);
-
     return (
-        <section className="flex items-center w-full justify-center">
+        <section className="flex items-center justify-start">
 
-            <div className="w-full">
+                <div className="relative w-full">
 
-                <div className="relative">
+                    <div className="grid w-full max-w-sm items-center gap-3">
+                        <Label htmlFor="picture">{"Search for a book or author"}</Label>
+                        <Input
+                            type={'text'}
+                            value={searchQuery}
+                            placholder={'Search for a title or author'}
+                            onChange={onChange}
+                            name={'Search'}
+                            onFocus={() => setSearchFocused(true)}
+                            onBlur={() => setSearchFocused(false)}
+                        />
 
-                    <InputField
-                        type="text"
-                        value={searchQuery}
-                        setValue={setSearchQuery}
-                        placholder={'Search for a title or author'}
-                        name={'Search'}
-                        icon={
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>
-                        }
-                        onFocus={() => setSearchFocused(true)}
-                        onBlur={() => setSearchFocused(false)}
-                    />
+                        {searchFocused && searchQuery.length > 0 && (
+                            <ul
+                                className="absolute max-w-sm w-full top-full left-0  mt-1 bg-white border border-gray-300 rounded shadow-lg z-10 max-h-60 overflow-y-auto"
+                                onMouseDown={(e) => e.preventDefault()}
+                            >
 
-                    {searchFocused && searchQuery.length > 0 && (
-                        <ul
-                            className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg z-10 max-h-60 overflow-y-auto"
-                            onMouseDown={(e) => e.preventDefault()}
-                        >
+                                {loading && (
+                                    <p className={'p-2 w-full text-center'}>Loading...</p>
+                                )}
 
-                            {loading && (
-                                <p className={'p-2'}>Loading...</p>
-                            )}
-
-                            {results.length > 0 && !loading && (
-                                (results.map((book, index) => (
+                                {results.length > 0 && !loading && (
+                                    (results.map((book, index) => (
                                         <ResultCard
                                             title={book.title}
                                             author={book.author_name?.[0] || "Unknown"}
@@ -104,16 +104,17 @@ export const SearchAPI = ({setTitle, setAuthorName}:Props) => {
                                             key={index}
                                         />
                                     )))
-                            )}
+                                )}
 
-                            {results.length === 0 && !loading && (
-                                <p className={'p-2'}>No books found</p>
-                            )}
+                                {results.length === 0 && !loading && (
+                                    <p className={'p-2'}>No books found</p>
+                                )}
 
-                        </ul>
-                    )}
+                            </ul>
+                        )}
 
-                </div>
+                    </div>
+
 
             </div>
         </section>

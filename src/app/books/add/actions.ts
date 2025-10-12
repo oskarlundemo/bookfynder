@@ -8,11 +8,12 @@ export async function addBook(bookData: {
     title: string;
     author: string;
     pages: number;
-    read: boolean;
+    status: string;
     rating: number;
-    priority: number;
     categories: Category[];
+
 }) {
+
     const supabase = await createClient();
     const { data, error } = await supabase.auth.getUser();
 
@@ -24,20 +25,25 @@ export async function addBook(bookData: {
     }
 
 
+
     try {
         const userId = data.user.id;
 
         const book = await prisma.$transaction(async (tx) => {
 
+
+            // Create the book
             const createdBook = await tx.book.create({
                 data: {
                     title: bookData.title,
                     author: bookData.author,
                     pages: bookData.pages,
+                    status: bookData.bookStatus,
                     userId,
                 },
             });
 
+            // Append the categories
             await tx.bookCategory.createMany({
                 data: bookData.selectedCategories.map(c => ({
                     bookId: createdBook.id,
@@ -45,25 +51,10 @@ export async function addBook(bookData: {
                 })),
             });
 
-            if (bookData.read) {
-                await tx.readBook.create({
-                    data: {
-                        bookId: createdBook.id,
-                        rating: bookData.rating,
-                        userId,
-                    },
-                });
-            } else {
-                await tx.readingList.create({
-                    data: {
-                        bookId: createdBook.id,
-                        priority: bookData.priority,
-                        userId,
-                    },
-                });
-            }
+            // Set the status
 
             return createdBook;
+
         });
 
         return {
@@ -71,6 +62,7 @@ export async function addBook(bookData: {
             message: `Book ${book.title} added successfully.`,
             book,
         };
+
     } catch (err) {
         console.error("Transaction failed:", err);
         return {

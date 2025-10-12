@@ -11,9 +11,11 @@ export async function POST (req: NextRequest) {
 
     const userId = data.user?.id
 
-    const {title, author} = await req.json();
+    const {book} = await req.json();
 
-    if (!userId || !title || !author) {
+    console.log(book);
+
+    if (!userId || !book) {
         return NextResponse.json({
             message: 'Insufficient parameters, please try again.',
             success: false,
@@ -32,9 +34,9 @@ export async function POST (req: NextRequest) {
         const newBook = await trx.book.create({
             data: {
                 userId,
-                title,
-                author,
-                pages: 0,
+                title: book.title,
+                author: book.author,
+                pages: book.pages || 0,
             },
         });
 

@@ -1,9 +1,8 @@
 "use client";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { useState, useEffect } from "react";
-import {LoadingSpinner} from "@/components/misc/LoadingSpinner";
 import toast from "react-hot-toast";
-
+import {LoadingRequest} from "./LoadingRequest"
 
 type CardProps = CardData & {
     cards: CardData[];
@@ -68,11 +67,9 @@ type Props = {
 
 const SwipeCards = ({books} :Props) => {
 
-    const [cards, setCards] = useState<CardData[]>(cardData);
-    const [cachedCards, setCachedCards] = useState<CardData[]>(cardData);
+    const [cards, setCards] = useState<CardData[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
-    const [errorMessage, setErrorMessage] = useState<string>("");
     const [topCard, setTopCard] = useState<any>(null);
 
 
@@ -84,18 +81,10 @@ const SwipeCards = ({books} :Props) => {
 
             setLoading(true);
 
-            const simplifiedBooks = books.map(book => ({
-                id: book.id,
-                title: book.title,
-                author: book.author,
-                categories: book.BookCategory.map(c => c.category.name),
-                rating: book.readBooks[0]?.rating ?? null
-            }));
-
             try {
-                const recommendedBooks = await getRecommendations(simplifiedBooks);
-                setCards(recommendedBooks.recommendations);
-                setCachedCards(recommendedBooks.recommendations);
+                const {recommendations} = await getRecommendations(books);
+                setCards(recommendations || []);
+                console.log(recommendations);
             } catch (err) {
                 setError(err);
                 setErrorMessage("An error occurred while fetching recommendations.");
@@ -105,7 +94,8 @@ const SwipeCards = ({books} :Props) => {
             }
         };
 
-        // fetchRecommendations();
+        fetchRecommendations();
+
     }, [books]);
 
     const getRecommendations = async (books: any[]) => {
@@ -118,36 +108,22 @@ const SwipeCards = ({books} :Props) => {
         return data.recommendations;
     };
 
+    const swipeAgain = async () => {
+        setLoading(true);
 
-    const swipeAgain = () => {
-        setCards(cachedCards);
+        try {
+            const {recommendations} = await getRecommendations(books);
+            setCards(recommendations || []);
+            console.log(recommendations);
+        } catch (err) {
+            setError(err);
+            setErrorMessage("An error occurred while fetching recommendations.");
+            console.error('Error while retrieving books', err);
+        } finally {
+            setLoading(false);
+        }
     }
 
-    if (!loading) {
-        return (
-            <div style={{color: 'var(--text-subtle)'}} className="flex flex-grow justify-center items-center flex-col">
-
-                <LoadingSpinner pulsating={false} bgColor={'transparent'} />;
-
-                <div
-                    style={{
-                        transform: 'translateY(50px)',
-                    }}
-
-                    className="flex flex-row justify-center items-center">
-                    <h1 className="text-2xl">Waiting for a response from OpenAI</h1>
-                </div>
-            </div>
-        )
-    }
-
-    if (error) {
-        return (
-            <div style={{color: 'var(--text-subtle)'}} className="flex flex-grow justify-center items-center flex-col">
-                <h1>Error: {errorMessage}</h1>
-            </div>
-        )
-    }
 
     useEffect(() => {
         if (cards.length === 0) {
@@ -157,17 +133,24 @@ const SwipeCards = ({books} :Props) => {
         }
     }, [cards]);
 
-    useEffect(() => {
-        console.log(cards)
-    }, [cards])
 
-    useEffect(() => {
-        console.log(topCard)
-    }, [topCard]);
+    if (loading) {
+        return (
+            <LoadingRequest/>
+        )
+    }
+
+    if (error) {
+        return (
+            <div style={{color: 'var(--text-subtle)'}} className="flex flex-grow justify-center items-center flex-col">
+                <h1>An error occured when trying to fetch the data from Open- AI</h1>
+            </div>
+        )
+    }
 
     return (
-
         <div className="flex flex-col flex-grow items-center justify-center w-full">
+
             <div className=" w-full grid place-items-center relative">
 
              {cards.length > 0 ? (
@@ -182,7 +165,7 @@ const SwipeCards = ({books} :Props) => {
                         />
                     )))
             ) : (
-                <h2 onClick={() => swipeAgain()}>You have swiped on all your cards, reset here</h2>
+                <Button onClick={() => swipeAgain()}>Fetch more recommendations!</Button>
             )}
 
             {cards.length > 0 && (
@@ -206,7 +189,7 @@ const SwipeCards = ({books} :Props) => {
                         onClick={() => {
                             if (!topCard) return;
                             setCards((prev) => prev.filter((card) => card.id !== topCard.id));
-                            handleSave(topCard.title, topCard.author, topCard, setCards);
+                            handleSave(topCard);
                         }}
 
                         style={{transition: '200ms ease-in-out', cursor: 'pointer'}}
@@ -226,21 +209,20 @@ const SwipeCards = ({books} :Props) => {
 export default SwipeCards;
 
 
-export const handleSave = async (title:string, author:string, book:object) => {
+export const handleSave = async (book:object) => {
     try {
-
         const res = await fetch("/api/explore/save-book", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title, author }),
+            body: JSON.stringify({book}),
         });
 
         const data = await res.json();
 
         if (res.ok && data.success) {
-            toast.success(`Book "${title}" added successfully!`);
+            toast.success(`Book "${book.title}" added successfully!`);
         } else {
-            toast.error(`An error occurred while adding "${title}".`);
+            toast.error(`An error occurred while adding "${book.title}".`);
         }
     } catch (error) {
         console.error("Error saving book:", error);
@@ -249,7 +231,8 @@ export const handleSave = async (title:string, author:string, book:object) => {
     }
 };
 
-const CardComponent = ({ id, title, book, zIndex, author, cards, setCards, year, about }: CardProps) => {
+const CardComponent = ({ id, book, zIndex, cards, setCards }: CardProps) => {
+
 
     const x = useMotionValue(0);
     const opacity = useTransform(x, [-150, 0, 150], [0, 1, 0]);
@@ -268,7 +251,7 @@ const CardComponent = ({ id, title, book, zIndex, author, cards, setCards, year,
 
         if (swipe > 50) {
             setCards((prev) => prev.filter((card) => card.id !== id));
-            await handleSave(title, author, book)
+            await handleSave(book)
         } else if (swipe < -50) {
             setCards((prev) => prev.filter((card) => card.id !== id));
         } else {
@@ -297,11 +280,11 @@ const CardComponent = ({ id, title, book, zIndex, author, cards, setCards, year,
             className="p-4 hover:cursor-grab active:cursor-grabbing h-[28rem] w-80 rounded-2xl shadow-md bg-white flex flex-col justify-between items-center text-center"
         >
 
-            <p>{about}</p>
+            <p>{book.about}</p>
 
             <div className={'book-credentials w-full flex flex-col'}>
-                <h2 className="text-xl text-left font-semibold">{title} <span className={'text-gray-600'}>({year})</span></h2>
-                <p className="text-gray-600 italic text-left">by {author}</p>
+                <h2 className="text-xl text-left font-semibold">{book.title} <span className={'text-gray-600'}>({book.year})</span></h2>
+                <p className="text-gray-600 italic text-left">by {book.author}</p>
             </div>
 
         </motion.div>

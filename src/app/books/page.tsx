@@ -1,52 +1,51 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import {prisma} from "@/lib/prisma";
-import {BooksSection} from "@/components/books/BooksSection";
+import {BookTabs} from "@/components/books/BookTabs";
+
+export const revalidate = 10; // re-fetch every 10 seconds
 
 export default async function BooksPage() {
 
     // auth check
     const supabase = await createClient();
     const { data, error } = await supabase.auth.getUser()
+
     if (error || !data?.user) {
         redirect('/auth/login')
     }
 
-    const books = await prisma.book.findMany({
+    const readBooks = await prisma.book.findMany({
         where: {
-            userId: data?.user?.id
-        },
-        include: {
-            readBooks: true,
-            readingList: true,
-            BookCategory: {
-                include: {
-                    category: true,
-                }
-            },
+            userId: data?.user?.id,
+            status: "READ"
         },
     })
 
-    const categories = await prisma.category.findMany()
+    const queuedBooks = await prisma.book.findMany({
+        where: {
+            userId: data?.user?.id,
+            status: "QUEUED"
+        },
+    })
+
+    const readingBooks = await prisma.book.findMany({
+        where: {
+            userId: data?.user?.id,
+            status: "READING"
+        },
+    })
 
     return (
         <main
             style={{ backgroundColor: 'var(--background)' }}
-            className="flex h-full flex-col overflow-y-auto"
+            className="flex flex-col mt-5"
         >
-            <div
-                style={{maxWidth: 'var(--max-width)'}}
-                className="mx-auto"
-            >
-                <header className="w-full flex p-5 flex-row justify-between">
-
-                    <h1 className={'text-3xl font-bold'}>Your bookshelf</h1>
-
-                </header>
-
-                <BooksSection categories={categories} data={books}/>
-
-            </div>
+            <BookTabs
+                queuedBooks={queuedBooks}
+                readingBooks={readingBooks}
+                readBooks={readBooks}
+            />
 
         </main>
     );
