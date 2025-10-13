@@ -3,6 +3,9 @@ import { motion, useMotionValue, useTransform } from "framer-motion";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import {LoadingRequest} from "./LoadingRequest"
+import { Button } from "@/components/ui/button"
+import { Book } from "@prisma/client";
+
 
 type CardProps = CardData & {
     cards: CardData[];
@@ -16,6 +19,7 @@ type CardData = {
     year: number;
     about: string;
     zIndex: number;
+    book: Book;
 };
 
 const cardData: CardData[] = [
@@ -67,15 +71,13 @@ type Props = {
 
 const SwipeCards = ({books} :Props) => {
 
-    const [cards, setCards] = useState<CardData[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [cards, setCards] = useState<CardData[]>(cardData);
+    const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<boolean>(false);
     const [topCard, setTopCard] = useState<any>(null);
 
 
     useEffect(() => {
-
-        setLoading(true);
 
         const fetchRecommendations = async () => {
 
@@ -85,9 +87,8 @@ const SwipeCards = ({books} :Props) => {
                 const {recommendations} = await getRecommendations(books);
                 setCards(recommendations || []);
                 console.log(recommendations);
-            } catch (err) {
+            } catch (err:any) {
                 setError(err);
-                setErrorMessage("An error occurred while fetching recommendations.");
                 console.error('Error while retrieving books', err);
             } finally {
                 setLoading(false);
@@ -115,9 +116,8 @@ const SwipeCards = ({books} :Props) => {
             const {recommendations} = await getRecommendations(books);
             setCards(recommendations || []);
             console.log(recommendations);
-        } catch (err) {
+        } catch (err:any) {
             setError(err);
-            setErrorMessage("An error occurred while fetching recommendations.");
             console.error('Error while retrieving books', err);
         } finally {
             setLoading(false);
@@ -140,6 +140,7 @@ const SwipeCards = ({books} :Props) => {
         )
     }
 
+
     if (error) {
         return (
             <div style={{color: 'var(--text-subtle)'}} className="flex flex-grow justify-center items-center flex-col">
@@ -151,7 +152,10 @@ const SwipeCards = ({books} :Props) => {
     return (
         <div className="flex flex-col flex-grow items-center justify-center w-full">
 
-            <div className=" w-full grid place-items-center relative">
+            <div
+
+
+                className="w-full grid place-items-center relative">
 
              {cards.length > 0 ? (
                 (cards.map((book, index) => (
@@ -209,7 +213,8 @@ const SwipeCards = ({books} :Props) => {
 export default SwipeCards;
 
 
-export const handleSave = async (book:object) => {
+export const handleSave = async (book:Book) => {
+
     try {
         const res = await fetch("/api/explore/save-book", {
             method: "POST",
@@ -226,8 +231,7 @@ export const handleSave = async (book:object) => {
         }
     } catch (error) {
         console.error("Error saving book:", error);
-        toast.error(`Failed to save "${title}". Please try again.`);
-        setCards(prev => [book, ...prev])
+        toast.error(`Failed to save "${book.title}". Please try again.`);
     }
 };
 
@@ -261,6 +265,15 @@ const CardComponent = ({ id, book, zIndex, cards, setCards }: CardProps) => {
 
     return (
         <motion.div
+
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+                type: "spring",
+                stiffness: 50,
+                damping: 20,
+            }}
+
             style={{
                 gridRow: 1,
                 gridColumn: 1,

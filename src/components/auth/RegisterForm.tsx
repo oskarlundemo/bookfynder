@@ -1,5 +1,6 @@
 "use client"
 
+import { Spinner } from "@/components/ui/spinner"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -23,7 +24,6 @@ export function RegisterForm ({
                           }: React.ComponentProps<"form">) {
 
     const router = useRouter();
-
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
@@ -56,12 +56,6 @@ export function RegisterForm ({
         setLoading(false)
     }
 
-
-    useEffect(() => {
-        console.log(password, email)
-    }, [password, email]);
-
-
     return (
         <form className={cn("flex flex-col gap-6", className)} {...props}>
             <FieldGroup>
@@ -76,7 +70,7 @@ export function RegisterForm ({
                     <Input
                         id="email"
                         type="email"
-                        placeholder="m@example.com"
+                        placeholder="john@doe.com"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                         required />
@@ -95,8 +89,22 @@ export function RegisterForm ({
                 </Field>
 
                 <Field>
-                    <Button onClick={(e) => handleSubmit(e)} type="submit" className="w-full">
-                        Sign up
+                    <Button disabled={!validEmail || !validPassword} onClick={(e) => handleSubmit(e)} type="submit" className="w-full">
+
+                        {loading && (
+                            <Spinner/>
+                        )}
+
+                        {loading ? (
+                            <p>
+                                Connecting
+                            </p>
+                        ) : (
+                            <p>
+                                Sign up
+                            </p>
+                        )}
+
                     </Button>
                 </Field>
 

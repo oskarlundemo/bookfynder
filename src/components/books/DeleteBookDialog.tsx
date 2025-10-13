@@ -10,6 +10,8 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
+import {Button} from "@/components/ui/button"
+
 
 type Props = {
     handleDelete: () => void;
@@ -18,21 +20,23 @@ type Props = {
 export default function DeleteBookDialog({handleDelete}: Props) {
 
     return (
-        <AlertDialog>
-            <AlertDialogTrigger>Delete book</AlertDialogTrigger>
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete your book
-                        and remove the data from our servers.
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={(e) => handleDelete(e)} >Delete</AlertDialogAction>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
+        <Button className={'cursor-pointer'}>
+            <AlertDialog>
+                <AlertDialogTrigger>Delete book</AlertDialogTrigger>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete your book
+                            and remove the data from our servers.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={(e) => handleDelete(e)} >Delete</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </Button>
     )
 }

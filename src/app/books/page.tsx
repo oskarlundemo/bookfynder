@@ -20,6 +20,13 @@ export default async function BooksPage() {
             userId: data?.user?.id,
             status: "READ"
         },
+        include: {
+            BookCategory: {
+                include: {
+                    category: true
+                }
+            }
+        }
     })
 
     const queuedBooks = await prisma.book.findMany({
@@ -27,6 +34,13 @@ export default async function BooksPage() {
             userId: data?.user?.id,
             status: "QUEUED"
         },
+        include: {
+            BookCategory: {
+                include: {
+                    category: true
+                }
+            }
+        }
     })
 
     const readingBooks = await prisma.book.findMany({
@@ -34,6 +48,13 @@ export default async function BooksPage() {
             userId: data?.user?.id,
             status: "READING"
         },
+        include: {
+            BookCategory: {
+                include: {
+                    category: true
+                }
+            }
+        }
     })
 
     return (

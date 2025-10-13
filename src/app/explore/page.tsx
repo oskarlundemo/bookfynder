@@ -35,15 +35,10 @@ export default async function ExplorePage () {
     console.log(usersBooks)
 
     return (
-        <main
-            style={{ }}
-            className="flex flex-col"
-        >
-
+        <main className="flex flex-grow flex-col">
             <SwipeCards
                 books={usersBooks}
             />
-
         </main>
     );
 }

@@ -1,8 +1,9 @@
 "use client"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {BookCard} from "@/components/books/BookCard"
+import BookCards from "@/components/books/BookCards"
 import EmptyBookFolder from  "@/components/books/EmptyBookFolder"
 import BookTable from  "@/components/books/BookTable"
+import {useEffect, useState} from "react";
 
 interface Books {
     readBooks?: Books[];
@@ -10,10 +11,24 @@ interface Books {
     queuedBooks?: Books[];
 }
 
-export const BookTabs = ({ readBooks, readingBooks, queuedBooks}: BooksProps) => {
+export const BookTabs = ({ readBooks, readingBooks, queuedBooks}: Books) => {
+
+    const [isMobile, setIsMobile] = useState<boolean>(false);
+
+    const handleResize = () => {
+        setIsMobile(window.innerWidth < 800);
+    }
+
+    useEffect(() => {
+        window.addEventListener("resize", handleResize, false);
+    }, []);
+
+    useEffect(() => {
+        handleResize();
+    }, []);
 
     return (
-        <Tabs style={{maxWidth: 'var(--max-width)'}} defaultValue="reading" className="w-full mx-auto">
+        <Tabs style={{maxWidth: 'var(--max-width)'}} defaultValue="reading" className="w-full flex-grow mx-auto">
 
             <TabsList>
                 <TabsTrigger value="reading">Reading</TabsTrigger>
@@ -24,9 +39,15 @@ export const BookTabs = ({ readBooks, readingBooks, queuedBooks}: BooksProps) =>
             <TabsContent value="read">
 
                 {readBooks && readBooks.length > 0 ? (
-                    <BookTable
-                        books={readBooks}
-                    />
+                        (isMobile ? (
+                            <BookCards
+                                books={readBooks}
+                            />
+                        ) : (
+                            <BookTable
+                                books={readBooks}
+                            />
+                        ))
                 ) : (
                     <EmptyBookFolder
                         title={'No read books'}
@@ -38,13 +59,19 @@ export const BookTabs = ({ readBooks, readingBooks, queuedBooks}: BooksProps) =>
             <TabsContent value="reading">
 
                 {readingBooks && readingBooks.length > 0 ? (
-                    <BookTable
-                        books={readingBooks}
-                    />
+                    (isMobile ? (
+                        <BookCards
+                            books={readingBooks}
+                        />
+                    ) : (
+                        <BookTable
+                            books={readingBooks}
+                        />
+                    ))
                 ) : (
                     <EmptyBookFolder
-                        title={'No current reads'}
-                        description={"You have not yet added any books that you are currently reading"}
+                        title={'No read books'}
+                        description={"You have not yet added any books that you have already read"}
                     />
                 )}
 
@@ -52,13 +79,19 @@ export const BookTabs = ({ readBooks, readingBooks, queuedBooks}: BooksProps) =>
             <TabsContent value="queue">
 
                 {queuedBooks && queuedBooks.length > 0 ? (
-                    <BookTable
-                        books={queuedBooks}
-                    />
+                    (isMobile ? (
+                        <BookCards
+                            books={queuedBooks}
+                        />
+                    ) : (
+                        <BookTable
+                            books={queuedBooks}
+                        />
+                    ))
                 ) : (
                     <EmptyBookFolder
-                        title={'No queued books'}
-                        description={"You have not yet added any books to your want to read in the future"}
+                        title={'No read books'}
+                        description={"You have not yet added any books that you have already read"}
                     />
                 )}
 

@@ -1,5 +1,6 @@
 "use client"
 
+import { Spinner } from "@/components/ui/spinner"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -71,7 +72,7 @@ export function LoginForm({
                     <Input
                         id="email"
                         type="email"
-                        placeholder="m@example.com"
+                        placeholder="john@doe.com"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                         required />
@@ -96,8 +97,22 @@ export function LoginForm({
                 </Field>
 
                 <Field>
-                    <Button onClick={(e) => handleSubmit(e)} type="submit" className="w-full">
-                        Login
+                    <Button disabled={!validEmail || !validPassword} onClick={(e) => handleSubmit(e)} type="submit" className="w-full">
+
+                        {loading && (
+                            <Spinner/>
+                        )}
+
+                        {loading ? (
+                            <p>
+                                Connecting
+                            </p>
+                        ) : (
+                            <p>
+                            Login
+                            </p>
+                        )}
+
                     </Button>
                 </Field>
 

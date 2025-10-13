@@ -4,8 +4,8 @@ import {SelectCategories} from "@/components/misc/SelectCategories";
 import {Category} from "@prisma/client";
 import {BookStatus} from "@/components/books/BookStatus";
 import {BookScore} from "@/components/books/BookScore";
-import {PageSlider} from "@/components/misc/PageSlider";
-
+import CurrentPageSlider from "@/components/books/CurrentPageSlider";
+import {useEffect} from "react";
 
 import {
     Button
@@ -17,6 +17,9 @@ interface BookProps {
 
     title: string;
     setTitle: (title: string) => void;
+
+    currentPage: number;
+    setCurrentPage: (currentPage: number) => void;
 
     bookStatus: string;
     setBookStatus: (status: string) => void;
@@ -38,38 +41,65 @@ interface BookProps {
     handleSubmit: (value: any) => void;
 }
 
-export default function BookForm  ({disabledBtn, setAuthor, setTitle,
+export default function BookForm  ({disabledBtn, setAuthor, setTitle, currentPage, setCurrentPage,
                                        buttonText = 'Save', author, rating, selectedCategories,
                                        title, setPage, setRating, categories, setSelectedCategories,
                                        handleSubmit, pages, bookStatus, setBookStatus}:BookProps) {
 
+    useEffect(() => {
+        console.log("CurrentPageSlider", pages);
+    }, []);
+
     return (
 
-        <form onSubmit={handleSubmit} className={'gap-5 flex mt-5 flex-col'}>
+        <form onSubmit={handleSubmit} className={'gap-5 flex-wrap flex mt-5 flex-col'}>
 
-            <InputField
-                setValue={setTitle}
-                value={title}
-                type={"text"}
-                placeholder={'Dorian Grey'}
-                name={'Title'}
-            />
 
-            <InputField
-                setValue={setAuthor}
-                value={author}
-                type={"text"}
-                placeholder={'Oscar Wilde'}
-                name={'Author'}
-            />
 
-            <InputField
-                setValue={setPage}
-                value={pages}
-                type={"number"}
-                placeholder={0}
-                name={'Pages'}
-            />
+            <div className="grid gap-5 grid-cols-[repeat(auto-fit,minmax(250px,1fr))]">
+                <div className="flex justify-around flex-col">
+
+                    <InputField
+                        setValue={setTitle}
+                        value={title}
+                        type={"text"}
+                        placeholder={'Dorian Grey'}
+                        name={'Title'}
+                    />
+
+                    <InputField
+                        setValue={setAuthor}
+                        value={author}
+                        type={"text"}
+                        placeholder={'Oscar Wilde'}
+                        name={'Author'}
+                    />
+
+                    <InputField
+                        setValue={setPage}
+                        value={pages}
+                        type={"number"}
+                        placeholder={0}
+                        name={'Pages'}
+                    />
+
+
+
+                </div>
+
+                <div className="flex justify-around flex-col">
+
+                    <BookStatus
+                        bookStaus={bookStatus}
+                        setBookStatus={setBookStatus}
+                    />
+
+                </div>
+
+            </div>
+
+
+
 
             <div className={'flex flex-row justify-between gap-2 flex-wrap'}>
 
@@ -79,9 +109,7 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle,
                     selectedCategories={selectedCategories}
                 />
 
-
-
-                {(bookStatus === "READ" || bookStatus === "QUEUE") && (
+                {(bookStatus === "READ" || bookStatus === "QUEUED") && (
                     <BookScore
                         rating={rating}
                         setRating={setRating}
@@ -91,10 +119,13 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle,
 
             </div>
 
-            <BookStatus
-                bookStaus={bookStatus}
-                setBookStatus={setBookStatus}
-            />
+            {bookStatus === "READING" && (
+                <CurrentPageSlider
+                    noOfPages={pages}
+                    value={currentPage}
+                    setCurrentPage={setCurrentPage}
+                />
+            )}
 
             <Button className={'w-fit mx-auto'} disabled={disabledBtn}>{buttonText}</Button>
 

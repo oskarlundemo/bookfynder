@@ -24,6 +24,7 @@ export default function AddBookPage () {
 
     const [disabledBtn, setDisabledBtn] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
+    const [currentPage, setCurrentPage] = useState<number>(1);
 
     useEffect(() => {
         setLoading(true);
@@ -50,6 +51,15 @@ export default function AddBookPage () {
 
         response.success ? toast.success(response.message) : toast.error(response.message);
     }
+
+
+    useEffect(() => {
+        if (currentPage > pages) setCurrentPage(pages);
+    }, [pages]);
+
+    useEffect(() => {
+        console.log(currentPage);
+    }, [currentPage]);
 
     if (loading) {
         return <LoadingSpinner bgColor={'var(--secondary)'}/>
@@ -80,6 +90,9 @@ export default function AddBookPage () {
 
                     setRating={setRating}
                     rating={rating}
+
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
 
                     handleSubmit={handleSubmit}
 

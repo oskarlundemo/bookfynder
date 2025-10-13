@@ -1,6 +1,3 @@
-import {AuthUI} from "@/components/auth/AuthUI";
-import {LoginCard} from "@/components/auth/LoginCard";
-
 import { GalleryVerticalEnd } from "lucide-react"
 import { LoginForm } from "@/components/auth/LoginForm"
 

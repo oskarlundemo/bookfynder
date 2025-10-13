@@ -25,8 +25,6 @@ export default function BookTable({books}: Props) {
 
     const router = useRouter();
 
-    console.log(books);
-
     async function handleDelete(e: React.FormEvent, bookId: string) {
 
         if (!bookId)
@@ -67,7 +65,7 @@ export default function BookTable({books}: Props) {
                         <TableCell className="text-right m-2">
                             <Button
                                 onClick={() => router.push(`/books/${book.id}`)}
-                                className="cursor-pointer">Edit
+                                className="cursor-pointer mx-2">Edit
                             </Button>
 
                             <DeleteBookDialog

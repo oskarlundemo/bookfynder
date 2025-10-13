@@ -60,7 +60,7 @@ type Props = {
     explanation?: string;
 }
 
-export function ChartPieDonutText({title, explanation, bookData, numberOfBooks} :Props) {
+export function ChartPieDonutText ({title, explanation, bookData, numberOfBooks} :Props) {
 
     return (
         <Card className="flex flex-col">

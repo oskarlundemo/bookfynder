@@ -7,34 +7,31 @@ export default async function StatisticsPag () {
 
     const supabase = await createClient()
 
-    const { data, error } = await supabase.auth.getUser()
+    const { data, error } = await supabase.auth.getUser();
+
     if (error || !data?.user) {
         redirect('/auth/login')
     }
 
-    const pieChartData = await prisma.readBook.findMany({
+    const readBookData = await prisma.book.findMany({
         where: {
-            userId: data?.user?.id
+            userId: data?.user?.id,
+            status: "READ"
         },
         include: {
-            book: {
+            BookCategory: {
                 include: {
-                    BookCategory: {
-                        include: {
-                            category: true
-                        }
-                    }
+                    category: true
                 }
             }
         }
     })
 
-
     return (
-        <main style={{backgroundColor: 'var(--secondary)'}} className="flex flex-col h-full ">
+        <main className="flex flex-col h-full ">
 
             <BentoGrid
-                pieChartData={pieChartData}
+                readBookData={readBookData}
             />
 
         </main>

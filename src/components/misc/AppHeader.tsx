@@ -26,7 +26,7 @@ export default function AppHeader() {
     return (
         <header
             style={{maxWidth: 'var(--max-width)'}}
-            className="App-header flex z-5 flex-row justify-between mx-auto items-center sticky top-0 p-5
+            className="flex z-5 flex-row justify-between mx-auto w-full  items-center sticky top-0 p-5
                bg-white/10 backdrop-blur-md border-b border-white/20 shadow-sm"
         >
             <h1 className="text-3xl font-bold">{title}</h1>
