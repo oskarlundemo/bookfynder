@@ -51,7 +51,7 @@ export const BookTabs = ({ readBooks, readingBooks, queuedBooks}: Books) => {
                 ) : (
                     <EmptyBookFolder
                         title={'No read books'}
-                        description={"You have not yet added any books that you have already read"}
+                        description={"You have not added any books that you have already read"}
                     />
                 )}
 
@@ -70,8 +70,8 @@ export const BookTabs = ({ readBooks, readingBooks, queuedBooks}: Books) => {
                     ))
                 ) : (
                     <EmptyBookFolder
-                        title={'No read books'}
-                        description={"You have not yet added any books that you have already read"}
+                        title={'No current reads'}
+                        description={"You have not added any books that you are currently reading"}
                     />
                 )}
 
@@ -90,8 +90,8 @@ export const BookTabs = ({ readBooks, readingBooks, queuedBooks}: Books) => {
                     ))
                 ) : (
                     <EmptyBookFolder
-                        title={'No read books'}
-                        description={"You have not yet added any books that you have already read"}
+                        title={'No books queued '}
+                        description={"You have not added any books that you want to read in the future"}
                     />
                 )}
 

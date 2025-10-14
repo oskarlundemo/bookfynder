@@ -5,7 +5,6 @@ import {Category} from "@prisma/client";
 import {BookStatus} from "@/components/books/BookStatus";
 import {BookScore} from "@/components/books/BookScore";
 import CurrentPageSlider from "@/components/books/CurrentPageSlider";
-import {useEffect} from "react";
 
 import {
     Button
@@ -46,10 +45,6 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle, currentPag
                                        title, setPage, setRating, categories, setSelectedCategories,
                                        handleSubmit, pages, bookStatus, setBookStatus}:BookProps) {
 
-    useEffect(() => {
-        console.log("CurrentPageSlider", pages);
-    }, []);
-
     return (
 
         <form onSubmit={handleSubmit} className={'gap-5 flex-wrap flex mt-5 flex-col'}>
@@ -57,7 +52,7 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle, currentPag
 
 
             <div className="grid gap-5 grid-cols-[repeat(auto-fit,minmax(250px,1fr))]">
-                <div className="flex justify-around flex-col">
+                <div className="flex justify-around flex-col gap-4">
 
                     <InputField
                         setValue={setTitle}
@@ -82,7 +77,6 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle, currentPag
                         placeholder={0}
                         name={'Pages'}
                     />
-
 
 
                 </div>

@@ -18,14 +18,16 @@ export default function AddBookPage () {
     const [title, setTitle] = useState<string>("");
     const [author, setAuthor] = useState<string>("");
     const [pages, setPages] = useState<number>(0);
-    const [read, setRead] = useState<boolean>(false);
-    const [rating, setRating] = useState<number>(0);
-    const [priority, setPriority] = useState<number>(0);
-    const [categories, setCategories] = useState<any>([]);
-    const [disabledBtn, setDisabledBtn] = useState<boolean>(false);
 
+    const [rating, setRating] = useState<number>(0);
+    const [categories, setCategories] = useState<Category[]>([]);
+
+    const [bookStatus, setBookStatus] = useState<string>("");
     const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+
+    const [disabledBtn, setDisabledBtn] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
+    const [currentPage, setCurrentPage] = useState<number>(1);
 
     const [error, setError] = useState<Error>();
 
@@ -46,9 +48,8 @@ export default function AddBookPage () {
                 setPages(book.pages)
                 setSelectedCategories(book.bookCategories)
                 setCategories(book.categories)
-                setRead(book.hasRead)
-                !!book.hasRead ? setRating(book?.score) : setPriority(book?.score);
-
+                setRating(book.rating)
+                setBookStatus(book.status);
             } catch (error) {
                 setError(true);
                 console.error("Error fetching book:", error);
@@ -68,16 +69,15 @@ export default function AddBookPage () {
         e.preventDefault();
 
         const response = await updateBook({
-             bookId,
+            bookId,
             title,
             author,
             pages,
-
-            read,
+            currentPage,
+            bookStatus,
             rating,
-            priority,
-            selectedCategories,
-        })
+            selectedCategories
+        });
 
         response.success ? toast.success(response.message) : toast.error(response.message);
     }
@@ -96,7 +96,6 @@ export default function AddBookPage () {
             <div style={{maxWidth: 'var(--max-form)'}} className="flex book-add-wrapper flex-col w-full justify-start">
 
                 <BookForm
-
                     title={title}
                     setTitle={setTitle}
 
@@ -106,14 +105,14 @@ export default function AddBookPage () {
                     pages={pages}
                     setPage={setPages}
 
-                    read={read}
-                    setRead={setRead}
+                    bookStatus={bookStatus}
+                    setBookStatus={setBookStatus}
 
                     setRating={setRating}
                     rating={rating}
 
-                    priority={priority}
-                    setPriority={setPriority}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
 
                     handleSubmit={handleSubmit}
 
@@ -122,8 +121,8 @@ export default function AddBookPage () {
                     selectedCategories={selectedCategories}
                     setSelectedCategories={setSelectedCategories}
 
-                    disabledBtn={disabledBtn}
-                    buttonText={'Update'}
+                    disabledBtn={false}
+                    buttonText={"Update"}
                 />
 
             </div>

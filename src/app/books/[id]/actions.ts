@@ -7,11 +7,14 @@ import {Category} from "@prisma/client";
 export async function updateBook(bookData: {
     bookId: string;
     title: string;
+
     author: string;
     pages: number;
-    read: boolean;
+
+    bookStatus: string;
+    currentPage: number;
+
     rating: number;
-    priority: number;
     categories: Category[];
 }) {
 
@@ -27,17 +30,16 @@ export async function updateBook(bookData: {
         const updatedBook = await prisma.book.update({
             where: {
                 id: bookData.bookId,
-                userId: data.user?.id
+                userId: userId,
             },
             data: {
                 title: bookData.title,
                 author: bookData.author,
                 pages: bookData.pages,
+                status: bookData.bookStatus,
+                rating: bookData.rating,
+                pagesRead: bookData.currentPage,
             },
-            include: {
-                readBooks: true,
-                readingList: true
-            }
         })
 
         // Radera de gamla
@@ -55,37 +57,6 @@ export async function updateBook(bookData: {
                 categoryId: c.id,
             })),
         });
-
-        // Uppdatera om read eller inte
-        if (updatedBook.readBooks && updatedBook.readBooks.length > 0) {
-            await tx.readBook.deleteMany({
-                where: { bookId: bookData.bookId }
-            });
-        } else if (updatedBook.readingList && updatedBook.readingList.length > 0) {
-            await tx.readingList.deleteMany({
-                where: { bookId: bookData.bookId }
-            });
-        }
-
-        // Om de ändras till läst, uppdatera
-        if (bookData.read) {
-            await tx.readBook.create({
-                data: {
-                    bookId: bookData.bookId,
-                    rating: bookData.rating,
-                    userId: userId,
-                }
-            })
-        } else {
-            // Vill läsa, uppdatera här istället
-            await tx.readingList.create({
-                data: {
-                    bookId: bookData.bookId,
-                    priority:bookData.priority,
-                    userId: userId,
-                }
-            })
-        }
     })
 
     return {
@@ -94,7 +65,7 @@ export async function updateBook(bookData: {
     }
 }
 
-export async function deleteBook(bookId: string) {
+export async function deleteBook (bookId: string) {
 
     const supabase = await createClient();
     const { data, error } = await supabase.auth.getUser()
@@ -119,7 +90,7 @@ export async function deleteBook(bookId: string) {
 }
 
 
-export async function getBook(bookId: string) {
+export async function getBook (bookId: string) {
 
     // auth check
     const supabase = await createClient();
@@ -132,28 +103,13 @@ export async function getBook(bookId: string) {
             id: bookId,
         },
         include: {
-            readBooks: true,
-            readingList: true,
             BookCategory: {
                 include: {
-                    category: true,
+                    category: true
                 }
-            },
-        },
+            }
+        }
     });
-
-
-    const hasRead = await prisma.readBook.findFirst({
-        where: {
-            bookId: book.id,
-        }
-    })
-
-    const readingList = await prisma.readingList.findFirst({
-        where: {
-            bookId: book.id,
-        }
-    })
 
     const categories = await prisma.category.findMany()
 
@@ -162,12 +118,11 @@ export async function getBook(bookId: string) {
     const formatedRespons = {
         author: book.author,
         title: book.title,
-        priority: readingList?.priority,
+        rating: book.rating,
+        pagesRead: book.pagesRead,
         pages: book.pages,
         bookCategories: bookCategories,
         categories: categories,
-        hasRead: hasRead,
-        score: hasRead?.rating || readingList?.priority
     }
 
     return {
@@ -175,5 +130,4 @@ export async function getBook(bookId: string) {
         message: `Book ${bookId} retrieved successfully.`,
         sucess: true,
     }
-
 }

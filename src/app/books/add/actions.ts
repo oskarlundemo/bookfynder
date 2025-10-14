@@ -8,7 +8,8 @@ export async function addBook(bookData: {
     title: string;
     author: string;
     pages: number;
-    status: string;
+    bookStatus: string;
+    currentPage: number;
     rating: number;
     categories: Category[];
 
@@ -24,8 +25,6 @@ export async function addBook(bookData: {
         };
     }
 
-
-
     try {
         const userId = data.user.id;
 
@@ -35,11 +34,12 @@ export async function addBook(bookData: {
             // Create the book
             const createdBook = await tx.book.create({
                 data: {
+                    userId: userId,
                     title: bookData.title,
                     author: bookData.author,
                     pages: bookData.pages,
                     status: bookData.bookStatus,
-                    userId,
+                    pagesRead: bookData.currentPage,
                 },
             });
 

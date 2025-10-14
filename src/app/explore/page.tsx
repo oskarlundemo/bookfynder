@@ -1,8 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import SwipeCards from "@/components/explore/SwipeCards";
-import {prisma} from "@/lib/prisma";
-
 
 export default async function ExplorePage () {
 
@@ -18,27 +16,12 @@ export default async function ExplorePage () {
         redirect('/error')
     }
 
-    const usersBooks = await prisma.book.findMany({
-        where: {
-            userId: data?.user?.id
-        },
-        include: {
-            BookCategory: {
-                include: {
-                    category: true,
-                }
-            },
-        },
-        take: 5,
-    })
-
-    console.log(usersBooks)
 
     return (
         <main className="flex flex-grow flex-col">
-            <SwipeCards
-                books={usersBooks}
-            />
+            <SwipeCards/>
+
+            {/* Här kan du lägga till liksom om de inte har minst 3 böcker så måste de lägga till eller något*/}
         </main>
     );
 }

@@ -18,8 +18,7 @@ export default function AddBookPage () {
     const [rating, setRating] = useState<number>(0);
     const [categories, setCategories] = useState<Category[]>([]);
 
-    const [bookStatus, setBookStatus] = useState<string>("");
-
+    const [bookStatus, setBookStatus] = useState<string>("READ");
     const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
 
     const [disabledBtn, setDisabledBtn] = useState<boolean>(false);
@@ -40,11 +39,14 @@ export default function AddBookPage () {
 
         e.preventDefault();
 
+        console.log(bookStatus);
+
         const response = await addBook({
             title,
             author,
             pages,
             bookStatus,
+            currentPage,
             rating,
             selectedCategories
         });
@@ -57,9 +59,6 @@ export default function AddBookPage () {
         if (currentPage > pages) setCurrentPage(pages);
     }, [pages]);
 
-    useEffect(() => {
-        console.log(currentPage);
-    }, [currentPage]);
 
     if (loading) {
         return <LoadingSpinner bgColor={'var(--secondary)'}/>

@@ -29,7 +29,6 @@ export async function POST (req: NextRequest) {
         })
     }
 
-
     await prisma.$transaction(async (trx) => {
         const newBook = await trx.book.create({
             data: {
@@ -37,23 +36,19 @@ export async function POST (req: NextRequest) {
                 title: book.title,
                 author: book.author,
                 pages: book.pages || 0,
+                status: "QUEUED",
             },
         });
 
-        await trx.readingList.create({
-            data: {
-                userId,
-                bookId: newBook.id,
-            },
-        });
+        const categories = book.categories.map((category) => ({
+            categoryId: category.id,
+            bookId: newBook.id
+        }))
 
-        await trx.bookCategory.create({
-            data: {
-                bookId: newBook.id,
-                categoryId: "ef5c02a8-4365-434e-85c2-eed8e745d112"
-            },
+        await trx.bookCategory.createMany({
+            data: categories,
+            skipDuplicates: true, 
         });
-
     });
 
     return NextResponse.json({

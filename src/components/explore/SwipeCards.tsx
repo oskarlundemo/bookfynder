@@ -1,10 +1,10 @@
 "use client";
-import { motion, useMotionValue, useTransform } from "framer-motion";
-import { useState, useEffect } from "react";
+import {motion, useMotionValue, useTransform} from "framer-motion";
+import {useEffect, useState} from "react";
 import toast from "react-hot-toast";
 import {LoadingRequest} from "./LoadingRequest"
-import { Button } from "@/components/ui/button"
-import { Book } from "@prisma/client";
+import {Button} from "@/components/ui/button"
+import {Book} from "@prisma/client";
 
 
 type CardProps = CardData & {
@@ -65,14 +65,11 @@ const cardData: CardData[] = [
     },
 ];
 
-type Props = {
-    books: Book[];
-}
 
-const SwipeCards = ({books} :Props) => {
+const SwipeCards = () => {
 
-    const [cards, setCards] = useState<CardData[]>(cardData);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [cards, setCards] = useState<CardData[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
     const [topCard, setTopCard] = useState<any>(null);
 
@@ -84,9 +81,9 @@ const SwipeCards = ({books} :Props) => {
             setLoading(true);
 
             try {
-                const {recommendations} = await getRecommendations(books);
-                setCards(recommendations || []);
-                console.log(recommendations);
+                const response = await getRecommendations();
+                setCards(response.data.recommendations || []);
+                console.log(response);
             } catch (err:any) {
                 setError(err);
                 console.error('Error while retrieving books', err);
@@ -97,25 +94,23 @@ const SwipeCards = ({books} :Props) => {
 
         fetchRecommendations();
 
-    }, [books]);
+    }, []);
 
-    const getRecommendations = async (books: any[]) => {
+    const getRecommendations = async () => {
         const res = await fetch("/api/explore/recommend-books", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ books })
         });
-        const data = await res.json();
-        return data.recommendations;
+        return await res.json();
     };
+
 
     const swipeAgain = async () => {
         setLoading(true);
 
         try {
-            const {recommendations} = await getRecommendations(books);
-            setCards(recommendations || []);
-            console.log(recommendations);
+            const response = await getRecommendations();
+            setCards(response.data.recommendations || []);
         } catch (err:any) {
             setError(err);
             console.error('Error while retrieving books', err);
@@ -123,7 +118,6 @@ const SwipeCards = ({books} :Props) => {
             setLoading(false);
         }
     }
-
 
     useEffect(() => {
         if (cards.length === 0) {
@@ -266,14 +260,6 @@ const CardComponent = ({ id, book, zIndex, cards, setCards }: CardProps) => {
     return (
         <motion.div
 
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-                type: "spring",
-                stiffness: 50,
-                damping: 20,
-            }}
-
             style={{
                 gridRow: 1,
                 gridColumn: 1,
@@ -296,8 +282,19 @@ const CardComponent = ({ id, book, zIndex, cards, setCards }: CardProps) => {
             <p>{book.about}</p>
 
             <div className={'book-credentials w-full flex flex-col'}>
-                <h2 className="text-xl text-left font-semibold">{book.title} <span className={'text-gray-600'}>({book.year})</span></h2>
-                <p className="text-gray-600 italic text-left">by {book.author}</p>
+
+                {book.categories && (
+                    <div className="flex flex-row gap-1 flex-wrap mb-2">
+                        {book.categories.map((category, index) => (
+                            <Button key={index}>
+                                {category.name}
+                            </Button>
+                        ))}
+                    </div>
+                )}
+
+                <h2 className="text-xl text-left font-semibold">{book.title} <span className={'text-gray-600 ml-auto'}>({book.year})</span></h2>
+                <p className="text-gray-600 my-auto italic text-left">by {book.author}</p>
             </div>
 
         </motion.div>
