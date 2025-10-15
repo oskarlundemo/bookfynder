@@ -20,8 +20,7 @@ type Props = {
 export default function DeleteBookDialog({handleDelete}: Props) {
 
     return (
-        <Button className={'cursor-pointer'}>
-            <AlertDialog>
+        <AlertDialog className={'bg-red-100!'}>
                 <AlertDialogTrigger>Delete book</AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>
@@ -37,6 +36,5 @@ export default function DeleteBookDialog({handleDelete}: Props) {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-        </Button>
     )
 }

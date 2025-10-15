@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import {Category} from "@prisma/client";
 
-export async function addBook(bookData: {
+export async function addBook (bookData: {
     title: string;
     author: string;
     pages: number;

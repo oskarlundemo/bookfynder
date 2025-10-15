@@ -41,7 +41,7 @@ export function BookScore ({rating, read, setRating}: Props) {
     )
 
     return (
-        <div className="flex items-center space-x-4">
+        <div className="flex items-start flex-col space-x-4">
             <p className="text-muted-foreground text-sm">{read ? 'Rating' : 'Priority'}</p>
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>

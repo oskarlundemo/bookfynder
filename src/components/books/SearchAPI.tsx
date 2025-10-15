@@ -69,11 +69,11 @@ export const SearchAPI = ({setTitle, setAuthorName}:Props) => {
     }
 
     return (
-        <section className="flex items-center justify-start">
+        <section className="flex items-center w-full justify-start">
 
-                <div className="relative w-full">
+                <div className="relative flex flex-grow flex-row w-full">
 
-                    <div className="grid w-full max-w-sm items-center gap-3">
+                    <div className="grid flex-grow items-center gap-3">
                         <Label htmlFor="picture">{"Search for a book or author"}</Label>
                         <Input
                             type={'text'}
@@ -83,11 +83,12 @@ export const SearchAPI = ({setTitle, setAuthorName}:Props) => {
                             name={'Search'}
                             onFocus={() => setSearchFocused(true)}
                             onBlur={() => setSearchFocused(false)}
+                            className={'w-full'}
                         />
 
                         {searchFocused && searchQuery.length > 0 && (
                             <ul
-                                className="absolute max-w-sm w-full top-full left-0  mt-1 bg-white border border-gray-300 rounded shadow-lg z-10 max-h-60 overflow-y-auto"
+                                className="absolute w-full top-full left-0  mt-1 bg-white border border-gray-300 rounded shadow-lg z-10 max-h-60 overflow-y-auto"
                                 onMouseDown={(e) => e.preventDefault()}
                             >
 

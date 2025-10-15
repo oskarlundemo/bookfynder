@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {createClient} from "@/lib/supabase/server";
-
 import {logout} from "@/app/auth/login/actions";
+import { User } from "lucide-react"
+
 
 import {
     DropdownMenu,
@@ -14,12 +14,16 @@ import {
 
 export const UserAvatar = ({}) => {
 
+
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>
                 <Avatar>
                     <AvatarImage src="" />
-                    <AvatarFallback>OL</AvatarFallback>
+                    <AvatarFallback>
+                        <User className="h-5 w-5" />
+                    </AvatarFallback>
                 </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent>

@@ -1,8 +1,5 @@
 import {Button} from "@/components/ui/button"
 import { useRouter } from "next/navigation";
-import {deleteBook} from "@/app/books/[id]/actions";
-import DeleteBookDialog from "@/components/books/DeleteBookDialog"
-import toast from "react-hot-toast";
 
 import {
     Table,
@@ -24,23 +21,6 @@ type Props = {
 export default function BookTable({books}: Props) {
 
     const router = useRouter();
-
-    async function handleDelete(e: React.FormEvent, bookId: string) {
-
-        if (!bookId)
-            return;
-
-        e.preventDefault();
-
-        const response = await deleteBook(bookId);
-        router.refresh();
-
-        if (response.success) {
-            toast.success(response.message);
-        } else {
-            toast.error(response.message);
-        }
-    }
 
     return (
         <Table>
@@ -67,11 +47,6 @@ export default function BookTable({books}: Props) {
                                 onClick={() => router.push(`/books/${book.id}`)}
                                 className="cursor-pointer mx-2">Edit
                             </Button>
-
-                            <DeleteBookDialog
-                                handleDelete={(e) => handleDelete(e, book.id)}
-                            />
-
                         </TableCell>
                     </TableRow>
                 ))}

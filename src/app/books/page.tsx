@@ -60,7 +60,7 @@ export default async function BooksPage() {
     return (
         <main
             style={{ backgroundColor: 'var(--background)' }}
-            className="flex flex-col mt-5"
+            className="flex w-full flex-col mt-5"
         >
             <BookTabs
                 queuedBooks={queuedBooks}

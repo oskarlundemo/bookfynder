@@ -35,18 +35,29 @@ export default function BookCards ({books} :props) {
                     <CardContent>
                         {book.status === 'READING' && (
                             <div className="flex gap-1 flex-col w-full">
-                                <p>Completion 33 %</p>
-                                <Progress value={33} />
+                                <p>Read {Math.ceil(book.pagesRead / book.pages * 100, 1)} %</p>
+                                <Progress value={book.pagesRead / book.pages * 100} />
                             </div>
                         )}
                     </CardContent>
+
                     <CardFooter>
+
                         <div className="flex flex-wrap flex-row gap-2">
                             {book.BookCategory.map((category, index) => (
                                 <Button key={index}>{category.category.name}</Button>
                             ))}
                         </div>
+
+                        {(book.status === 'READ' || book.status === 'QUEUED') && book.rating && (
+                            <div className={'flex flex-row ml-auto gap-2 items-center'}>
+                                <p>{book.status === 'READ' ? 'Rating' : 'Priority'}</p>
+                                <p>{book.rating} / 5</p>
+                            </div>
+                        )}
+
                     </CardFooter>
+
                 </Card>
             ))}
         </section>

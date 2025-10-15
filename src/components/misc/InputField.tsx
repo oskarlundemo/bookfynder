@@ -17,7 +17,7 @@ type Props = {
 export const InputField = ({placeholder, onFocus, onBlur, value, name, setValue, type}:Props) => {
 
     return (
-        <div className="grid w-full max-w-sm items-center gap-3">
+        <div className="grid w-full items-center gap-3">
             <Label htmlFor="picture">{name}</Label>
             <Input
                 onBlur={onBlur}

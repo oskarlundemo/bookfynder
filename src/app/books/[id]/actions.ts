@@ -21,11 +21,16 @@ export async function updateBook(bookData: {
     const supabase = await createClient();
     const { data, error } = await supabase.auth.getUser()
 
+
+    if (error) {
+        console.error('Update error:', error.message)
+        redirect('/error')
+    }
+
     const userId = data.user?.id
 
     // Starta en transaction
     await prisma.$transaction(async (tx) => {
-
         // Updatera fälten
         const updatedBook = await prisma.book.update({
             where: {
@@ -36,7 +41,7 @@ export async function updateBook(bookData: {
                 title: bookData.title,
                 author: bookData.author,
                 pages: bookData.pages,
-                status: bookData.bookStatus,
+                status: bookData.currentPage === bookData.pages ? "READ" :  bookData.bookStatus,
                 rating: bookData.rating,
                 pagesRead: bookData.currentPage,
             },
@@ -70,21 +75,26 @@ export async function deleteBook (bookId: string) {
     const supabase = await createClient();
     const { data, error } = await supabase.auth.getUser()
 
-    let deletedBook;
+    if (error) {
+        console.error('Delete error:', error.message)
+        redirect('/error')
+    }
 
     try {
-         deletedBook = await prisma.book.delete({
+        let deletedBook = await prisma.book.delete({
             where: {
                 id: bookId,
                 userId: data.user?.id
             }
         })
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        console.error('Delete error:', err)
     }
 
+
+
     return {
-        message: `${deletedBook.title} was deleted successfully.`,
+        message: `Book deleted successfully.`,
         success: true,
     }
 }
@@ -101,6 +111,7 @@ export async function getBook (bookId: string) {
     const book = await prisma.book.findUnique({
         where: {
             id: bookId,
+            userId: userId,
         },
         include: {
             BookCategory: {
@@ -112,7 +123,6 @@ export async function getBook (bookId: string) {
     });
 
     const categories = await prisma.category.findMany()
-
     const bookCategories = book.BookCategory.map(bc => bc.category);
 
     const formatedRespons = {
@@ -123,6 +133,7 @@ export async function getBook (bookId: string) {
         pages: book.pages,
         bookCategories: bookCategories,
         categories: categories,
+        status: book.status,
     }
 
     return {

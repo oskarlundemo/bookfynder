@@ -74,36 +74,47 @@ const SwipeCards = () => {
     const [topCard, setTopCard] = useState<any>(null);
 
 
-    useEffect(() => {
-
-        const fetchRecommendations = async () => {
-
-            setLoading(true);
-
-            try {
-                const response = await getRecommendations();
-                setCards(response.data.recommendations || []);
-                console.log(response);
-            } catch (err:any) {
-                setError(err);
-                console.error('Error while retrieving books', err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchRecommendations();
-
-    }, []);
-
     const getRecommendations = async () => {
         const res = await fetch("/api/explore/recommend-books", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
         });
-        return await res.json();
+        return res.json();
     };
 
+    // Load cached cards or fetch new recommendations
+    useEffect(() => {
+        const cachedCards = localStorage.getItem("cards");
+
+        const fetchRecommendations = async () => {
+            setLoading(true);
+            try {
+                const response = await getRecommendations();
+                const newCards = response.data?.recommendations || [];
+                setCards(newCards);
+            } catch (err) {
+                setError(true);
+                console.error("Error fetching recommendations:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (cachedCards) {
+            setCards(JSON.parse(cachedCards));
+            setLoading(false);
+        } else {
+            fetchRecommendations();
+        }
+    }, []);
+
+    useEffect(() => {
+        if (cards.length > 0) {
+            localStorage.setItem("cards", JSON.stringify(cards));
+        } else {
+            localStorage.removeItem("cards");
+        }
+    }, [cards]);
 
     const swipeAgain = async () => {
         setLoading(true);
@@ -134,7 +145,6 @@ const SwipeCards = () => {
         )
     }
 
-
     if (error) {
         return (
             <div style={{color: 'var(--text-subtle)'}} className="flex flex-grow justify-center items-center flex-col">
@@ -147,8 +157,6 @@ const SwipeCards = () => {
         <div className="flex flex-col flex-grow items-center justify-center w-full">
 
             <div
-
-
                 className="w-full grid place-items-center relative">
 
              {cards.length > 0 ? (

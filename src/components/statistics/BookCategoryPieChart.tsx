@@ -1,6 +1,5 @@
 "use client"
 import * as React from "react"
-import { TrendingUp } from "lucide-react"
 import { Label, Pie, PieChart } from "recharts"
 import {
     Card,
@@ -53,6 +52,16 @@ const chartConfig = {
 } satisfies ChartConfig
 
 
+const defaultColors = [
+    "var(--chart-1)",
+    "var(--chart-2)",
+    "var(--chart-3)",
+    "var(--chart-4)",
+    "var(--chart-5)",
+    "var(--chart-6)",
+]
+
+
 type Props = {
     title: string;
     bookData?: any[];
@@ -61,6 +70,13 @@ type Props = {
 }
 
 export function ChartPieDonutText ({title, explanation, bookData, numberOfBooks} :Props) {
+
+
+    const coloredData = bookData.map((item, index) => ({
+        ...item,
+        fill: item.fill || defaultColors[index % defaultColors.length],
+    }))
+
 
     return (
         <Card className="flex flex-col">
@@ -81,7 +97,7 @@ export function ChartPieDonutText ({title, explanation, bookData, numberOfBooks}
                         />
 
                         <Pie
-                            data={bookData}
+                            data={coloredData}
                             dataKey="value"
                             nameKey="name"
                             innerRadius={60}

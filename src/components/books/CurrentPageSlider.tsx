@@ -8,6 +8,7 @@ type Props = {
 
 export default function CurrentPageSlider ({noOfPages, setCurrentPage, value}:Props) {
 
+
     return (
 
         <div className="flex gap-2 flex-col w-full">
@@ -16,9 +17,10 @@ export default function CurrentPageSlider ({noOfPages, setCurrentPage, value}:Pr
 
             <Slider
                 defaultValue={[value]}
-                onChange={(e) => {setCurrentPage(e.target.value)}}
-                max={330}
+                onChange={(e) => setCurrentPage(Number(e.target.value))}
+                max={noOfPages}
                 step={1}
+                disabled={noOfPages === 0}
             />
 
             <p className={'ml-auto p-5'}>{value} / {noOfPages}</p>

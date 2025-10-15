@@ -2,26 +2,22 @@
 
 import {ShadNav} from "@/components/misc/ShadNav";
 import { usePathname } from "next/navigation";
-import {useEffect, useState} from "react";
+
+
+const getTitle = (pathname: string) => {
+    switch (pathname) {
+        case "/books": return "Books";
+        case "/statistics": return "Statistics";
+        case "/explore": return "Explore";
+        default: return "Default";
+    }
+};
 
 
 export default function AppHeader() {
 
     const pathname = usePathname();
-    const [title, setTitle] = useState<string>("")
-
-    useEffect(() => {
-
-        if (pathname === "/books") {
-            setTitle("Books")
-        } else if (pathname === "/statistics") {
-            setTitle("Statistics")
-        } else if (pathname === "/explore") {
-            setTitle("Explore")
-        } else
-            setTitle("Default")
-
-    }, [pathname]);
+    const title = getTitle(pathname);
 
     return (
         <header

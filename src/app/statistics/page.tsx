@@ -27,11 +27,33 @@ export default async function StatisticsPag () {
         }
     })
 
+    /**
+     *
+     * name: Name value: 256
+     *
+     */
+
+    const categoryCounts = readBookData
+        .flatMap(book => book.BookCategory.map(bc => bc.category.name))
+        .reduce((acc, name) => {
+            acc[name] = (acc[name] || 0) + 1;
+            return acc;
+        }, {} as Record<string, number>);
+
+
+    const allCategories = Object.entries(categoryCounts).map(([name, value]) => ({
+        name,
+        value,
+        color: 'var(--chart-1)'
+    }));
+
+    console.log(allCategories);
+
     return (
-        <main className="flex flex-col h-full ">
+        <main className="flex w-full flex-col h-full ">
 
             <BentoGrid
-                readBookData={readBookData}
+                readBookData={allCategories}
             />
 
         </main>
