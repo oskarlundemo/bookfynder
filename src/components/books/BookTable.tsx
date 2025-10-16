@@ -16,41 +16,64 @@ type Props = {
     books: any;
     title?: string;
     rating?: boolean;
+    bookStatus?: string;
+    subTitle?:string;
 }
 
-export default function BookTable({books}: Props) {
+export default function BookTable({books, subTitle, bookStatus}: Props) {
 
     const router = useRouter();
 
     return (
         <Table>
-            <TableCaption>A list of your read books.</TableCaption>
+            <TableCaption>{subTitle}</TableCaption>
             <TableHeader>
                 <TableRow>
-                    <TableHead className="w-[100px]">Author</TableHead>
                     <TableHead>Title</TableHead>
+                    <TableHead>Author</TableHead>
+                    <TableHead>Categories</TableHead>
                     <TableHead>Pages</TableHead>
-                    <TableHead className={'text-right'}></TableHead>
-                    <TableHead className={'text-right'}></TableHead>
+
+                    {(bookStatus === 'READ' || bookStatus === 'QUEUED') ? (
+                        (bookStatus === 'READ' ? (
+                            <TableHead>Rating</TableHead>
+                        ) : (
+                                <TableHead>Priority</TableHead>
+                        ))
+                    ) : (
+                        <TableHead>Current page</TableHead>
+                    )}
+                    <TableHead className={'text-right'}>Configure</TableHead>
                 </TableRow>
             </TableHeader>
-            <TableBody>
 
+            <TableBody>
                 {books.map((book: any, index: number) => (
                     <TableRow key={index}>
-                        <TableCell className="font-medium">{book.author}</TableCell>
                         <TableCell className="font-medium">{book.title}</TableCell>
-                        <TableCell className="font-medium">{book.pages}</TableCell>
+                        <TableCell>{book.author}</TableCell>
+                        <TableCell>
+                            {book.BookCategory
+                                .map((category: any) => category.category?.name || 'No categories')
+                                .join(', ')}
+                        </TableCell>
+                        <TableCell>{book.pages}</TableCell>
 
-                        <TableCell className="text-right m-2">
-                            <Button
-                                onClick={() => router.push(`/books/${book.id}`)}
-                                className="cursor-pointer mx-2">Edit
+
+                        {bookStatus === 'READ' || bookStatus === 'QUEUED' ? (
+                            <TableCell>{book.rating ?? '—'}</TableCell>
+                        ) : (
+                            <TableCell>{book.pagesRead ?? '0'}</TableCell>
+                        )}
+
+
+                        <TableCell className="text-right">
+                            <Button onClick={() => router.push(`/books/${book.id}`)}>
+                                Edit
                             </Button>
                         </TableCell>
                     </TableRow>
                 ))}
-
             </TableBody>
         </Table>
     )

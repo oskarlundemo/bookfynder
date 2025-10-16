@@ -137,7 +137,6 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle, currentPag
                 />
             )}
 
-
             <div className="flex justify-around flex-row w-full">
 
 

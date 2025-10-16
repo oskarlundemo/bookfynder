@@ -31,6 +31,30 @@ export async function updateBook(bookData: {
 
     // Starta en transaction
     await prisma.$transaction(async (tx) => {
+
+
+        if (bookData.bookStatus === 'READING') {
+
+            let pagesRead;
+
+            const previousSession = await tx.book.findUnique({
+                where: {
+                    id: bookData.bookId,
+                    userId: userId,
+                }
+            })
+
+            await tx.bookProgressEntry.create({
+                data: {
+                    startPage: previousSession.pagesRead,
+                    endPage: bookData.currentPage,
+                    pagesRead: bookData.currentPage - previousSession.pagesRead,
+                    userId: userId,
+                    bookId: bookData.bookId,
+                }
+            })
+        }
+
         // Updatera fälten
         const updatedBook = await prisma.book.update({
             where: {
@@ -41,11 +65,14 @@ export async function updateBook(bookData: {
                 title: bookData.title,
                 author: bookData.author,
                 pages: bookData.pages,
-                status: bookData.currentPage === bookData.pages ? "READ" :  bookData.bookStatus,
+                status: bookData.currentPage >= bookData.pages ? "READ" :  bookData.bookStatus,
                 rating: bookData.rating,
                 pagesRead: bookData.currentPage,
             },
         })
+
+
+
 
         // Radera de gamla
         await tx.bookCategory.deleteMany({

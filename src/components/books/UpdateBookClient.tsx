@@ -42,6 +42,7 @@ export default function UpdateBookClient({ bookId }: { bookId: string }) {
                 setTitle(book.title);
                 setAuthor(book.author);
                 setPages(book.pages);
+                setCurrentPage(book.pagesRead);
                 setSelectedCategories(book.bookCategories);
                 setCategories(book.categories);
                 setRating(book.rating || 1);

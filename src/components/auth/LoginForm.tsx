@@ -105,11 +105,11 @@ export function LoginForm({
 
                         {loading ? (
                             <p>
-                                Connecting
+                                Logging in
                             </p>
                         ) : (
                             <p>
-                            Login
+                                Login
                             </p>
                         )}
 

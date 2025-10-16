@@ -1,4 +1,4 @@
-import { GalleryHorizontalEnd, Library, Plus } from "lucide-react"
+import { GalleryHorizontalEnd, Library, ChartPie, Plus } from "lucide-react"
 import {UserAvatar} from "@/components/misc/UserAvatar"
 
 import {
@@ -32,7 +32,7 @@ const items = [
     {
         title: "Statistics",
         url: "/statistics",
-        icon: Plus,
+        icon: ChartPie,
     },
 ]
 

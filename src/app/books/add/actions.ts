@@ -30,7 +30,6 @@ export async function addBook (bookData: {
 
         const book = await prisma.$transaction(async (tx) => {
 
-
             // Create the book
             const createdBook = await tx.book.create({
                 data: {
@@ -42,6 +41,16 @@ export async function addBook (bookData: {
                     pagesRead: bookData.currentPage,
                 },
             });
+
+            await tx.bookProgressEntry.create({
+                data: {
+                    bookId: createdBook.id,
+                    userId: userId,
+                    startPage: 1,
+                    endPage: bookData.currentPage,
+                    pagesRead: bookData.currentPage - 1,
+                }
+            })
 
             // Append the categories
             await tx.bookCategory.createMany({

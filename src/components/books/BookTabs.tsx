@@ -45,7 +45,9 @@ export const BookTabs = ({ readBooks, readingBooks, queuedBooks}: Books) => {
                             />
                         ) : (
                             <BookTable
+                                bookStatus={'READ'}
                                 books={readBooks}
+                                subTitle={'A list of books that you have already read'}
                             />
                         ))
                 ) : (
@@ -65,7 +67,9 @@ export const BookTabs = ({ readBooks, readingBooks, queuedBooks}: Books) => {
                         />
                     ) : (
                         <BookTable
+                            bookStatus={'READING'}
                             books={readingBooks}
+                            subTitle={'A list of books that you are currently reading'}
                         />
                     ))
                 ) : (
@@ -85,7 +89,9 @@ export const BookTabs = ({ readBooks, readingBooks, queuedBooks}: Books) => {
                         />
                     ) : (
                         <BookTable
+                            bookStatus={'QUEUED'}
                             books={queuedBooks}
+                            subTitle={'A list of books that you want to read'}
                         />
                     ))
                 ) : (
