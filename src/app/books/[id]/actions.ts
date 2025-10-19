@@ -21,7 +21,6 @@ export async function updateBook(bookData: {
     const supabase = await createClient();
     const { data, error } = await supabase.auth.getUser()
 
-
     if (error) {
         console.error('Update error:', error.message)
         redirect('/error')
@@ -35,24 +34,27 @@ export async function updateBook(bookData: {
 
         if (bookData.bookStatus === 'READING') {
 
-            let pagesRead;
+            if (bookData.bookStatus === 'READING') {
+                const previousReadingSession = await tx.bookProgressEntry.findFirst({
+                    where: {
+                        bookId: bookData.bookId,
+                        userId: userId,
+                    },
+                    orderBy: {
+                        createdAt: 'desc',
+                    },
+                });
 
-            const previousSession = await tx.book.findUnique({
-                where: {
-                    id: bookData.bookId,
-                    userId: userId,
-                }
-            })
-
-            await tx.bookProgressEntry.create({
-                data: {
-                    startPage: previousSession.pagesRead,
-                    endPage: bookData.currentPage,
-                    pagesRead: bookData.currentPage - previousSession.pagesRead,
-                    userId: userId,
-                    bookId: bookData.bookId,
-                }
-            })
+                await tx.bookProgressEntry.create({
+                    data: {
+                        startPage: previousReadingSession?.endPage ?? 0,
+                        endPage: bookData.currentPage,
+                        pagesRead: bookData.currentPage - (previousReadingSession?.endPage ?? 0),
+                        userId: userId,
+                        bookId: bookData.bookId,
+                    },
+                });
+            }
         }
 
         // Updatera fälten
@@ -70,8 +72,6 @@ export async function updateBook(bookData: {
                 pagesRead: bookData.currentPage,
             },
         })
-
-
 
 
         // Radera de gamla
