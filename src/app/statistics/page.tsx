@@ -4,6 +4,9 @@ import { startOfWeek, endOfWeek, format } from 'date-fns'
 import {prisma} from "@/lib/prisma";
 import {ChartPieDonutText} from "../../components/statistics/BookCategoryPieChart";
 import {PagesBarChart} from "../../components/statistics/PagesBarChart";
+import {ChartBarLabelCustom} from "../../components/statistics/BookReadChart";
+import {ChartAreaInteractive} from "../../components/statistics/AreaChartPages";
+
 
 export default async function StatisticsPag () {
 
@@ -58,18 +61,32 @@ export default async function StatisticsPag () {
         },
     })
 
+
+    const booksRead = await prisma.book.findMany({
+        where: {
+            userId: data?.user?.id,
+            status: "READ"
+        }
+    })
+
+    console.log(booksRead)
+
     return (
         <main className="flex w-full flex-col p-5 gap-5 h-full ">
 
+            <PagesBarChart
+                data={PagesReadDayAWeek(pagesReadThisWeek)}
+            />
+
             <ChartPieDonutText
                 title={'Books'}
-                numberOfBooks={readBookData.length || 0}
-                bookData={readBookData || []}
+                numberOfBooks={allCategories.length || 0}
+                bookData={allCategories || []}
                 explanation={"Your reading genres"}
             />
 
-            <PagesBarChart
-                data={PagesReadDayAWeek(pagesReadThisWeek)}
+            <ChartBarLabelCustom
+                data={BooksReadPerMonth(booksRead)}
             />
 
         </main>
@@ -104,4 +121,31 @@ export function PagesReadDayAWeek (data: any[]) {
     }))
 
     return fullWeek
+}
+
+export function BooksReadPerMonth(data: any[]) {
+
+    // Group by month name and count how many books were read
+    const result = data.reduce((acc, entry) => {
+        const date = new Date(entry.createdAt)
+        const monthName = format(date, 'MMMM') // e.g. "October"
+
+        if (entry.status === 'READ') {
+            acc[monthName] = (acc[monthName] || 0) + 1
+        }
+
+        return acc
+    }, {} as Record<string, number>)
+
+    const allMonths = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ]
+
+    const fullMonths = allMonths.map(month => ({
+        month,
+        books: result[month] || 0,
+    }))
+
+    return fullMonths
 }
