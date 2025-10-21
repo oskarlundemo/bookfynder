@@ -69,10 +69,10 @@ export default async function StatisticsPag () {
         }
     })
 
-    console.log(booksRead)
+    console.log(pagesReadThisWeek)
 
     return (
-        <main className="flex w-full flex-col p-5 gap-5 h-full ">
+        <main style={{maxWidth: 'var(--max-width)'}} className="flex mx-auto w-full flex-col p-5 gap-5 h-full ">
 
             <PagesBarChart
                 data={PagesReadDayAWeek(pagesReadThisWeek)}

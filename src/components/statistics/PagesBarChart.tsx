@@ -53,7 +53,7 @@ type Props = {
 export function PagesBarChart ({data} :Props) {
 
     return (
-        <Card>
+        <Card >
             <CardHeader>
                 <CardTitle>Pages read this week</CardTitle>
                 <CardDescription>19 Okt - 26 Okt</CardDescription>

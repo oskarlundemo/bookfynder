@@ -42,15 +42,17 @@ export async function addBook (bookData: {
                 },
             });
 
-            await tx.bookProgressEntry.create({
-                data: {
-                    bookId: createdBook.id,
-                    userId: userId,
-                    startPage: 1,
-                    endPage: bookData.currentPage,
-                    pagesRead: bookData.currentPage - 1,
-                }
-            })
+            if (bookData.bookStatus === "READING") {
+                await tx.bookProgressEntry.create({
+                    data: {
+                        bookId: createdBook.id,
+                        userId: userId,
+                        startPage: 1,
+                        endPage: bookData.currentPage,
+                        pagesRead: bookData.currentPage - 1,
+                    }
+                })
+            }
 
             // Append the categories
             await tx.bookCategory.createMany({

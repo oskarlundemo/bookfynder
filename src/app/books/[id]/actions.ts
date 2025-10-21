@@ -34,27 +34,67 @@ export async function updateBook(bookData: {
 
         if (bookData.bookStatus === 'READING') {
 
-            if (bookData.bookStatus === 'READING') {
-                const previousReadingSession = await tx.bookProgressEntry.findFirst({
+            const previousReadingSession = await tx.bookProgressEntry.findFirst({
+                where: {
+                    bookId: bookData.bookId,
+                    userId: userId,
+                },
+                orderBy: {
+                    createdAt: 'desc',
+                },
+            });
+
+            // Om den updaterade sidan är mindre än den nya? Radera alla de gamla
+
+            if (previousReadingSession &&
+                (previousReadingSession.endPage > bookData.currentPage ||
+                    previousReadingSession.startPage < bookData.currentPage)
+            ) {
+                console.log("Deleting the previous session");
+                await tx.bookProgressEntry.deleteMany({
                     where: {
                         bookId: bookData.bookId,
                         userId: userId,
-                    },
-                    orderBy: {
-                        createdAt: 'desc',
-                    },
-                });
-
-                await tx.bookProgressEntry.create({
-                    data: {
-                        startPage: previousReadingSession?.endPage ?? 0,
-                        endPage: bookData.currentPage,
-                        pagesRead: bookData.currentPage - (previousReadingSession?.endPage ?? 0),
-                        userId: userId,
-                        bookId: bookData.bookId,
+                        OR: [
+                            { startPage: { gt: bookData.currentPage } },
+                            { endPage: { gt: bookData.currentPage } },
+                        ],
                     },
                 });
             }
+
+            console.log('Reading session:', previousReadingSession);
+
+            console.log("Current page" , bookData.currentPage);
+
+            // Checka om senaste är lägre än förre ex nya 20 gamle 30
+
+            // Check om senaste starten är lägre än nya ex 20 start 22
+
+            // Om nya är lägre än start och slut
+
+            let updatedLatestSession;
+
+            if (previousReadingSession) {
+                updatedLatestSession = await tx.bookProgressEntry.findFirst({
+                    where: {
+                        bookId: bookData.bookId,
+                        userId: userId,
+                    }
+                })
+            }
+
+            const newEntry = await tx.bookProgressEntry.create({
+                data: {
+                    startPage:  updatedLatestSession?.endPage || 0,
+                    endPage: bookData.currentPage,
+                    pagesRead: bookData.currentPage - (updatedLatestSession?.endPage ?? 1),
+                    userId: userId,
+                    bookId: bookData.bookId,
+                },
+            });
+
+            console.log("The new entry:", newEntry);
         }
 
         // Updatera fälten

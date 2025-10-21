@@ -49,7 +49,7 @@ type Props = {
 export function ChartBarLabelCustom({data}:Props) {
 
     return (
-        <Card>
+        <Card >
             <CardHeader>
                 <CardTitle>Books read each month this year</CardTitle>
                 <CardDescription>January - June 2024</CardDescription>
