@@ -3,6 +3,8 @@
 import {prisma} from "@/lib/prisma";
 import {createClient} from "@/lib/supabase/server";
 import {Category} from "@prisma/client";
+import { redirect } from 'next/navigation'
+
 
 export async function updateBook(bookData: {
     bookId: string;
@@ -44,60 +46,35 @@ export async function updateBook(bookData: {
                 },
             });
 
-            // Om den updaterade sidan är mindre än den nya? Radera alla de gamla
-
-            if (previousReadingSession &&
-                (previousReadingSession.endPage > bookData.currentPage ||
-                    previousReadingSession.startPage < bookData.currentPage)
-            ) {
-                console.log("Deleting the previous session");
+            if (previousReadingSession && previousReadingSession.endPage > bookData.currentPage)
+            {
                 await tx.bookProgressEntry.deleteMany({
                     where: {
                         bookId: bookData.bookId,
                         userId: userId,
-                        OR: [
-                            { startPage: { gt: bookData.currentPage } },
-                            { endPage: { gt: bookData.currentPage } },
-                        ],
+                        endPage: {gt: bookData.currentPage}
                     },
                 });
             }
 
-            console.log('Reading session:', previousReadingSession);
-
-            console.log("Current page" , bookData.currentPage);
-
-            // Checka om senaste är lägre än förre ex nya 20 gamle 30
-
-            // Check om senaste starten är lägre än nya ex 20 start 22
-
-            // Om nya är lägre än start och slut
-
-            let updatedLatestSession;
-
-            if (previousReadingSession) {
-                updatedLatestSession = await tx.bookProgressEntry.findFirst({
-                    where: {
-                        bookId: bookData.bookId,
-                        userId: userId,
-                    }
-                })
-            }
+            let updatedLatestSession = await tx.bookProgressEntry.findFirst({
+                where: {
+                    bookId: bookData.bookId,
+                    userId: userId,
+                }
+            });
 
             const newEntry = await tx.bookProgressEntry.create({
                 data: {
                     startPage:  updatedLatestSession?.endPage || 0,
                     endPage: bookData.currentPage,
-                    pagesRead: bookData.currentPage - (updatedLatestSession?.endPage ?? 1),
+                    pagesRead: bookData.currentPage - (updatedLatestSession?.endPage ?? 0),
                     userId: userId,
                     bookId: bookData.bookId,
                 },
             });
-
-            console.log("The new entry:", newEntry);
         }
 
-        // Updatera fälten
         const updatedBook = await prisma.book.update({
             where: {
                 id: bookData.bookId,
@@ -157,7 +134,6 @@ export async function deleteBook (bookId: string) {
     } catch (err) {
         console.error('Delete error:', err)
     }
-
 
 
     return {
