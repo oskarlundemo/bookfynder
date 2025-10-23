@@ -68,7 +68,7 @@ const cardData: CardData[] = [
 
 const SwipeCards = () => {
 
-    const [cards, setCards] = useState<CardData[]>([]);
+    const [cards, setCards] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
     const [topCard, setTopCard] = useState<any>(null);

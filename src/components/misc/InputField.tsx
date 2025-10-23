@@ -6,26 +6,34 @@ type Props = {
     name?: string
     label?: string
     type?: string
-    value?: any;
+    value?: any
     setValue: (value: string | number | undefined) => void
-
+    disabled?: boolean
     onBlur?: () => void
     onFocus?: () => void
 }
 
-
-export const InputField = ({placeholder, onFocus, onBlur, value, name, setValue, type}:Props) => {
-
+export const InputField = ({
+                               placeholder,
+                               disabled = false,
+                               onFocus,
+                               onBlur,
+                               value,
+                               name,
+                               setValue,
+                               type,
+                           }: Props) => {
     return (
         <div className="grid w-full items-center gap-3">
-            <Label htmlFor="picture">{name}</Label>
+            <Label htmlFor={name}>{name}</Label>
             <Input
                 onBlur={onBlur}
                 onFocus={onFocus}
                 type={type}
-                placeholder={placeholder}
+                placeholder={ placeholder ? String (placeholder) : ''}
                 value={value}
-                onChange={e =>
+                disabled={disabled}
+                onChange={(e) =>
                     setValue(type === "number" ? Number(e.target.value) : e.target.value)
                 }
             />
