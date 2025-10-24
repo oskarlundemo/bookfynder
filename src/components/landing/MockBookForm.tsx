@@ -1,8 +1,7 @@
-
+"use client"
 import "@/styles/BookForm.css"
 import {InputField} from "@/components/misc/InputField";
-import {useState, useEffect} from "react";
-
+import {useState, useRef, useEffect} from "react";
 
 export default function MockBookForm  () {
 
@@ -11,37 +10,48 @@ export default function MockBookForm  () {
     const [title, setTitle] = useState<string>('');
     const [pages, setPages] = useState<number>(0);
 
+    const timeouts = useRef<NodeJS.Timeout[]>([]);
+    const intervals = useRef<NodeJS.Timeout[]>([]);
 
     useEffect(() => {
 
-        const mockTitle = "East of eden"
-        const mockAuthor = "John Steinbeck"
-        const mockPages = 640
+        const mockTitle = "East of eden";
+        const mockAuthor = "John Steinbeck";
+        const mockPages = 640;
 
         mockTitle.split("").forEach((char, i) => {
-            setTimeout(() => {
-                setTitle((prev) => prev + char)
-            }, 100 * i)
-        })
+            const t = setTimeout(() => setTitle((prev) => prev + char), 100 * i);
+            timeouts.current.push(t);
+        });
 
 
-        setTimeout(() => {
-            mockAuthor.split("").forEach((char, i) => {
-                setTimeout(() => {
-                    setAuthor((prev) => prev + char)
-                }, 100 * i)
-            })
-        }, mockTitle.length * 100 + 400)
+        const authorStartTime = mockTitle.length * 100 + 400;
+        mockAuthor.split("").forEach((char, i) => {
+            const t = setTimeout(
+                () => setAuthor((prev) => prev + char),
+                authorStartTime + 100 * i
+            );
+            timeouts.current.push(t);
+        });
 
-        setTimeout(() => {
-            let current = 0
+        const pagesStartTime = authorStartTime + mockAuthor.length * 100 + 400;
+        const t = setTimeout(() => {
+            let current = 0;
             const interval = setInterval(() => {
-                current += 10
-                setPages(current)
-                if (current >= mockPages) clearInterval(interval)
-            }, 40)
-        }, mockTitle.length * 100 + mockAuthor.length * 100 + 800)
-    }, [])
+                current += 10;
+                setPages(current);
+                if (current >= mockPages) clearInterval(interval);
+            }, 40);
+            intervals.current.push(interval);
+        }, pagesStartTime);
+        timeouts.current.push(t);
+
+        return () => {
+            timeouts.current.forEach(clearTimeout);
+            intervals.current.forEach(clearInterval);
+        };
+    }, []);
+
 
     return (
 

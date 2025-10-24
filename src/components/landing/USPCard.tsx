@@ -1,3 +1,4 @@
+"use client"
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -8,16 +9,16 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-
 
 type Props = {
     title: string,
     description: string,
 
     content: React.ReactNode,
-    cardFooter: React.ReactNode,
+    cardFooter?: React.ReactNode,
 }
 
 export function USPCard ({title, description, cardFooter, content}: Props) {

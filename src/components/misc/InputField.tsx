@@ -22,6 +22,7 @@ export const InputField = ({
                                name,
                                setValue,
                                type,
+
                            }: Props) => {
     return (
         <div className="grid w-full items-center gap-3">
