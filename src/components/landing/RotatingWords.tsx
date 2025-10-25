@@ -51,9 +51,12 @@ export default function RotatingWords() {
 
 
     return (
-        <h2 className="text-4xl font-semibold text-center mt-4">
-            Discover new{" "}
-            <span className="text-blue-600">{currentWord}</span>
-        </h2>
+
+        <div className="grid grid-cols-2 gap-2 items-center">
+            <h2 className="text-4xl font-semibold text-center">
+                Discover new{" "}
+            </h2>
+            <h2 className="text-blue-600 text-4xl">{currentWord}<span>|</span></h2>
+        </div>
     );
 }

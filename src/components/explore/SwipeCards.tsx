@@ -72,6 +72,7 @@ const SwipeCards = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
     const [topCard, setTopCard] = useState<any>(null);
+    const [cachedCards, setCachedCards] = useState<any>([]);
 
 
     const getRecommendations = async () => {
@@ -92,6 +93,7 @@ const SwipeCards = () => {
                 const response = await getRecommendations();
                 const newCards = response.data?.recommendations || [];
                 setCards(newCards);
+                setCachedCards(newCards);
             } catch (err) {
                 setError(true);
                 console.error("Error fetching recommendations:", err);
@@ -116,7 +118,8 @@ const SwipeCards = () => {
         }
     }, [cards]);
 
-    const swipeAgain = async () => {
+    const fetchNew = async () => {
+
         setLoading(true);
 
         try {
@@ -128,6 +131,11 @@ const SwipeCards = () => {
         } finally {
             setLoading(false);
         }
+    }
+
+    const swipeAgain = () => {
+        setCards(cachedCards)
+        console.log('Swipe Again')
     }
 
     useEffect(() => {
@@ -156,6 +164,14 @@ const SwipeCards = () => {
     return (
         <div className="flex flex-col flex-grow items-center justify-center w-full">
 
+
+            {cards.length > 0 && (
+                <div className="flex flex-row gap-10 translate-x-30 justify-center my-5">
+                    <span className={'text-2xl text-right text-gray-500'}>{cards.length}/10</span>
+                </div>
+            )}
+
+
             <div
                 className="w-full grid place-items-center relative">
 
@@ -171,8 +187,32 @@ const SwipeCards = () => {
                         />
                     )))
             ) : (
-                <Button onClick={() => swipeAgain()}>Fetch more recommendations!</Button>
-            )}
+                 <div className="flex flex-col items-center justify-center text-center space-y-4 p-6">
+                     <h2 className="text-3xl font-extrabold">
+                         Looks like you’ve read every book in the universe (or at least this deck).
+                     </h2>
+                     <h3 className="text-lg text-gray-600">
+                         Ready to dive back in or explore something new?
+                     </h3>
+                     <div className="flex space-x-4 mt-4">
+                         <Button
+                             onClick={() => swipeAgain()}
+                             variant="default"
+                             className="cursor-pointer transform transition-transform duration-200 hover:scale-105"
+                         >
+                             Swipe this deck again
+                         </Button>
+                         <Button
+                             onClick={() => fetchNew()}
+                             variant="secondary"
+                             className="cursor-pointer transform transition-transform duration-200 hover:scale-105"
+                         >
+                             Fetch new recommendations
+                         </Button>
+                     </div>
+                 </div>
+
+             )}
 
             {cards.length > 0 && (
                 <div className="flex flex-row gap-10 justify-center mt-6">

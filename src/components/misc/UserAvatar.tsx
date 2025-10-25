@@ -1,7 +1,7 @@
+"use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {logout} from "@/app/auth/login/actions";
 import { User } from "lucide-react"
-
 
 import {
     DropdownMenu,
@@ -13,8 +13,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export const UserAvatar = ({}) => {
-
-
 
     return (
         <DropdownMenu>

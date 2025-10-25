@@ -1,7 +1,19 @@
+"use server"
+
 import { GalleryVerticalEnd } from "lucide-react"
 import { LoginForm } from "@/components/auth/LoginForm"
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
 
-export default function Login() {
+export default async function Login() {
+
+    const supabase = await createClient();
+    const { data } = await supabase.auth.getUser()
+
+    if (data?.user) {
+        redirect('/books')
+    }
+
     return (
         <div className="grid w-full lg:grid-cols-2">
             <div className="flex flex-col gap-4 p-6 md:p-10">

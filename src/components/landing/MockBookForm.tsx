@@ -2,6 +2,7 @@
 import "@/styles/BookForm.css"
 import {InputField} from "@/components/misc/InputField";
 import {useState, useRef, useEffect} from "react";
+import {BookStatus} from "@/components/books/BookStatus"
 
 export default function MockBookForm  () {
 
@@ -9,6 +10,7 @@ export default function MockBookForm  () {
     const [author, setAuthor] = useState<string>('');
     const [title, setTitle] = useState<string>('');
     const [pages, setPages] = useState<number>(0);
+    const [bookStatus, setBookStatus] = useState<string>('READING');
 
     const timeouts = useRef<NodeJS.Timeout[]>([]);
     const intervals = useRef<NodeJS.Timeout[]>([]);
@@ -88,6 +90,13 @@ export default function MockBookForm  () {
                         />
                     </div>
                 </div>
+
+                <BookStatus
+                    disabled={true}
+                    bookStatus={bookStatus}
+                    setBookStatus={setBookStatus}
+                />
+
 
             </div>
 
