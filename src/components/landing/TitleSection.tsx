@@ -9,9 +9,9 @@ export default function TitleSection () {
     const router = useRouter();
 
     return (
-        <section className="flex flex-col items-center p-20 w-full">
+        <section className="flex flex-col items-center p-10 w-full">
 
-            <h1 className={'text-9xl text-shadow-stone-900 font-semibold'}>Librum</h1>
+            <h1 className={'text-9xl text-shadow-stone-900 font-semibold'}>Librum.</h1>
             <h2>alpha version 1.0</h2>
 
             <RotatingWords/>

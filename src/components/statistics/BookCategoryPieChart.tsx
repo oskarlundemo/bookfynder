@@ -118,7 +118,7 @@ export function ChartPieDonutText ({title, explanation, bookData, numberOfBooks}
                                                     y={viewBox.cy}
                                                     className="fill-foreground text-3xl font-bold"
                                                 >
-                                                    {numberOfBooks}
+                                                    {numberOfBooks + 1}
                                                 </tspan>
                                                 <tspan
                                                     x={viewBox.cx}

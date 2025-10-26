@@ -46,10 +46,9 @@ export default async function StatisticsPag () {
         color: 'var(--chart-1)'
     }));
 
-
     const now = new Date()
-    const weekStart = startOfWeek(now, { weekStartsOn: 1 }) // Monday
-    const weekEnd = endOfWeek(now, { weekStartsOn: 1 })     // Sunday
+    const weekStart = startOfWeek(now, { weekStartsOn: 1 })
+    const weekEnd = endOfWeek(now, { weekStartsOn: 1 })
 
     const pagesReadThisWeek = await prisma.bookProgressEntry.findMany({
         where: {
@@ -69,12 +68,12 @@ export default async function StatisticsPag () {
         }
     })
 
-    console.log(pagesReadThisWeek)
-
     return (
         <main style={{maxWidth: 'var(--max-width)'}} className="flex mx-auto w-full flex-col p-5 gap-5 h-full ">
 
             <PagesBarChart
+                startDate={weekStart}
+                endDate={weekEnd}
                 data={PagesReadDayAWeek(pagesReadThisWeek)}
             />
 

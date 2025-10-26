@@ -1,5 +1,6 @@
 "use client"
 
+import {useState, useEffect} from "react";
 import { TrendingUp } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts"
 
@@ -48,15 +49,23 @@ const chartConfig = {
 
 type Props = {
     data: any[],
+    startDate?: any,
+    endDate?: any,
 }
 
-export function PagesBarChart ({data} :Props) {
+
+export function PagesBarChart ({data, startDate, endDate} :Props) {
+
+    const [firstDate, setFirstDate] = useState<any>(new Date(startDate))
+    const [secondDate, setSecondDate] = useState<any>(new Date(endDate))
 
     return (
         <Card >
             <CardHeader>
                 <CardTitle>Pages read this week</CardTitle>
-                <CardDescription>19 Okt - 26 Okt</CardDescription>
+                <CardDescription>
+                    {firstDate.toISOString().split("T")[0]} - {secondDate.toISOString().split("T")[0]}
+                </CardDescription>
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig}>

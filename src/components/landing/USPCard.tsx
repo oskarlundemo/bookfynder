@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label"
 
 type Props = {
     title: string,
-    description: string,
+    description: React.ReactNode,
 
     content: React.ReactNode,
     cardFooter?: React.ReactNode,
