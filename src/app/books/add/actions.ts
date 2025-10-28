@@ -39,10 +39,12 @@ export async function addBook (bookData: {
                     pages: bookData.pages,
                     status: bookData.bookStatus,
                     pagesRead: bookData.currentPage,
+                    rating: bookData.rating || 1
                 },
             });
 
             if (bookData.bookStatus === "READING") {
+
                 await tx.bookProgressEntry.create({
                     data: {
                         bookId: createdBook.id,
@@ -52,17 +54,15 @@ export async function addBook (bookData: {
                         pagesRead: bookData.currentPage - 1,
                     }
                 })
+
+                await tx.bookCategory.createMany({
+                    data: bookData.selectedCategories.map(c => ({
+                        bookId: createdBook.id,
+                        categoryId: c.id,
+                    })),
+                });
+
             }
-
-            // Append the categories
-            await tx.bookCategory.createMany({
-                data: bookData.selectedCategories.map(c => ({
-                    bookId: createdBook.id,
-                    categoryId: c.id,
-                })),
-            });
-
-            // Set the status
 
             return createdBook;
 

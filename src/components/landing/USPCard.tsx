@@ -23,7 +23,7 @@ type Props = {
 
 export function USPCard ({title, description, cardFooter, content}: Props) {
     return (
-        <Card className="w-full justify-between max-w-sm">
+        <Card className="w-full justify-between max-w-sm shadow-[0_8px_30px_rgba(100,149,237,0.2)]!">
             <CardHeader>
                 <CardTitle>{title}</CardTitle>
                 <CardDescription>

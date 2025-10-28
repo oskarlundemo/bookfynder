@@ -3,6 +3,7 @@
 import { GalleryHorizontalEnd, Library, ChartPie, Plus } from "lucide-react"
 import {UserAvatar} from "@/components/misc/UserAvatar"
 
+
 import {
     Sidebar,
     SidebarContent,
@@ -90,8 +91,8 @@ export function AppSidebar () {
                 </SidebarGroup>
             </SidebarContent>
 
-            <SidebarFooter>
-                <UserAvatar />
+            <SidebarFooter className={'overflow-hidden'}>
+                <UserAvatar/>
             </SidebarFooter>
         </Sidebar>
     )

@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import {LoadingRequest} from "./LoadingRequest"
 import {Button} from "@/components/ui/button"
 import {Book} from "@prisma/client";
-
+import ErrorPage from "@/components/misc/ErrorPage"
 
 type CardProps = CardData & {
     cards: CardData[];
@@ -66,14 +66,17 @@ const cardData: CardData[] = [
 ];
 
 
-const SwipeCards = () => {
+type props = {
+    userId?: string,
+}
+
+const SwipeCards = ({userId} : props) => {
 
     const [cards, setCards] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
     const [topCard, setTopCard] = useState<any>(null);
-    const [cachedCards, setCachedCards] = useState<any>([]);
-
+    const storageKey = `cards_${userId}`;
 
     const getRecommendations = async () => {
         const res = await fetch("/api/explore/recommend-books", {
@@ -85,7 +88,8 @@ const SwipeCards = () => {
 
     // Load cached cards or fetch new recommendations
     useEffect(() => {
-        const cachedCards = localStorage.getItem("cards");
+
+        const cachedCards = localStorage.getItem(storageKey);
 
         const fetchRecommendations = async () => {
             setLoading(true);
@@ -93,7 +97,6 @@ const SwipeCards = () => {
                 const response = await getRecommendations();
                 const newCards = response.data?.recommendations || [];
                 setCards(newCards);
-                setCachedCards(newCards);
             } catch (err) {
                 setError(true);
                 console.error("Error fetching recommendations:", err);
@@ -112,11 +115,12 @@ const SwipeCards = () => {
 
     useEffect(() => {
         if (cards.length > 0) {
-            localStorage.setItem("cards", JSON.stringify(cards));
+            localStorage.setItem(storageKey, JSON.stringify(cards));
         } else {
-            localStorage.removeItem("cards");
+            localStorage.removeItem(storageKey);
         }
-    }, [cards]);
+    }, [cards, storageKey]);
+
 
     const fetchNew = async () => {
 
@@ -126,16 +130,11 @@ const SwipeCards = () => {
             const response = await getRecommendations();
             setCards(response.data.recommendations || []);
         } catch (err:any) {
-            setError(err);
+            setError(true);
             console.error('Error while retrieving books', err);
         } finally {
             setLoading(false);
         }
-    }
-
-    const swipeAgain = () => {
-        setCards(cachedCards)
-        console.log('Swipe Again')
     }
 
     useEffect(() => {
@@ -155,9 +154,10 @@ const SwipeCards = () => {
 
     if (error) {
         return (
-            <div style={{color: 'var(--text-subtle)'}} className="flex flex-grow justify-center items-center flex-col">
-                <h1>An error occured when trying to fetch the data from Open- AI</h1>
-            </div>
+            <ErrorPage
+                title={'Error'}
+                details={'An error occurred while fetching recommendations from Open AI. Please try again later!'}
+            />
         )
     }
 
@@ -195,13 +195,6 @@ const SwipeCards = () => {
                          Ready to dive back in or explore something new?
                      </h3>
                      <div className="flex space-x-4 mt-4">
-                         <Button
-                             onClick={() => swipeAgain()}
-                             variant="default"
-                             className="cursor-pointer transform transition-transform duration-200 hover:scale-105"
-                         >
-                             Swipe this deck again
-                         </Button>
                          <Button
                              onClick={() => fetchNew()}
                              variant="secondary"
@@ -300,8 +293,6 @@ const CardComponent = ({ id, book, zIndex, cards, setCards }: CardProps) => {
             await handleSave(book)
         } else if (swipe < -50) {
             setCards((prev) => prev.filter((card) => card.id !== id));
-        } else {
-            console.log("Not swiped long enough, nothing happened");
         }
     };
 

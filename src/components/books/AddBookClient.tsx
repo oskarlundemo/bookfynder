@@ -33,6 +33,7 @@ export default function AddBookClient({ user }: { user: any }) {
     }, [pages]);
 
     async function handleSubmit(e: React.FormEvent) {
+
         e.preventDefault();
 
         const response = await addBook({
@@ -45,7 +46,6 @@ export default function AddBookClient({ user }: { user: any }) {
             selectedCategories,
             userId: user.id,
         });
-
 
         if (response.success) {
             toast.success(response.message);
@@ -63,6 +63,7 @@ export default function AddBookClient({ user }: { user: any }) {
     }
 
     if (loading) return <ShadSpinner/>;
+
 
     return (
         <main className="flex items-start justify-center h-full w-full">

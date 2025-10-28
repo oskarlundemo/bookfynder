@@ -167,7 +167,7 @@ const CardComponent = ({ id, title, card, about, year, author, zIndex, categorie
 
                 {categories && (
                     <div className="flex flex-row gap-1 flex-wrap mb-2">
-                        {categories.map((category, index) => (
+                        {categories.map((category:any, index:number) => (
                             <Button key={index}>
                                 {category}
                             </Button>

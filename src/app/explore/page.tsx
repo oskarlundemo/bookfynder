@@ -8,6 +8,7 @@ export default async function ExplorePage () {
     const supabase = await createClient();
 
     const { data, error } = await supabase.auth.getUser()
+
     if (error || !data?.user) {
         redirect('/auth/login')
     }
@@ -16,9 +17,11 @@ export default async function ExplorePage () {
         redirect('/error')
     }
 
+    // Fixa så om man laddar in på loading, nu om gustab skapar konto
 
     return (
         <main className="flex flex-grow flex-col">
+
 
             <SwipeCards/>
 

@@ -13,7 +13,6 @@ import { useRouter } from "next/navigation";
 
 export default function UpdateBookClient({ bookId }: { bookId: string }) {
 
-
     const router = useRouter();
 
     const [title, setTitle] = useState<string>("");

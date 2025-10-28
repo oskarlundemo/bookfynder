@@ -25,7 +25,7 @@ export default function BookCards ({books} :props) {
     console.log(books);
 
     return (
-        <section className="flex flex-col gap-2">
+        <section className="flex flex-col px-2 gap-2">
             {books.map((book, index) => (
                 <Card onClick={() => router.push(`/books/${book.id}`)} key={index}>
                     <CardHeader>
