@@ -23,7 +23,9 @@ export default async function ExplorePage () {
         <main className="flex flex-grow flex-col">
 
 
-            <SwipeCards/>
+            <SwipeCards
+                userId={data?.user.id}
+            />
 
             {/* Här kan du lägga till liksom om de inte har minst 3 böcker så måste de lägga till eller något*/}
         </main>

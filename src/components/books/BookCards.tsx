@@ -22,7 +22,6 @@ type props = {
 export default function BookCards ({books} :props) {
 
     const router = useRouter();
-    console.log(books);
 
     return (
         <section className="flex flex-col px-2 gap-2">
@@ -42,7 +41,6 @@ export default function BookCards ({books} :props) {
                     </CardContent>
 
                     <CardFooter>
-
                         <div className="flex flex-wrap flex-row gap-2">
                             {book.BookCategory.map((category, index) => (
                                 <Button key={index}>{category.category.name}</Button>
@@ -55,9 +53,7 @@ export default function BookCards ({books} :props) {
                                 <p>{book.rating} / 5</p>
                             </div>
                         )}
-
                     </CardFooter>
-
                 </Card>
             ))}
         </section>

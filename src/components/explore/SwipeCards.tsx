@@ -96,6 +96,7 @@ const SwipeCards = ({userId} : props) => {
             try {
                 const response = await getRecommendations();
                 const newCards = response.data?.recommendations || [];
+                localStorage.setItem(storageKey, JSON.stringify(newCards));
                 setCards(newCards);
             } catch (err) {
                 setError(true);
@@ -145,7 +146,6 @@ const SwipeCards = ({userId} : props) => {
         }
     }, [cards]);
 
-
     if (loading) {
         return (
             <LoadingRequest/>
@@ -164,13 +164,11 @@ const SwipeCards = ({userId} : props) => {
     return (
         <div className="flex flex-col flex-grow items-center justify-center w-full">
 
-
             {cards.length > 0 && (
                 <div className="flex flex-row gap-10 translate-x-30 justify-center my-5">
                     <span className={'text-2xl text-right text-gray-500'}>{cards.length}/10</span>
                 </div>
             )}
-
 
             <div
                 className="w-full grid place-items-center relative">

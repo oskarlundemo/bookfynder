@@ -1,5 +1,6 @@
 "use client"
 import * as React from "react"
+import {useEffect, useState} from "react";
 
 import {
     Field,
@@ -32,7 +33,7 @@ export function BookStatus ({bookStatus, setBookStatus} : Props): React.ReactEle
                     <FieldDescription>
                         Select the status for this book
                     </FieldDescription>
-                    <RadioGroup defaultValue="read">
+                    <RadioGroup defaultValue={`${bookStatus ? bookStatus : 'read'}`}>
                         <FieldLabel htmlFor="read-r2h">
                             <Field orientation="horizontal">
                                 <FieldContent>
@@ -41,7 +42,7 @@ export function BookStatus ({bookStatus, setBookStatus} : Props): React.ReactEle
                                         I have already read this book.
                                     </FieldDescription>
                                 </FieldContent>
-                                <RadioGroupItem onClick={() => setBookStatus("READ")} value="read" id="read-r2h" />
+                                <RadioGroupItem onClick={() => setBookStatus("READ")} value="READ" id="read-r2h" />
                             </Field>
                         </FieldLabel>
                         <FieldLabel htmlFor="reading-z4k">
@@ -52,7 +53,7 @@ export function BookStatus ({bookStatus, setBookStatus} : Props): React.ReactEle
                                         I am currently reading this book.
                                     </FieldDescription>
                                 </FieldContent>
-                                <RadioGroupItem onClick={() => setBookStatus("READING")} value="reading" id="reading-z4k" />
+                                <RadioGroupItem onClick={() => setBookStatus("READING")} value="READING" id="reading-z4k" />
                             </Field>
                         </FieldLabel>
                         <FieldLabel htmlFor="que-z4k">
@@ -63,7 +64,7 @@ export function BookStatus ({bookStatus, setBookStatus} : Props): React.ReactEle
                                         I want to read this book in the future.
                                     </FieldDescription>
                                 </FieldContent>
-                                <RadioGroupItem onClick={() => setBookStatus("QUEUED")} value="que" id="que-z4k" />
+                                <RadioGroupItem onClick={() => setBookStatus("QUEUED")} value="QUEUED" id="que-z4k" />
                             </Field>
                         </FieldLabel>
                     </RadioGroup>

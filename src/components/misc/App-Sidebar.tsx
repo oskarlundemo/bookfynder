@@ -1,8 +1,25 @@
 "use client"
 
+import {logout} from "@/app/auth/login/actions";
+
 import { GalleryHorizontalEnd, Library, ChartPie, Plus } from "lucide-react"
 import {UserAvatar} from "@/components/misc/UserAvatar"
+import Username from "@/components/misc/Username"
 
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 import {
     Sidebar,
@@ -54,7 +71,11 @@ const items = [
 ]
 
 
-export function AppSidebar () {
+type Props = {
+    username: string
+}
+
+export function AppSidebar ({username}) {
 
     const {state} = useSidebar();
 
@@ -78,11 +99,9 @@ export function AppSidebar () {
                                         </SidebarMenuItem>
                                     </TooltipTrigger>
 
-                                    {state === 'collapsed' && (
-                                        <TooltipContent side="right">
-                                            <p>{item.tooltip}</p>
-                                        </TooltipContent>
-                                    )}
+                                    <TooltipContent side="right">
+                                        <p>{item.tooltip}</p>
+                                    </TooltipContent>
 
                                 </Tooltip>
                             ))}
@@ -91,8 +110,27 @@ export function AppSidebar () {
                 </SidebarGroup>
             </SidebarContent>
 
-            <SidebarFooter className={'overflow-hidden'}>
-                <UserAvatar/>
+            <SidebarFooter>
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <SidebarMenuButton>
+                                    <UserAvatar/>
+                                    <p>{username}</p>
+                                </SidebarMenuButton>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                                side="top"
+                                className="w-[--radix-popper-anchor-width]"
+                            >
+                                <DropdownMenuItem onClick={logout}>
+                                    <span>Sign out</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </SidebarMenuItem>
+                </SidebarMenu>
             </SidebarFooter>
         </Sidebar>
     )

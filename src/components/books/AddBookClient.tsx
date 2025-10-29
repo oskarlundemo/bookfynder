@@ -17,7 +17,18 @@ export default function AddBookClient({ user }: { user: any }) {
     const [bookStatus, setBookStatus] = useState("READ");
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [allowSubmit, setAllowSubmit] = useState<boolean>(false);
+
+    useEffect(() => {
+        const isAllowed =
+            title.trim().length > 0 &&
+            author.trim().length > 0 &&
+            pages > 0 &&
+            rating > 0
+
+        setAllowSubmit(isAllowed)
+    }, [title, author, pages, rating])
 
     useEffect(() => {
         async function loadCategories() {
@@ -64,7 +75,6 @@ export default function AddBookClient({ user }: { user: any }) {
 
     if (loading) return <ShadSpinner/>;
 
-
     return (
         <main className="flex items-start justify-center h-full w-full">
             <div style={{ maxWidth: "var(--max-form)" }} className="flex m-5 rounded-2xl flex-col w-full">
@@ -86,7 +96,7 @@ export default function AddBookClient({ user }: { user: any }) {
                     categories={categories}
                     selectedCategories={selectedCategories}
                     setSelectedCategories={setSelectedCategories}
-                    disabledBtn={false}
+                    disabledBtn={!allowSubmit}
                     buttonText="Add"
                 />
             </div>

@@ -137,14 +137,13 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle, currentPag
                 />
             )}
 
-            <div className="flex justify-around flex-row w-full">
-
+            <div className="flex justify-around flex-row w-full gap-2">
 
                 {handleDelete && (
                     <DeleteBookDialog handleDelete={(e) => handleDelete(e, bookId)}/>
                 )}
 
-                <Button className={'w-1/3 cursor-pointer'} disabled={disabledBtn}>{buttonText}</Button>
+                <Button className={'w-1/3 cursor-pointer w-1/2'} disabled={disabledBtn}>{buttonText}</Button>
             </div>
 
         </form>

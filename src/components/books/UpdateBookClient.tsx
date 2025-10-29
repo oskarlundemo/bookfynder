@@ -10,7 +10,6 @@ import { getBook, updateBook } from "@/app/books/[id]/actions";
 import {deleteBook} from "@/app/books/[id]/actions";
 import { useRouter } from "next/navigation";
 
-
 export default function UpdateBookClient({ bookId }: { bookId: string }) {
 
     const router = useRouter();
@@ -25,9 +24,22 @@ export default function UpdateBookClient({ bookId }: { bookId: string }) {
     const [bookStatus, setBookStatus] = useState<string>("");
     const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
 
-    const [disabledBtn, setDisabledBtn] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const [allowSubmit, setAllowSubmit] = useState<boolean>(false);
+
+
+    useEffect(() => {
+        const isAllowed =
+            title.trim().length > 0 &&
+            author.trim().length > 0 &&
+            pages > 0 &&
+            rating > 0
+
+        setAllowSubmit(isAllowed)
+    }, [title, author, pages, rating])
+
+
 
     const [error, setError] = useState<boolean>(false);
 
@@ -46,6 +58,7 @@ export default function UpdateBookClient({ bookId }: { bookId: string }) {
                 setCategories(book.categories);
                 setRating(book.rating || 1);
                 setBookStatus(book.status);
+                console.log(book);
             } catch (err) {
                 console.error("Error fetching book:", err);
                 setError(true);
@@ -140,7 +153,7 @@ export default function UpdateBookClient({ bookId }: { bookId: string }) {
 
                     handleDelete={handleDelete}
                     bookId={bookId}
-                    disabledBtn={disabledBtn}
+                    disabledBtn={!allowSubmit}
                     buttonText="Update"
                 />
             </div>
