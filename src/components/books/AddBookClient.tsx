@@ -24,8 +24,7 @@ export default function AddBookClient({ user }: { user: any }) {
         const isAllowed =
             title.trim().length > 0 &&
             author.trim().length > 0 &&
-            pages > 0 &&
-            rating > 0
+            pages > 0
 
         setAllowSubmit(isAllowed)
     }, [title, author, pages, rating])
@@ -54,7 +53,7 @@ export default function AddBookClient({ user }: { user: any }) {
             bookStatus,
             currentPage,
             rating,
-            selectedCategories,
+            categories: selectedCategories,
             userId: user.id,
         });
 

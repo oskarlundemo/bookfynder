@@ -1,6 +1,5 @@
 "use client"
 import * as React from "react"
-import {useEffect, useState} from "react";
 
 import {
     Field,
@@ -19,16 +18,17 @@ import {
 type Props = {
     bookStatus: string;
     setBookStatus: (status: string) => void;
+    disabled?: boolean;
 }
 
-export function BookStatus ({bookStatus, setBookStatus} : Props): React.ReactElement {
+export function BookStatus ({bookStatus, disabled = false, setBookStatus} : Props): React.ReactElement {
 
     return (
         <div className="w-full flex-row max-w-md">
             <FieldGroup>
                 <FieldSet>
                     <FieldLabel htmlFor="compute-environment-p8w">
-                        Book status
+                        Book status *
                     </FieldLabel>
                     <FieldDescription>
                         Select the status for this book
@@ -42,7 +42,7 @@ export function BookStatus ({bookStatus, setBookStatus} : Props): React.ReactEle
                                         I have already read this book.
                                     </FieldDescription>
                                 </FieldContent>
-                                <RadioGroupItem onClick={() => setBookStatus("READ")} value="READ" id="read-r2h" />
+                                <RadioGroupItem disabled={disabled} onClick={() => setBookStatus("READ")} value="READ" id="read-r2h" />
                             </Field>
                         </FieldLabel>
                         <FieldLabel htmlFor="reading-z4k">
@@ -53,7 +53,7 @@ export function BookStatus ({bookStatus, setBookStatus} : Props): React.ReactEle
                                         I am currently reading this book.
                                     </FieldDescription>
                                 </FieldContent>
-                                <RadioGroupItem onClick={() => setBookStatus("READING")} value="READING" id="reading-z4k" />
+                                <RadioGroupItem disabled={disabled} onClick={() => setBookStatus("READING")} value="READING" id="reading-z4k" />
                             </Field>
                         </FieldLabel>
                         <FieldLabel htmlFor="que-z4k">
@@ -64,7 +64,7 @@ export function BookStatus ({bookStatus, setBookStatus} : Props): React.ReactEle
                                         I want to read this book in the future.
                                     </FieldDescription>
                                 </FieldContent>
-                                <RadioGroupItem onClick={() => setBookStatus("QUEUED")} value="QUEUED" id="que-z4k" />
+                                <RadioGroupItem disabled={disabled} onClick={() => setBookStatus("QUEUED")} value="QUEUED" id="que-z4k" />
                             </Field>
                         </FieldLabel>
                     </RadioGroup>

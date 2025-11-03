@@ -2,23 +2,10 @@
 
 import {prisma} from "@/lib/prisma";
 import {createClient} from "@/lib/supabase/server";
-import {Category} from "@prisma/client";
 import { redirect } from 'next/navigation'
+import { bookSchema } from "@/lib/validation/bookSchema";
 
-
-export async function updateBook(bookData: {
-    bookId: string;
-    title: string;
-
-    author: string;
-    pages: number;
-
-    bookStatus: string;
-    currentPage: number;
-
-    rating: number;
-    categories: Category[];
-}) {
+export async function updateBook(rawBookData: unknown) {
 
     const supabase = await createClient();
     const { data, error } = await supabase.auth.getUser()
@@ -28,11 +15,19 @@ export async function updateBook(bookData: {
         redirect('/error')
     }
 
+    const parsed = bookSchema.safeParse(rawBookData);
+
+    if (!parsed.success) {
+        console.log(parsed.error.format())
+        return { success: false, message: "Validation failed, please control and reformat your input", errors: parsed.error.format() };
+    }
+
+
+    const bookData = parsed.data;
     const userId = data.user?.id
 
     // Starta en transaction
     await prisma.$transaction(async (tx) => {
-
 
         if (bookData.bookStatus === 'READING') {
 
@@ -90,7 +85,6 @@ export async function updateBook(bookData: {
             },
         })
 
-
         // Radera de gamla
         await tx.bookCategory.deleteMany({
             where: {
@@ -100,8 +94,7 @@ export async function updateBook(bookData: {
 
         // Lägg till de nya kategorierna
         await tx.bookCategory.createMany({
-            // @ts-ignore
-            data: bookData.selectedCategories.map(c => ({
+            data: bookData.categories.map(c => ({
                 bookId: bookData.bookId,
                 categoryId: c.id,
             })),
@@ -110,7 +103,7 @@ export async function updateBook(bookData: {
 
     return {
         success: true,
-        message: `Book ${bookData.title} updated successfully.`,
+        message: `Book "${bookData.title}" updated successfully.`,
     }
 }
 
@@ -134,7 +127,6 @@ export async function deleteBook (bookId: string) {
     } catch (err) {
         console.error('Delete error:', err)
     }
-
 
     return {
         message: `Book deleted successfully.`,

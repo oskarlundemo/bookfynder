@@ -72,6 +72,7 @@ export default function UpdateBookClient({ bookId }: { bookId: string }) {
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+
         if (!bookId) return;
 
         const response = await updateBook({
@@ -82,14 +83,13 @@ export default function UpdateBookClient({ bookId }: { bookId: string }) {
             currentPage,
             bookStatus,
             rating,
-            selectedCategories,
+            categories: selectedCategories,
         });
 
         response.success
             ? toast.success(response.message)
             : toast.error(response.message);
     }
-
 
     async function handleDelete(e: React.FormEvent, bookId: string) {
 

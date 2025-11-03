@@ -1,7 +1,8 @@
 'use server'
+
 import { createClient } from '@/lib/supabase/server'
 
-export async function forgot(formData: FormData) {
+export async function forgot (formData: FormData) {
 
     const supabase = await createClient()
 
@@ -22,5 +23,5 @@ export async function forgot(formData: FormData) {
         return { success: false, message: error.message }
     }
 
-    return { success: true, message: 'Reset link has been sent.' }
+    return { success: true, message: 'Reset link has been sent to your email' }
 }

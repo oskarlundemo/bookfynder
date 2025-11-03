@@ -55,13 +55,13 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle, currentPag
             <div className="grid w-full items-center my-auto gap-5 grid-cols-1 sm:grid-cols-2">
 
                 <div className="flex flex-col order-1 sm:order-2 gap-4">
-
                     <InputField
                         setValue={setTitle}
                         value={title}
                         type="text"
                         placeholder="Dorian Grey"
-                        name="Title"
+                        name="Title *"
+                        maxLength={100}
                     />
 
                     <InputField
@@ -69,7 +69,8 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle, currentPag
                         value={author}
                         type="text"
                         placeholder="Oscar Wilde"
-                        name="Author"
+                        name="Author *"
+                        maxLength={100}
                     />
 
                     <div className="flex items-end gap-5 flex-row">
@@ -78,7 +79,8 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle, currentPag
                             value={pages}
                             type="number"
                             placeholder={0}
-                            name="Pages"
+                            name="Pages *"
+                            maxNumber={10000}
                         />
 
                         {(bookStatus === "READ" || bookStatus === "QUEUED") && (
@@ -89,6 +91,14 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle, currentPag
                             />
                         )}
                     </div>
+
+
+                    <div className="flex flex-col gap-2 flex-row">
+                        <p className={'text-sm text-gray-500 items enter'}>Mandatory fields are marked with</p>
+                        <svg className={'fill-gray-500'} xmlns="http://www.w3.org/2000/svg" height="10px" viewBox="0 -960 960 960" width="10px" fill="#e3e3e3"><path d="M440-120v-264L254-197l-57-57 187-186H120v-80h264L197-706l57-57 186 187v-264h80v264l186-187 57 57-187 186h264v80H576l187 186-57 57-186-187v264h-80Z"/></svg>
+                    </div>
+
+
                 </div>
 
 
@@ -102,6 +112,7 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle, currentPag
 
 
             <div className="flex flex-row justify-between w-full gap-2 flex-wrap">
+                <h2>Categories *</h2>
                 <div className="flex flex-col w-full">
 
                     <div
