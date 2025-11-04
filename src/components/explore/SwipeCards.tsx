@@ -6,6 +6,8 @@ import {LoadingRequest} from "./LoadingRequest"
 import {Button} from "@/components/ui/button"
 import {Book} from "@prisma/client";
 import ErrorPage from "@/components/misc/ErrorPage"
+import { Info, Heart, X } from 'lucide-react';
+import MoreInfo from "@/components/explore/MoreInfo"
 
 type CardProps = CardData & {
     cards: CardData[];
@@ -129,6 +131,7 @@ const SwipeCards = ({userId} : props) => {
 
         try {
             const response = await getRecommendations();
+            console.log(response.data.recommendations);
             setCards(response.data.recommendations || []);
         } catch (err:any) {
             setError(true);
@@ -172,7 +175,6 @@ const SwipeCards = ({userId} : props) => {
 
             <div
                 className="w-full grid place-items-center relative">
-
              {cards.length > 0 ? (
                 (cards.map((book, index) => (
                         <CardComponent
@@ -216,9 +218,9 @@ const SwipeCards = ({userId} : props) => {
                         }}
 
                         style={{transition: '200ms ease-in-out', cursor: 'pointer'}} className="w-16 h-16 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center shadow-lg active:scale-95 transform hover:scale-110 transition-all">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="white">
-                            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
-                        </svg>
+
+                        <X stroke={'white'} />
+
                     </button>
 
                     <button
@@ -231,10 +233,7 @@ const SwipeCards = ({userId} : props) => {
 
                         style={{transition: '200ms ease-in-out', cursor: 'pointer'}}
                         className="w-16 h-16 rounded-full bg-green-500 hover:bg-green-600 flex items-center active:scale-95  justify-center shadow-lg transform hover:scale-110 transition-all">
-
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="white">
-                            <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Zm0-108q96-86 158-147.5t98-107q36-45.5 50-81t14-70.5q0-60-40-100t-100-40q-47 0-87 26.5T518-680h-76q-15-41-55-67.5T300-774q-60 0-100 40t-40 100q0 35 14 70.5t50 81q36 45.5 98 107T480-228Zm0-273Z"/>
-                        </svg>
+                        <Heart stroke={'white'}/>
                     </button>
                 </div>
             )}
@@ -244,7 +243,6 @@ const SwipeCards = ({userId} : props) => {
 };
 
 export default SwipeCards;
-
 
 export const handleSave = async (book:Book) => {
 
@@ -270,7 +268,6 @@ export const handleSave = async (book:Book) => {
 
 const CardComponent = ({ id, book, zIndex, cards, setCards }: CardProps) => {
 
-
     const x = useMotionValue(0);
     const opacity = useTransform(x, [-150, 0, 150], [0, 1, 0]);
     const rotateRaw = useTransform(x, [-150, 150], [-18, 18]);
@@ -281,6 +278,8 @@ const CardComponent = ({ id, book, zIndex, cards, setCards }: CardProps) => {
         const offset = isFront ? 0 : id % 2 ? 6 : -6;
         return `${rotateRaw.get() + offset}deg`;
     })
+
+    console.log(book)
 
     const handleDragEnd = async () => {
 
@@ -316,22 +315,42 @@ const CardComponent = ({ id, book, zIndex, cards, setCards }: CardProps) => {
             className="p-4 hover:cursor-grab active:cursor-grabbing h-[28rem] w-80 rounded-2xl shadow-md bg-white flex flex-col justify-between items-center text-center"
         >
 
-            <p>{book.about}</p>
-
-            <div className={'book-credentials w-full flex flex-col'}>
+            <div className="book-credentials h-full w-full flex flex-col mt-4">
 
                 {book.categories && (
-                    <div className="flex flex-row gap-1 flex-wrap mb-2">
+                    <div className="flex flex-row gap-2 flex-wrap mb-4">
                         {book.categories.map((category, index) => (
-                            <Button key={index}>
-                                {category.name}
-                            </Button>
+                            <span
+                                key={index}
+                                className="text-xs px-2 py-1 bg-gray-100 rounded-full text-gray-700 font-medium tracking-wide"
+                            >
+                            {category.name}
+                            </span>
                         ))}
                     </div>
                 )}
 
-                <h2 className="text-xl text-left font-semibold">{book.title} <span className={'text-gray-600 ml-auto'}>({book.year})</span></h2>
-                <p className="text-gray-600 my-auto italic text-left">by {book.author}</p>
+                <h2 className="text-xl font-semibold text-left leading-tight">
+                    {book.title}
+                    <span className="text-gray-500 text-sm font-sans ml-2">({book.year})</span>
+                </h2>
+
+                <p className="text-gray-600 italic text-left mt-1">
+                    by {book.author}
+                </p>
+
+                <p className="text-m text-gray-800 text-left mt-4 leading-relaxed line-clamp-4">
+                    {book.about}
+                </p>
+
+                <div className="flex items-end justify-end gap-2 p-2 flex-row mt-auto">
+                    <MoreInfo
+                        whyRead={book.whyRead || "No data was received from Open AI "}
+                        aboutAuthor={book.aboutAuthor || "No data was received from Open AI"}
+                        whyRecommended={book.whyRecommended || "No data was received from Open AI"}
+                    />
+                </div>
+
             </div>
 
         </motion.div>

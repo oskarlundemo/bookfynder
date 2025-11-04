@@ -17,7 +17,6 @@ export default async function UpdateBookPage({params,}: { params: { id: string }
         redirect("/auth/login");
     }
 
-
     const isUsersBook = await prisma.book.findUnique({
         where: {
             userId: data.user.id,
@@ -31,11 +30,6 @@ export default async function UpdateBookPage({params,}: { params: { id: string }
             details={'The book data you are trying to access does not belong to you'}
         />
     }
-
-
-    console.log(data.user)
-
-    // Kolla så man inte kan titta på någon annas böcker
 
     return <UpdateBookClient bookId={bookId} />;
 }

@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { Book } from 'lucide-react';
 
 import {
     Empty,
@@ -25,7 +26,7 @@ export default function EmptyBookFolder ({ title, description }: Props) {
         <Empty>
             <EmptyHeader>
                 <EmptyMedia variant="icon">
-                    📚
+                    <Book/>
                 </EmptyMedia>
                 <EmptyTitle>{title}</EmptyTitle>
                 <EmptyDescription>{description}</EmptyDescription>

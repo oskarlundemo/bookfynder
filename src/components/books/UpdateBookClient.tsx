@@ -28,7 +28,6 @@ export default function UpdateBookClient({ bookId }: { bookId: string }) {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [allowSubmit, setAllowSubmit] = useState<boolean>(false);
 
-
     useEffect(() => {
         const isAllowed =
             title.trim().length > 0 &&
@@ -38,8 +37,6 @@ export default function UpdateBookClient({ bookId }: { bookId: string }) {
 
         setAllowSubmit(isAllowed)
     }, [title, author, pages, rating])
-
-
 
     const [error, setError] = useState<boolean>(false);
 
@@ -58,7 +55,6 @@ export default function UpdateBookClient({ bookId }: { bookId: string }) {
                 setCategories(book.categories);
                 setRating(book.rating || 1);
                 setBookStatus(book.status);
-                console.log(book);
             } catch (err) {
                 console.error("Error fetching book:", err);
                 setError(true);
@@ -66,7 +62,6 @@ export default function UpdateBookClient({ bookId }: { bookId: string }) {
                 setLoading(false);
             }
         };
-
         fetchBook();
     }, [bookId]);
 

@@ -5,7 +5,7 @@ import {createClient} from "@/lib/supabase/server";
 import { redirect } from 'next/navigation'
 import { bookSchema } from "@/lib/validation/bookSchema";
 
-export async function updateBook(rawBookData: unknown) {
+export async function updateBook (rawBookData: unknown) {
 
     const supabase = await createClient();
     const { data, error } = await supabase.auth.getUser()
@@ -21,7 +21,6 @@ export async function updateBook(rawBookData: unknown) {
         console.log(parsed.error.format())
         return { success: false, message: "Validation failed, please control and reformat your input", errors: parsed.error.format() };
     }
-
 
     const bookData = parsed.data;
     const userId = data.user?.id

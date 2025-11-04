@@ -32,7 +32,7 @@ export function SelectCategories ({categories, setSelectedCategories, selectedCa
     const [formattedCategories, setFormattedCategories] = React.useState< { value: string; label: string;}[] >([]);
 
     React.useEffect(() => {
-        const formatted = categories.map((cat) => ({ value: cat.name, label: cat.name, id: cat.id})); setFormattedCategories(formatted);
+        const formatted = categories.map((cat) => ({ value: cat.name, name: cat.name, label: cat.name, id: cat.id})); setFormattedCategories(formatted);
         }, [categories]);
 
     return (
@@ -67,6 +67,8 @@ export function SelectCategories ({categories, setSelectedCategories, selectedCa
 
                                             if (exists) {
                                                 return prev.filter(cat => cat.id !== category.id);
+                                            } else if (selectedCategories.length >= 5) {
+                                                return prev;
                                             } else {
                                                 return [...prev, category];
                                             }

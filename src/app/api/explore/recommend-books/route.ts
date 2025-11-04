@@ -55,52 +55,53 @@ export async function POST (req: NextRequest) {
     );
 
     const prompt = `
-    You are a book recommendation assistant.
-    From the list of books below, recommend 10 books that match the user's taste. Respond in JSON format with id, title, year, author, about and genres.
-    Respond strictly in JSON. Do not include explanations, markdown, or backticks.
+    You are an intelligent book recommendation assistant that helps users discover new books based on their reading preferences.
 
-    User has liked and saved these books list: ${favoriteBooks}
-    
-    The categories your are allowed to map to are these ${categories}.
-    
-    The json should look like this 
-    
-    Also include the books rating on GoodReads,
-    
-    recommendations : [
-     {
-      "id": "b1eafa49-fca4-4e25-abd6-822b8d42cf60",
-      "title": "The Book Thief",
-      "year": 2005,
-      "author": "Markus Zusak",
-      "about": "A story about a young girl living in Nazi Germany who finds solace by stealing books and sharing them with others.",
- 
-      "ratingGoodReads": 3.45
-      "pages": 300
-      "categories": [
-        id: 7b7ba473-bc9d-47c6-b97d-65d1ab184ef5, name: Sci-Fi
+    You will receive:
+    1. A list of books the user has liked and saved.
+    2. A list of valid book categories that you can assign.
+
+    Your task:
+    - Recommend **10 books** that best match the user’s taste.
+    - Each recommendation must include details about the book, why it’s a good match, and information about the author.
+    - Only use the categories provided in the input list.
+    - Respond **strictly in JSON format**, without any extra text, markdown, or explanations.
+
+    Input:
+    User’s liked books: ${favoriteBooks}
+
+    Allowed categories: ${categories}
+
+    Your response must be a valid JSON object in this format:
+
+    {
+      "recommendations": [
+        {
+          "id": "uuid",
+          "title": "string",
+          "year": number,
+          "author": "string",
+          "about": "A short 1–2 sentence summary of what the book is about.",
+          "pages": number,
+          "ratingGoodReads": number,
+          "categories": [
+            { "id": "uuid", "name": "string" }
+          ],
+          "whyRead": "Explain in a few sentences why this book is worth reading.",
+          "aboutAuthor": "Briefly describe the author and their writing style or background.",
+          "whyRecommended": "Explain why this book fits the user’s previous reading preferences."
+        }
       ]
-    },
-    ]
-  `;
+    }`;
+
 
     const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "gpt-5-mini",
         messages: [{ role: "user", content: prompt }]
     });
 
     const responseText = completion.choices[0].message?.content || "[]";
-
-    let recommendations = [];
-
-    try {
-        let cleaned = responseText.trim()
-            .replace(/^```json\s*/, '')
-            .replace(/```$/, '');
-        recommendations = JSON.parse(cleaned);
-    } catch (e) {
-        console.error("Failed to parse GPT response:", responseText, e);
-    }
+    let recommendations = JSON.parse(responseText);
 
     return NextResponse.json({
         success: true,

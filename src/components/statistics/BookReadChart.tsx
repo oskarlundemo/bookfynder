@@ -48,11 +48,14 @@ type Props = {
 
 export function ChartBarLabelCustom({data}:Props) {
 
+
+
+
     return (
         <Card >
             <CardHeader>
                 <CardTitle>Books read each month this year</CardTitle>
-                <CardDescription>January - June 2024</CardDescription>
+                <CardDescription>January - December {new Date().getFullYear()}</CardDescription>
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig}>

@@ -6,6 +6,8 @@ import {BookStatus} from "@/components/books/BookStatus";
 import {BookScore} from "@/components/books/BookScore";
 import CurrentPageSlider from "@/components/books/CurrentPageSlider";
 import DeleteBookDialog from "@/components/books/DeleteBookDialog";
+import { Asterisk } from 'lucide-react';
+
 
 import {
     Button
@@ -95,9 +97,8 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle, currentPag
 
                     <div className="flex flex-col gap-2 flex-row">
                         <p className={'text-sm text-gray-500 items enter'}>Mandatory fields are marked with</p>
-                        <svg className={'fill-gray-500'} xmlns="http://www.w3.org/2000/svg" height="10px" viewBox="0 -960 960 960" width="10px" fill="#e3e3e3"><path d="M440-120v-264L254-197l-57-57 187-186H120v-80h264L197-706l57-57 186 187v-264h80v264l186-187 57 57-187 186h264v80H576l187 186-57 57-186-187v264h-80Z"/></svg>
+                        <Asterisk height={10} width={10}/>
                     </div>
-
 
                 </div>
 
@@ -112,9 +113,8 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle, currentPag
 
 
             <div className="flex flex-row justify-between w-full gap-2 flex-wrap">
-                <h2>Categories *</h2>
+                <h2>Categories * <span className={'text-gray-300'}>({selectedCategories.length} / 5)</span></h2>
                 <div className="flex flex-col w-full">
-
                     <div
                         className={`flex flex-wrap ${selectedCategories.length > 0 ? 'bg-gray-100 p-2 gap-2 rounded-2xl' : ''}   mb-3 transition-all duration-200 min-h-[40px]`}
                     >
@@ -125,7 +125,7 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle, currentPag
                                 </Button>
                             ))
                         ) : (
-                            <div className="h-8 opacity-0 w-full" />
+                            <div className={"h-8 opacity-0 w-full"} />
                         )}
                     </div>
 

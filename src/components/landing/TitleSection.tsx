@@ -11,7 +11,7 @@ export default function TitleSection () {
     return (
         <section className="flex flex-col items-center p-10 w-full">
 
-            <h1 className={'text-9xl text-shadow-stone-900 font-semibold'}>Librum.</h1>
+            <h1 className={'text-9xl text-shadow-stone-900 font-semibold'}>Bookfynder.</h1>
             <h2>alpha version 1.0</h2>
 
             <RotatingWords/>

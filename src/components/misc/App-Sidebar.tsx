@@ -4,20 +4,13 @@ import {logout} from "@/app/auth/login/actions";
 
 import { GalleryHorizontalEnd, Library, ChartPie, Plus } from "lucide-react"
 import {UserAvatar} from "@/components/misc/UserAvatar"
-import Username from "@/components/misc/Username"
+import { User } from "lucide-react"
+
 
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuGroup,
     DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuPortal,
-    DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
@@ -34,9 +27,6 @@ import {
     useSidebar
 } from "@/components/ui/sidebar"
 
-
-
-import { Button } from "@/components/ui/button"
 import {
     Tooltip,
     TooltipContent,
@@ -75,9 +65,7 @@ type Props = {
     username: string
 }
 
-export function AppSidebar ({username}) {
-
-    const {state} = useSidebar();
+export function AppSidebar ({username}:Props) {
 
     return (
         <Sidebar collapsible="icon">
@@ -116,7 +104,7 @@ export function AppSidebar ({username}) {
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <SidebarMenuButton>
-                                    <UserAvatar/>
+                                    <User className="w-4 h-4 aspect-square" />
                                     <p>{username}</p>
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
