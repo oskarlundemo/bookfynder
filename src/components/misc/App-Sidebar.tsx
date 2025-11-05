@@ -71,7 +71,7 @@ export function AppSidebar ({username}:Props) {
         <Sidebar collapsible="icon">
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Librum</SidebarGroupLabel>
+                    <SidebarGroupLabel>Bookfynder</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {items.map((item, index) => (

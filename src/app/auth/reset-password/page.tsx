@@ -28,7 +28,7 @@ export default function ResetPassword() {
                     <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
                         <GalleryVerticalEnd className="size-4" />
                     </div>
-                    Librum.
+                    Bookfynder
                 </a>
 
                 <div className="flex flex-1 items-center justify-center">
