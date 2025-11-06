@@ -33,10 +33,10 @@ export default function UpdateBookClient({ bookId }: { bookId: string }) {
             title.trim().length > 0 &&
             author.trim().length > 0 &&
             pages > 0 &&
-            rating > 0
+            selectedCategories.length > 0 && selectedCategories.length <= 5
 
         setAllowSubmit(isAllowed)
-    }, [title, author, pages, rating])
+    }, [title, author, pages, rating, selectedCategories]);
 
     const [error, setError] = useState<boolean>(false);
 
@@ -65,7 +65,7 @@ export default function UpdateBookClient({ bookId }: { bookId: string }) {
         fetchBook();
     }, [bookId]);
 
-    async function handleSubmit(e: React.FormEvent) {
+    async function handleSubmit (e: React.FormEvent) {
         e.preventDefault();
 
         if (!bookId) return;

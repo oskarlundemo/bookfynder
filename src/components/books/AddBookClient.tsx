@@ -18,16 +18,9 @@ export default function AddBookClient({ user }: { user: any }) {
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [allowSubmit, setAllowSubmit] = useState<boolean>(false);
+    const [allowSubmit, setAllowSubmit] = useState<boolean>(true);
 
-    useEffect(() => {
-        const isAllowed =
-            title.trim().length > 0 &&
-            author.trim().length > 0 &&
-            pages > 0
 
-        setAllowSubmit(isAllowed)
-    }, [title, author, pages, rating])
 
     useEffect(() => {
         async function loadCategories() {

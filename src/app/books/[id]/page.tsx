@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import UpdateBookClient from "@/components/books/UpdateBookClient";
 import {prisma} from "@/lib/prisma";
 import ErrorPage from "@/components/misc/ErrorPage"
+import NotFound from "@/app/not-found"
 
 export default async function UpdateBookPage({params,}: { params: { id: string }; }) {
 
@@ -17,21 +18,28 @@ export default async function UpdateBookPage({params,}: { params: { id: string }
         redirect("/auth/login");
     }
 
-    const isUsersBook = await prisma.book.findUnique({
-        where: {
-            userId: data.user.id,
-            id: bookId
+    try {
+
+        const isUsersBook = await prisma.book.findUnique({
+            where: {
+                userId: data.user.id,
+                id: bookId
+            }
+        })
+
+        if (!isUsersBook) {
+            return (
+                    <NotFound
+                        errorMessage="It looks like this book isn’t part of your library."
+                    />
+                )
         }
-    })
 
-    if (!isUsersBook) {
-        return <ErrorPage
-            title={'Unauthorized'}
-            details={'The book data you are trying to access does not belong to you'}
-        />
+        return <UpdateBookClient bookId={bookId} />;
+
+    } catch (error) {
+        return <NotFound errorMessage={'The book your are searching for does not exist'}/>
     }
-
-    return <UpdateBookClient bookId={bookId} />;
 }
 
 

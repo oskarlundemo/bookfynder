@@ -56,7 +56,7 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle, currentPag
 
             <div className="grid w-full items-center my-auto gap-5 grid-cols-1 sm:grid-cols-2">
 
-                <div className="flex flex-col order-1 sm:order-2 gap-4">
+                <div className="flex flex-col h-full order-1 sm:order-2 gap-4">
                     <InputField
                         setValue={setTitle}
                         value={title}
@@ -95,9 +95,9 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle, currentPag
                     </div>
 
 
-                    <div className="flex flex-col gap-2 flex-row">
+                    <div className="flex flex-col mt-auto gap-2 items-center flex-row">
                         <p className={'text-sm text-gray-500 items enter'}>Mandatory fields are marked with</p>
-                        <Asterisk height={10} width={10}/>
+                        <Asterisk stroke={'lightgray'} height={10} width={10}/>
                     </div>
 
                 </div>

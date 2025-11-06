@@ -18,9 +18,23 @@ export async function updateBook (rawBookData: unknown) {
     const parsed = bookSchema.safeParse(rawBookData);
 
     if (!parsed.success) {
-        console.log(parsed.error.format())
-        return { success: false, message: "Validation failed, please control and reformat your input", errors: parsed.error.format() };
+
+        let errorMessage = "";
+
+        for (const issue of parsed.error.issues) {
+            const field = issue.path[0];
+            const fieldName = field.charAt(0).toUpperCase() + field.slice(1);
+
+            errorMessage += `${fieldName}: ${issue.message}\n`;
+        }
+
+        return {
+            success: false,
+            message: "Validation failed \n " + errorMessage,
+            errors: parsed.error.issues,
+        };
     }
+
 
     const bookData = parsed.data;
     const userId = data.user?.id

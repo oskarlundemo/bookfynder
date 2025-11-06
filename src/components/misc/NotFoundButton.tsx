@@ -16,7 +16,10 @@ export default function NotFoundButton({ isLoggedIn }: Props) {
         <div className="flex flex-row">
             <Button
                 onClick={() => router.push(isLoggedIn ? "/books" : "/")}
-                className="flex cursor-pointer hover:scale-105 flex-row p-5 gap-2"
+                className="
+                    flex flex-row gap-2 p-5 cursor-pointer
+                    transform transition-transform duration-200 ease-in-out
+                     hover:scale-105"
             >
                 <House />
                 <p>Take me home</p>
