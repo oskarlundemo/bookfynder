@@ -65,9 +65,9 @@ export async function addBook (rawBookData: unknown) {
                     data: {
                         bookId: createdBook.id,
                         userId: userId,
-                        startPage: 1,
+                        startPage: 0,
                         endPage: bookData.currentPage,
-                        pagesRead: bookData.currentPage - 1,
+                        pagesRead: bookData.currentPage,
                     }
                 })
             }

@@ -20,8 +20,6 @@ export default function AddBookClient({ user }: { user: any }) {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [allowSubmit, setAllowSubmit] = useState<boolean>(true);
 
-
-
     useEffect(() => {
         async function loadCategories() {
             const response = await fetchCategories();

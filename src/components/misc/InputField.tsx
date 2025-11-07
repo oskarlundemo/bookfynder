@@ -31,6 +31,10 @@ export const InputField = ({
 
     const [inputLength, setInputLength] = useState<number>(0);
 
+    useEffect(() => {
+        setInputLength(value.length);
+    }, [value]);
+
     return (
         <div className="grid w-full items-center gap-3">
             <Label htmlFor={name}>{name}

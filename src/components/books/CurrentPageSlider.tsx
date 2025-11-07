@@ -1,4 +1,5 @@
-import { Slider } from "@/components/ui/slider"
+import { Slider } from "@/components/ui/slider";
+import { CirclePlus, CircleMinus } from 'lucide-react';
 
 type Props = {
     noOfPages: number;
@@ -23,7 +24,27 @@ export default function CurrentPageSlider ({noOfPages, setCurrentPage, value}:Pr
                 disabled={noOfPages === 0}
             />
 
-            <p className={'ml-auto p-5'}>{value} / {noOfPages}</p>
+
+            <div className="flex ml-auto items-center gap-2 justify-center flex-row">
+                <CircleMinus
+                    onClick={() => {
+                        if (Number(value) <= 1) return;
+                        setCurrentPage(Number(value) - 1);
+                    }}
+                />
+
+                <p>{value} / {noOfPages}</p>
+
+                <CirclePlus
+                    onClick={() => {
+                        if (Number(value) >= noOfPages) return;
+                        setCurrentPage(Number(value) + 1);
+                    }}
+                />
+            </div>
+
+
+
         </div>
 
     )
