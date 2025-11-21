@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import {prisma} from "@/lib/prisma";
+import {prisma} from "@/lib/prisma/prisma";
 import {BookTabs} from "@/components/books/BookTabs";
 
 export const revalidate = 10; // re-fetch every 10 seconds
@@ -23,7 +23,7 @@ export default async function BooksPage() {
         include: {
             BookCategory: {
                 include: {
-                    category: true
+                    Category: true
                 }
             }
         }
@@ -37,7 +37,7 @@ export default async function BooksPage() {
         include: {
             BookCategory: {
                 include: {
-                    category: true
+                    Category: true
                 }
             }
         }
@@ -51,7 +51,7 @@ export default async function BooksPage() {
         include: {
             BookCategory: {
                 include: {
-                    category: true
+                    Category: true
                 }
             }
         }

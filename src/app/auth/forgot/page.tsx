@@ -1,7 +1,6 @@
 "use server"
 
 import { GalleryVerticalEnd } from "lucide-react"
-import { ForgotForm } from "@/components/auth/ForgotForm"
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
@@ -27,7 +26,7 @@ export default async function Forgot() {
                 </div>
                 <div className="flex flex-1 items-center justify-center">
                     <div className="w-full max-w-xs">
-                        <ForgotForm/>
+                        {/* Forgot form */}
                     </div>
                 </div>
             </div>

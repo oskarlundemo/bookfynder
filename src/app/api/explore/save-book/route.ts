@@ -1,7 +1,7 @@
 "use server"
 
 import { NextRequest, NextResponse } from "next/server";
-import {prisma} from "@/lib/prisma";
+import {prisma} from "@/lib/prisma/prisma";
 import {createClient} from "@/lib/supabase/server";
 
 export async function POST (req: NextRequest) {

@@ -26,7 +26,6 @@ export default function MockBookForm  () {
             timeouts.current.push(t);
         });
 
-
         const authorStartTime = mockTitle.length * 100 + 400;
         mockAuthor.split("").forEach((char, i) => {
             const t = setTimeout(

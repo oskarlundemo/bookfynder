@@ -1,8 +1,6 @@
 import NotFoundButton from "@/components/misc/NotFoundButton"
 import { createClient } from '@/lib/supabase/server'
 
-
-
 type Props = {
     errorMessage?: string
 }

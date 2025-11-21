@@ -3,7 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import UpdateBookClient from "@/components/books/UpdateBookClient";
-import {prisma} from "@/lib/prisma";
+import {prisma} from "@/lib/prisma/prisma";
 import ErrorPage from "@/components/misc/ErrorPage"
 import NotFound from "@/app/not-found"
 

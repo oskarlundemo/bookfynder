@@ -4,8 +4,6 @@ import { Label, Pie, PieChart } from "recharts"
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
@@ -53,11 +51,11 @@ const chartConfig = {
 
 
 
-export function MockPieChart ({}) {
-
+export function MockChart ({}) {
 
     return (
-        <Card className="flex flex-col">
+
+        <Card className="flex shadow-0! border-0! flex-col">
             <CardHeader className="items-center pb-0">
                 <CardTitle>Your reading habits in genres</CardTitle>
             </CardHeader>

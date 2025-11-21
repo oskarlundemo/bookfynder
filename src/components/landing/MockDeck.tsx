@@ -3,6 +3,7 @@ import {motion, useMotionValue, useTransform} from "framer-motion";
 import {useState} from "react";
 import {Button} from "@/components/ui/button"
 import {Book} from "@prisma/client";
+import {toast} from "react-hot-toast"
 
 
 type CardProps = CardData & {
@@ -121,6 +122,7 @@ const CardComponent = ({ id, title, card, about, year, author, zIndex, categorie
         const swipe = x.get();
 
         if (swipe > 50) {
+
             setCards((prev) => {
                 const newDeck = [...prev];
                 const topCard = newDeck.pop();
