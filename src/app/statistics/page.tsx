@@ -1,7 +1,7 @@
 import {createClient} from "@/lib/supabase/server";
 import {redirect} from "next/navigation";
 import { startOfWeek, endOfWeek, format } from 'date-fns'
-import {prisma} from "@/lib/prisma/prisma";
+import {prisma} from "../../../prisma/prisma";
 import {ChartPieDonutText} from "../../components/statistics/BookCategoryPieChart";
 import {PagesBarChart} from "../../components/statistics/PagesBarChart";
 import {ChartBarLabelCustom} from "../../components/statistics/BookReadChart";

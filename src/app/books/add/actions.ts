@@ -1,6 +1,6 @@
 "use server"
 
-import { prisma } from "@/lib/prisma/prisma";
+import { prisma } from "../../../../prisma/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { bookSchema } from "@/lib/validation/bookSchema";
 import { ReadingStatus } from "@prisma/client";
