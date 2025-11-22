@@ -12,11 +12,11 @@ export function LandingHeader () {
             <nav style={{maxWidth: 'var(--max-width)'}} className={'ml-auto'}>
 
                 <ul className={'flex flex-row justify-end gap-5 m-5'}>
-                    <li onClick={() => router.push('/auth/login')} className={'flex text-lg cursor-pointer'}>
+                    <li onClick={() => router.push('/auth/login')} className={'flex text-2xl cursor-pointer'}>
                         Login
                     </li>
 
-                    <li onClick={() => router.push('/auth/register')} className={'flex text-lg cursor-pointer'}>
+                    <li onClick={() => router.push('/auth/register')} className={'flex text-2xl cursor-pointer'}>
                         Register
                     </li>
                 </ul>

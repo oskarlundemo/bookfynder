@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import {redirect} from "next/navigation";
 import {LandingHeader} from "@/components/landing/LandingHeader"
-import MockDeck from '@/components/landing/MockDeck';
 import {AuthorDetails} from "@/components/landing/AuthorDetails";
 
 
@@ -19,12 +18,38 @@ export default async function Home ({}) {
 
             <LandingHeader/>
 
-            <AuthorDetails />
 
             <div className="flex flex-col h-full w-full items-center justify-center" style={{ maxWidth: 'var(--max-width)' }}>
 
-                <div className="relative flex flex-col mb-6">
-                    <h1 className="relative text-8xl  select-none">Bookfynder <span className={'text-secondary-foreground'}>(alpha)</span></h1>
+                <div className="relative flex flex-row items-center gap-5 mb-6">
+
+                    <svg
+                        className="drop-shadow-2xl"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="64"
+                        height="64"
+                        viewBox="0 0 64 64"
+                    >
+                        <rect width="64" height="64" rx="12" fill="#0F172A" />
+                        <text
+                            x="50%"
+                            y="50%"
+                            textAnchor="middle"
+                            dominantBaseline="central"
+                            fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+                            fontSize="28"
+                            fontWeight="600"
+                            fill="#F9FAFB"
+                        >
+                            bf.
+                        </text>
+                    </svg>
+
+                    <h1 className="relative text-8xl select-none text-gray-300">Bookfynder</h1>
+                    <h1 className="text-8xl absolute select-none left-29">Bookfynder</h1>
+
+                    <span className={'absolute right-1 top-0'}>1.0 alpha</span>
+
                 </div>
 
                 <div className="relative flex flex-col gap-5">
@@ -32,6 +57,9 @@ export default async function Home ({}) {
                 </div>
 
             </div>
+
+            <AuthorDetails />
+
         </main>
     );
 }
