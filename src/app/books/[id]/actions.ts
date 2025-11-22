@@ -164,14 +164,15 @@ export async function getBook (bookId: string) {
         include: {
             BookCategory: {
                 include: {
-                    category: true
+                    Category: true
                 }
             }
         }
     });
 
     const categories = await prisma.category.findMany()
-    const bookCategories = book.BookCategory.map(bc => bc.category);
+    const bookCategories = book.BookCategory.map(bc => bc.Category);
+    console.log("Categories" + bookCategories)
 
     const formatedRespons = {
         author: book.author,
