@@ -24,49 +24,6 @@ type CardData = {
     book: Book;
 };
 
-const cardData: CardData[] = [
-    {
-        id: 1,
-        title: "Pride and Prejudice",
-        author: "Jane Austen",
-        year: 1813,
-        about:
-            "A witty exploration of love, reputation, and class, following Elizabeth Bennet as she navigates misunderstandings and pride in 19th-century England.",
-    },
-    {
-        id: 2,
-        title: "Moby-Dick",
-        author: "Herman Melville",
-        year: 1851,
-        about:
-            "A brooding tale of obsession and revenge as Captain Ahab hunts the great white whale across the vast, unforgiving ocean.",
-    },
-    {
-        id: 3,
-        title: "1984",
-        author: "George Orwell",
-        year: 1949,
-        about:
-            "A chilling dystopian vision of a totalitarian regime where Big Brother watches every move and individuality is crushed.",
-    },
-    {
-        id: 4,
-        title: "The Great Gatsby",
-        author: "F. Scott Fitzgerald",
-        year: 1925,
-        about:
-            "A tragic story of wealth, love, and illusion set in the roaring 1920s, centered around the mysterious millionaire Jay Gatsby.",
-    },
-    {
-        id: 5,
-        title: "To Kill a Mockingbird",
-        author: "Harper Lee",
-        year: 1960,
-        about:
-            "A profound look at justice and racial prejudice in the American South through the eyes of young Scout Finch.",
-    },
-];
-
 
 type props = {
     userId?: string,

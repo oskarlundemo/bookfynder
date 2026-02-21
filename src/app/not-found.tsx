@@ -16,8 +16,8 @@ export default async function NotFound({errorMessage}: Props) {
             <div className="flex flex-col h-full w-full items-center justify-center" style={{ maxWidth: 'var(--max-width)' }}>
 
                 <div className="relative flex flex-col mb-6">
-                    <h1 className="relative text-8xl  select-none">404</h1>
-                    <h1 className="absolute text-8xl left-3  opacity-50 select-none">404</h1>
+                    <h1 className="relative text-5xl  select-none">404</h1>
+                    <h1 className="absolute text-5xl left-2  opacity-50 select-none">404</h1>
                 </div>
 
                 <h2 className="text-xl font-semibold mb-2">This page wandered off… </h2>

@@ -3,6 +3,7 @@ import "@/styles/BookForm.css"
 import {InputField} from "@/components/misc/InputField";
 import {useState, useRef, useEffect} from "react";
 import {BookStatus} from "@/components/books/BookStatus"
+import LandingText from "@/components/misc/LandingText";
 
 export default function MockBookForm  () {
 
@@ -54,12 +55,31 @@ export default function MockBookForm  () {
     }, []);
 
     return (
+        <section className={'gap-5 md:flex-row flex-col-reverse flex  flex-start w-full h-[400px] items-start'}>
 
-        <form className={'gap-5 flex-grow w-full flex-wrap flex flex-col'}>
+            <LandingText
+                title={"Start by adding your favorite reads"}
+                breadText={
+                    <>
+                        <p className={'text-left text-lg leading-relaxed'}>
+                            Start by adding some of the books you have already read. Be sure to rate them as well,
+                            so the algorithm can make better predictions. Most books can be found using the{' '}
+                            <a
+                                className="border-b-4 border-black"
+                                href="https://openlibrary.org/developers/api"
+                            >
+                                OpenLibrary API
+                            </a>
+                            {' '} otherwise, you can add them manually.
+                        </p>
+                    </>
+                }
+                number={1}
+            />
 
-            <div className="flex flex-col flex-grow h-full w-full items-center my-auto gap-5">
+            <div className="flex flex-row md:w-1/2 w-full items-center gap-5">
 
-                <div className="flex w-full flex-col gap-4">
+                <div className="flex mx-auto w-full max-w-[500px] flex-col gap-4">
 
                     <InputField
                         setValue={setTitle}
@@ -89,15 +109,8 @@ export default function MockBookForm  () {
                     </div>
                 </div>
 
-                <BookStatus
-                    disabled={true}
-                    bookStatus={bookStatus}
-                    setBookStatus={setBookStatus}
-                />
-
-
             </div>
 
-        </form>
+        </section>
     )
 }

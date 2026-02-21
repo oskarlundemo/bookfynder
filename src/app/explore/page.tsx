@@ -21,8 +21,6 @@ export default async function ExplorePage () {
         redirect('/error')
     }
 
-    // Fixa så om man laddar in på loading, nu om gustab skapar konto
-
     return (
         <main className="relative flex flex-grow flex-col">
 
@@ -34,7 +32,6 @@ export default async function ExplorePage () {
 
             <AIDisclaimer/>
 
-            {/* Här kan du lägga till liksom om de inte har minst 3 böcker så måste de lägga till eller något*/}
         </main>
     );
 }

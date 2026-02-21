@@ -8,20 +8,28 @@ type Props = {
     code?: number
 }
 
-export default function ErrorPage ({details}: Props) {
+export default function ErrorPage ({details, title}: Props) {
+
     return (
-        <main className="flex flex-col items-center justify-center h-full">
+        <main className="flex flex-col items-center justify-center w-full h-full">
 
-            {title ? (
-                <h1 className={'text-4xl font-bold'}>{title}</h1>
+            <div className="relative  flex flex-col items-center gap-5">
 
-            ) : (
-                <h1 className={'text-4xl font-bold'}>Sorry, something went wrong</h1>
-            )}
+                {title ? (
+                    <h1 className={'text-4xl text-red-500 font-bold'}>{title}</h1>
 
-            {details && (
-                <p>{details}</p>
-            )}
+                ) : (
+                    <h1 className={'text-4xl text-red-500 font-bold'}>Error</h1>
+                )}
+
+                {details ? (
+                    <p className={'text-gray-400 mb-6'}>{details}</p>
+                ) : (
+                    <p className={'text-gray-400 mb-6'}>Something went wrong! Try again later</p>
+                )}
+
+            </div>
+
         </main>
     )
 }

@@ -2,6 +2,10 @@ import { createClient } from '@/lib/supabase/server'
 import {redirect} from "next/navigation";
 import {LandingHeader} from "@/components/landing/LandingHeader"
 import {AuthorDetails} from "@/components/landing/AuthorDetails";
+import Logo from "@/components/landing/Logo";
+import {MockChart} from "@/components/landing/MockChart";
+import MockDeck from "@/components/landing/MockDeck";
+import MockBookForm from "@/components/landing/MockBookForm";
 
 export default async function Home ({}) {
 
@@ -13,48 +17,19 @@ export default async function Home ({}) {
     }
 
     return (
-        <main className="flex flex-col m-auto items-center w-full h-full justify-center text-center px-4">
+        <main className="flex flex-col m-auto items-center justify-start w-full  text-center px-4">
 
             <LandingHeader/>
 
-            <div className="flex flex-col h-full w-full items-center justify-center" style={{ maxWidth: 'var(--max-width)' }}>
+            <Logo/>
 
-                <div className="relative flex flex-row items-center gap-5 mb-6">
+            <section className="flex flex-col gap-50 md:gap-20 max-w-[1200px] w-full">
+                <MockBookForm/>
 
-                    <svg
-                        className="drop-shadow-2xl"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="64"
-                        height="64"
-                        viewBox="0 0 64 64"
-                    >
-                        <rect width="64" height="64" rx="12" fill="#0F172A" />
-                        <text
-                            x="50%"
-                            y="50%"
-                            textAnchor="middle"
-                            dominantBaseline="central"
-                            fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-                            fontSize="28"
-                            fontWeight="600"
-                            fill="#F9FAFB"
-                        >
-                            bf.
-                        </text>
-                    </svg>
+                <MockDeck/>
 
-                    <h1 className="relative text-8xl select-none text-gray-300">Bookfynder</h1>
-                    <h1 className="text-8xl absolute select-none left-29">Bookfynder</h1>
-
-                    <span className={'absolute right-1 top-0'}>1.0 alpha</span>
-
-                </div>
-
-                <div className="relative flex flex-col gap-5">
-                    <h2 className={'text-3xl'}>Books that match your <strong>vibe</strong></h2>
-                </div>
-
-            </div>
+                <MockChart/>
+            </section>
 
             <AuthorDetails />
 
