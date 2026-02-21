@@ -7,6 +7,7 @@ import { ResetForm } from "@/components/auth/ResetForm";
 import { GalleryVerticalEnd } from "lucide-react";
 
 export default function ResetPassword() {
+
     const supabase = createClient();
     const params = useSearchParams();
     const code = params.get("code");

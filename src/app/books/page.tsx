@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import {prisma} from "../../../prisma/prisma";
 import {BookTabs} from "@/components/books/BookTabs";
 
-export const revalidate = 10; // re-fetch every 10 seconds
+export const revalidate = 10;
 
 export default async function BooksPage() {
 

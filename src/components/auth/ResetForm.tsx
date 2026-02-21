@@ -75,18 +75,19 @@ export function ResetForm ({
                     <FieldLabel htmlFor="email">Password</FieldLabel>
                     <Input
                         id="password"
-                        type={`${showPassword ? "text" : "password"}`}
+                        type={`${!showPassword ? "password" : "text"}`}
                         value={password}
                         placeholder={'New password'}
                         onChange={e => setPassword(e.target.value)}
-                        required />
+                        required
+                    />
                 </Field>
 
                 <Field>
                     <FieldLabel htmlFor="email">Confirm password</FieldLabel>
                     <Input
                         id="confirmpassword"
-                        type={`${showPassword ? "text" : "password"}`}
+                        type={`${!showPassword ? "password" : "text"}`}
                         value={confirmPassword}
                         placeholder={'Confirm new password'}
                         onChange={e => setConfirmPassword(e.target.value)}

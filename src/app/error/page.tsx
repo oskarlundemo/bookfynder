@@ -22,7 +22,6 @@ export default function ErrorPage ({details}: Props) {
             {details && (
                 <p>{details}</p>
             )}
-
         </main>
     )
 }

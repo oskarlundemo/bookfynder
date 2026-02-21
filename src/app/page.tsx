@@ -3,7 +3,6 @@ import {redirect} from "next/navigation";
 import {LandingHeader} from "@/components/landing/LandingHeader"
 import {AuthorDetails} from "@/components/landing/AuthorDetails";
 
-
 export default async function Home ({}) {
 
     const supabase = await createClient();
@@ -17,7 +16,6 @@ export default async function Home ({}) {
         <main className="flex flex-col m-auto items-center w-full h-full justify-center text-center px-4">
 
             <LandingHeader/>
-
 
             <div className="flex flex-col h-full w-full items-center justify-center" style={{ maxWidth: 'var(--max-width)' }}>
 

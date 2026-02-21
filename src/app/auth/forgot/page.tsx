@@ -3,6 +3,7 @@
 import { GalleryVerticalEnd } from "lucide-react"
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import {ForgotForm} from "@/components/auth/ForgotForm";
 
 export default async function Forgot() {
 
@@ -21,12 +22,12 @@ export default async function Forgot() {
                         <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
                             <GalleryVerticalEnd className="size-4" />
                         </div>
-                        Librum.
+                        Bookfynder
                     </a>
                 </div>
                 <div className="flex flex-1 items-center justify-center">
                     <div className="w-full max-w-xs">
-                        {/* Forgot form */}
+                        <ForgotForm/>
                     </div>
                 </div>
             </div>
