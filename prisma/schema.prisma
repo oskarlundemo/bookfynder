@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Book {
+  id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title             String
+  author            String
+  userId            String              @db.Uuid
+  pages             Int
+  createdAt         DateTime            @default(now())
+  status            ReadingStatus       @default(READ)
+  pagesRead         Int?
+  rating            Int?
+  User              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  BookCategory      BookCategory[]
+  BookProgressEntry BookProgressEntry[]
+  Category          Category[]          @relation("BookCategories")
+}
+
+model BookCategory {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bookId     String   @db.Uuid
+  categoryId String   @db.Uuid
+  Book       Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  Category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([bookId, categoryId])
+}
+
+model BookProgressEntry {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid
+  bookId    String   @db.Uuid
+  startPage Int
+  endPage   Int
+  pagesRead Int      @default(0)
+  createdAt DateTime @default(now())
+  Book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Category {
+  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name         String
+  BookCategory BookCategory[]
+  Book         Book[]         @relation("BookCategories")
+}
+
+model User {
+  id                String              @id @db.Uuid
+  Book              Book[]
+  BookProgressEntry BookProgressEntry[]
+}
+
+enum ReadingStatus {
+  QUEUED
+  READING
+  READ
+}

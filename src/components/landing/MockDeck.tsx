@@ -3,6 +3,8 @@ import {motion, useMotionValue, useTransform} from "framer-motion";
 import {useState} from "react";
 import {Button} from "@/components/ui/button"
 import {Book} from "@prisma/client";
+import {toast} from "react-hot-toast"
+import LandingText from "@/components/misc/LandingText";
 
 
 type CardProps = CardData & {
@@ -76,11 +78,23 @@ const MockDeck = () => {
     const [cards, setCards] = useState<CardData[]>(cardData);
 
     return (
-        <div className="flex flex-col flex-grow items-center justify-center w-full">
+        <div className="flex md:flex-row h-[400px] flex-col-reverse justify-center">
+
+            <LandingText
+                title={"Swipe on your next favorites"}
+                breadText={
+                    <>
+                        <p className={'text-left text-lg leading-relaxed'}>
+                            Once you have added a couple books, start swiping on new exciting reads based on your preferances. With this
+                            UX it becomes a lot funnier. The recommendation are created with the help of <span className={'border-b-4 border-black'}>Open AI</span>
+                        </p>
+                    </>
+                }
+                number={2}
+            />
 
             <div
-                className="w-full grid place-items-center relative">
-
+                className="grid  m-auto relative">
                 {cards.length > 0 && (
                     (cards.map((book, index) => (
                         <CardComponent
@@ -96,6 +110,7 @@ const MockDeck = () => {
                     ))
                 }
             </div>
+
         </div>
     );
 };
@@ -121,6 +136,7 @@ const CardComponent = ({ id, title, card, about, year, author, zIndex, categorie
         const swipe = x.get();
 
         if (swipe > 50) {
+
             setCards((prev) => {
                 const newDeck = [...prev];
                 const topCard = newDeck.pop();

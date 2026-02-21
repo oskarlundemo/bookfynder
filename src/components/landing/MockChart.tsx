@@ -4,8 +4,6 @@ import { Label, Pie, PieChart } from "recharts"
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
@@ -15,6 +13,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
+import LandingText from "@/components/misc/LandingText";
 
 const chartData = [
     { genre: "Fiction", count: 12, fill: "var(--chart-1)" },
@@ -51,20 +50,35 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-
-
-export function MockPieChart ({}) {
-
+export function MockChart ({}) {
 
     return (
-        <Card className="flex flex-col">
-            <CardHeader className="items-center pb-0">
-                <CardTitle>Your reading habits in genres</CardTitle>
-            </CardHeader>
-            <CardContent className="flex-1 pb-0">
+            <div className="flex w-full h-[500px] flex-col-reverse md:flex-row">
+
+                <LandingText
+                    title={"Watch your reading come to life with charts"}
+                    breadText={
+                        <>
+                            <p className="text-left text-lg leading-relaxed">
+                                Watch your progress come to life with the help of different charts! The UI is built using the beautiful UI-library {' '}
+                                <a
+                                    className="border-b-4 border-black"
+                                    href="https://ui.shadcn.com/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    shadCn
+                                </a>
+                                .
+                            </p>
+                        </>
+                    }
+                    number={3}
+                />
+
                 <ChartContainer
                     config={chartConfig}
-                    className="mx-auto aspect-square max-h-[250px]"
+                    className="mx-auto aspect-square max-h-[300px]"
                 >
                     <PieChart>
 
@@ -112,8 +126,7 @@ export function MockPieChart ({}) {
                         </Pie>
                     </PieChart>
                 </ChartContainer>
-            </CardContent>
-        </Card>
+            </div>
     )
 }
 

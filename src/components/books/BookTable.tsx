@@ -72,7 +72,7 @@ export default function BookTable({ books, subTitle, bookStatus }: Props) {
             id: "categories",
             header: "Categories",
             cell: ({ row }) =>
-                row.original.BookCategory?.map((c) => c.category?.name).join(", ") ||
+                row.original.BookCategory?.map((c) => c.Category?.name).join(", ") ||
                 "—",
         },
         {

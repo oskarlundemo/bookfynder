@@ -1,7 +1,7 @@
 import {createClient} from "@/lib/supabase/server";
 import {redirect} from "next/navigation";
 import { startOfWeek, endOfWeek, format } from 'date-fns'
-import {prisma} from "@/lib/prisma";
+import {prisma} from "../../../prisma/prisma";
 import {ChartPieDonutText} from "../../components/statistics/BookCategoryPieChart";
 import {PagesBarChart} from "../../components/statistics/PagesBarChart";
 import {ChartBarLabelCustom} from "../../components/statistics/BookReadChart";
@@ -26,14 +26,14 @@ export default async function StatisticsPag () {
         include: {
             BookCategory: {
                 include: {
-                    category: true
+                    Category: true
                 }
             }
         }
     })
 
     const categoryCounts = readBookData
-        .flatMap(book => book.BookCategory.map(bc => bc.category.name))
+        .flatMap(book => book.BookCategory.map(bc => bc.Category.name))
         .reduce((acc, name) => {
             acc[name] = (acc[name] || 0) + 1;
             return acc;
@@ -59,7 +59,6 @@ export default async function StatisticsPag () {
             },
         },
     })
-
 
     const booksRead = await prisma.book.findMany({
         where: {

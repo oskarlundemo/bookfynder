@@ -52,7 +52,7 @@ export default function BookForm  ({disabledBtn, setAuthor, setTitle, currentPag
 
     return (
 
-        <form onSubmit={handleSubmit} className={'gap-5 flex-wrap flex mt-10 flex-col'}>
+        <form onSubmit={handleSubmit} className={'gap-5 max-w-[1280px] flex-wrap flex mt-10 flex-col'}>
 
             <div className="grid w-full items-center my-auto gap-5 grid-cols-1 sm:grid-cols-2">
 

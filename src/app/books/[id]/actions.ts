@@ -1,6 +1,6 @@
 "use server"
 
-import {prisma} from "@/lib/prisma";
+import {prisma} from "../../../../prisma/prisma";
 import {createClient} from "@/lib/supabase/server";
 import { redirect } from 'next/navigation'
 import { bookSchema } from "@/lib/validation/bookSchema";
@@ -164,14 +164,15 @@ export async function getBook (bookId: string) {
         include: {
             BookCategory: {
                 include: {
-                    category: true
+                    Category: true
                 }
             }
         }
     });
 
     const categories = await prisma.category.findMany()
-    const bookCategories = book.BookCategory.map(bc => bc.category);
+    const bookCategories = book.BookCategory.map(bc => bc.Category);
+    console.log("Categories" + bookCategories)
 
     const formatedRespons = {
         author: book.author,
