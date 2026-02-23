@@ -78,8 +78,16 @@ const MockDeck = () => {
     const [cards, setCards] = useState<CardData[]>(cardData);
 
     return (
-        <div className="flex md:flex-row h-[400px] flex-col-reverse justify-center">
+        <section className="
+            flex w-full
+            flex-col md:flex-row
+            rounded-2xl p-10
+            items-start
+            gap-10
 
+            border border-white/40
+
+           ">
             <LandingText
                 title={"Swipe on your next favorites"}
                 breadText={
@@ -94,7 +102,7 @@ const MockDeck = () => {
             />
 
             <div
-                className="grid  m-auto relative">
+                className="grid h-fit  m-auto relative">
                 {cards.length > 0 && (
                     (cards.map((book, index) => (
                         <CardComponent
@@ -111,7 +119,7 @@ const MockDeck = () => {
                 }
             </div>
 
-        </div>
+        </section>
     );
 };
 

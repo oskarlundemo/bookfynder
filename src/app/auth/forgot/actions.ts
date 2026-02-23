@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 
 export async function forgot (formData: FormData) {
 
-    const supabase = await createClient()
+    const supabase = await createClient();
 
     const data = {
         email: formData.get('email') as string,

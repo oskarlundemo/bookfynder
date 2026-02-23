@@ -10,7 +10,7 @@ export function LandingHeader () {
     return (
         <header className="fixed top-0 z-20 w-full rounded-b-2xl flex items-center bg-white/30 backdrop-blur-md border-b border-white/20">
 
-            <nav style={{maxWidth: 'var(--max-width)'}} className={' rounded-b-2xl   w-full mx-auto max-w-[1200px]'}>
+            <nav style={{maxWidth: 'var(--max-width)'}} className={'rounded-b-2xl w-full mx-auto max-w-[1200px]'}>
 
                 <ul className={'flex flex-row justify-end gap-5 m-5'}>
 

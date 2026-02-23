@@ -16,26 +16,33 @@ import {
 } from "@/components/ui/radio-group"
 
 type Props = {
-    bookStatus: string;
-    setBookStatus: (status: string) => void;
+    bookStatus?: string;
+    setBookStatus?: (status: string) => void;
     disabled?: boolean;
+    mock?: boolean;
 }
 
-export function BookStatus ({bookStatus, disabled = false, setBookStatus} : Props): React.ReactElement {
+export function BookStatus ({bookStatus, disabled = false, mock = false, setBookStatus} : Props): React.ReactElement {
 
     return (
-        <div className="w-full flex-row max-w-md">
+        <div className="w-full flex-row ">
             <FieldGroup>
                 <FieldSet>
-                    <FieldLabel htmlFor="compute-environment-p8w">
-                        Book status *
-                    </FieldLabel>
-                    <FieldDescription>
+
+                    {!mock &&(
+                        <>
+                        <FieldLabel htmlFor="compute-environment-p8w">
+                            Book status *
+                        </FieldLabel>
+                        <FieldDescription>
                         Select the status for this book
-                    </FieldDescription>
+                        </FieldDescription>
+                        </>
+                    )}
+
                     <RadioGroup defaultValue={`${bookStatus ? bookStatus : 'read'}`}>
                         <FieldLabel htmlFor="read-r2h">
-                            <Field orientation="horizontal">
+                            <Field className={'text-left'} orientation="horizontal">
                                 <FieldContent>
                                     <FieldTitle>Read</FieldTitle>
                                     <FieldDescription>
@@ -46,7 +53,7 @@ export function BookStatus ({bookStatus, disabled = false, setBookStatus} : Prop
                             </Field>
                         </FieldLabel>
                         <FieldLabel htmlFor="reading-z4k">
-                            <Field orientation="horizontal">
+                            <Field className={'text-left'} orientation="horizontal">
                                 <FieldContent>
                                     <FieldTitle>Reading</FieldTitle>
                                     <FieldDescription>
@@ -57,7 +64,7 @@ export function BookStatus ({bookStatus, disabled = false, setBookStatus} : Prop
                             </Field>
                         </FieldLabel>
                         <FieldLabel htmlFor="que-z4k">
-                            <Field orientation="horizontal">
+                            <Field className={'text-left'} orientation="horizontal">
                                 <FieldContent>
                                     <FieldTitle>Queue</FieldTitle>
                                     <FieldDescription>

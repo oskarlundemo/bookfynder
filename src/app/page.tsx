@@ -17,13 +17,14 @@ export default async function Home ({}) {
     }
 
     return (
-        <main className="flex flex-col m-auto items-center justify-start w-full  text-center px-4">
+        <main className="flex  pt-40 flex-col items-center justify-start w-full text-center px-4">
 
             <LandingHeader/>
 
             <Logo/>
 
-            <section className="flex flex-col gap-50 md:gap-20 max-w-[1200px] w-full">
+            <section className="flex flex-col gap-20  md:gap-20 max-w-[1200px] w-full">
+
                 <MockBookForm/>
 
                 <MockDeck/>

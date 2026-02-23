@@ -2,7 +2,7 @@ export default function Logo ({}) {
 
 
     return (
-        <div className="flex flex-col my-40  w-full items-center justify-center" style={{ maxWidth: 'var(--max-width)' }}>
+        <div className="flex my-50 flex-col w-full items-center justify-center" style={{ maxWidth: 'var(--max-width)' }}>
 
             <div className="relative flex flex-row items-center gap-5 mb-6">
 
@@ -54,7 +54,7 @@ export default function Logo ({}) {
                     </h1>
                 </div>
 
-                <span className={'text-xl -top-8 -right-5 absolute sm:text-2xl md:text-3xl'}>1.0 alpha</span>
+                <span className={'text-xl -top-8 text-gray-200 -right-5 absolute sm:text-2xl md:text-3xl'}>1.0 alpha</span>
 
             </div>
 
