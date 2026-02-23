@@ -1,12 +1,7 @@
 "use client"
 import * as React from "react"
 import { Label, Pie, PieChart } from "recharts"
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
+
 import {
     ChartConfig,
     ChartContainer,
@@ -53,8 +48,14 @@ const chartConfig = {
 export function MockChart ({}) {
 
     return (
-            <div className="flex w-full h-[500px] flex-col-reverse md:flex-row">
-
+        <div className="
+                flex w-full
+                flex-col
+                md:flex-row
+                rounded-2xl p-10
+                h-[600px]
+                items-start justify-between
+                md:h-[400px]  ">
                 <LandingText
                     title={"Watch your reading come to life with charts"}
                     breadText={
@@ -125,7 +126,26 @@ export function MockChart ({}) {
                             />
                         </Pie>
                     </PieChart>
+
+                    <article className="flex gap-2 flex-wrap">
+
+                        {chartData.map((item, i) => (
+                            <div
+                                className={'flex items-center justify-center m-auto  flex-row gap-3 '}
+                                key={i}>
+                                <div
+                                    className={"h-5 w-5 rounded-[5px]"}
+                                    style={{
+                                        backgroundColor: `${item.fill}`
+                                    }}
+                                />
+                                <span>{item.genre} ({item.count})</span>
+                            </div>
+                        ))}
+                    </article>
+
                 </ChartContainer>
+
             </div>
     )
 }

@@ -1,4 +1,5 @@
 "use client"
+
 import {forgot} from "@/app/auth/forgot/actions"
 import { Spinner } from "@/components/ui/spinner"
 import { cn } from "@/lib/utils"
@@ -49,7 +50,7 @@ export function ForgotForm ({
 
     const handleSubmit = async (e: React.FormEvent) => {
 
-        if (validEmail)
+        if (!validEmail)
             return;
 
         e.preventDefault()
@@ -72,7 +73,7 @@ export function ForgotForm ({
     }
 
     return (
-        <form className={cn("flex flex-col gap-6", className)} {...props}>
+        <form onSubmit={handleSubmit} className={cn("flex flex-col gap-6", className)} {...props}>
             <FieldGroup>
                 <div className="flex flex-col items-center gap-1 text-center">
                     <h1 className="text-2xl font-bold">Forgot password</h1>
@@ -94,7 +95,7 @@ export function ForgotForm ({
                 </Field>
 
                 <Field>
-                    <Button disabled={!validEmail} onClick={(e) => handleSubmit(e)} type="submit" className="w-full">
+                    <Button disabled={!validEmail || loading} type="submit" className="w-full">
 
                         {loading && (
                             <Spinner/>

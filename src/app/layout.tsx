@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     description: "This is my book finding app.",
     authors: [{ name: "Oskar Lundemo", url: "https://oskarlundemo.com" }],
     icons: {
-        icon: "fav.svg",
-    },
+
+    }
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

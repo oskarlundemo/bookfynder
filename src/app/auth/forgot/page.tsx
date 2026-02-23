@@ -1,6 +1,5 @@
 "use server"
 
-import { GalleryVerticalEnd } from "lucide-react"
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import {ForgotForm} from "@/components/auth/ForgotForm";

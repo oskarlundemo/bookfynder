@@ -3,7 +3,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
-
 export async function login(formData: FormData) {
     const supabase = await createClient()
 
@@ -31,7 +30,6 @@ export async function logout() {
 
     const supabase = await createClient();
 
-    // Supabase sign out
     const { error } = await supabase.auth.signOut()
 
     if (error) {
