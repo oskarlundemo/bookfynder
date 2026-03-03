@@ -1,26 +1,22 @@
 "use client"
 
 import { useEffect } from "react";
-import { useSearchParams, redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import {useRouter, useSearchParams} from "next/navigation";
 import { ResetForm } from "@/components/auth/ResetForm";
 import { GalleryVerticalEnd } from "lucide-react";
+import {router} from "next/client";
 
 export default function ResetPassword() {
 
-    const supabase = createClient();
-    const params = useSearchParams();
-    const code = params.get("code");
+    const searchParams = useSearchParams();
+    const accessToken = searchParams.get("access_token") || "";
+    const router = useRouter();
 
     useEffect(() => {
-        if (code) {
-            supabase.auth.exchangeCodeForSession(code);
+        if (!accessToken) {
+            router.push("/auth/login");
         }
-    }, [code]);
-
-    if (!code) {
-        redirect("/auth/login");
-    }
+    }, [accessToken, router]);
 
     return (
         <div className="grid w-full lg:grid-cols-2">
@@ -34,7 +30,7 @@ export default function ResetPassword() {
 
                 <div className="flex flex-1 items-center justify-center">
                     <div className="w-full max-w-xs">
-                        <ResetForm />
+                        <ResetForm/>
                     </div>
                 </div>
             </div>

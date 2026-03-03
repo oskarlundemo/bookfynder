@@ -16,7 +16,8 @@ import { Input } from "@/components/ui/input"
 
 import {useEffect, useState} from "react";
 import toast from "react-hot-toast";
-import {useRouter} from "next/navigation";
+import {useParams, useRouter, useSearchParams} from "next/navigation";
+
 
 export function ResetForm ({
                                 className,
@@ -24,13 +25,15 @@ export function ResetForm ({
                             }: React.ComponentProps<"form">) {
 
     const router = useRouter();
-
     const [samePasswords, setSamePasswords] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
 
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [showPassword, setShowPassword] = useState<boolean>(false);
+
+    const searchParams = useSearchParams();
+    const accessToken = searchParams.get("access_token") || "";
 
     useEffect(() => {
         setSamePasswords(password === confirmPassword && confirmPassword.length > 0 && password.length > 0);
@@ -47,6 +50,7 @@ export function ResetForm ({
         const formData = new FormData()
         formData.append('password', password)
         formData.append('confirmPassword', confirmPassword)
+        formData.append('token', accessToken);
 
         const result = await resetPassword(formData)
 

@@ -53,7 +53,6 @@ export function LoginForm({
         } else {
             toast.error(result.message)
         }
-
         setLoading(false)
     }
 

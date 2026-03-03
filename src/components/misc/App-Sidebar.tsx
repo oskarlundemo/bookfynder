@@ -1,11 +1,9 @@
 "use client"
 
-import {logout} from "@/app/auth/login/actions";
+import {logout, deleteAccount} from "@/app/auth/login/actions";
 
-import { GalleryHorizontalEnd, Library, ChartPie, Plus } from "lucide-react"
-import {UserAvatar} from "@/components/misc/UserAvatar"
+import {GalleryHorizontalEnd, Library, ChartPie, Plus, LogOut, Settings, Trash} from "lucide-react"
 import { User } from "lucide-react"
-
 
 import {
     DropdownMenu,
@@ -24,7 +22,6 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarFooter,
-    useSidebar
 } from "@/components/ui/sidebar"
 
 import {
@@ -32,6 +29,11 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+
+import {Input} from "@/components/ui/input";
+import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
+import {useEffect, useState} from "react";
+import {Button} from "@/components/ui/button";
 
 const items = [
     {
@@ -66,6 +68,14 @@ type Props = {
 }
 
 export function AppSidebar ({username}:Props) {
+
+    const [usernameInput, setUsernameInput] = useState<string>("");
+    const [usernameMatches, setUsernameMatches] = useState<boolean>(false);
+
+    useEffect(() => {
+        const matches = usernameInput.trim() === username;
+        setUsernameMatches(matches);
+    }, [usernameInput, username]);
 
     return (
         <Sidebar collapsible="icon">
@@ -113,8 +123,46 @@ export function AppSidebar ({username}:Props) {
                                 className="w-[--radix-popper-anchor-width]"
                             >
                                 <DropdownMenuItem onClick={logout}>
+                                    <LogOut/>
                                     <span>Sign out</span>
                                 </DropdownMenuItem>
+
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <DropdownMenuItem
+                                            onSelect={(e) => e.preventDefault()} // 🔥 IMPORTANT
+                                            className="text-red-500"
+                                        >
+                                            <Trash className="h-4 w-4" />
+                                            Delete Account
+                                        </DropdownMenuItem>
+                                    </DialogTrigger>
+
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>Are you absolutely sure?</DialogTitle>
+                                            <DialogDescription>
+                                                This action cannot be undone. This will permanently delete
+                                                your account and remove your data from our servers.
+                                            </DialogDescription>
+
+                                            <p className={'text-gray-400'}>Type: "{username}" to confirm</p>
+                                            <Input
+                                                value={usernameInput}
+                                                onChange={(e) => setUsernameInput(e.target.value)}
+                                            />
+
+                                            <Button
+                                                disabled={!usernameMatches}
+                                                type="button"
+                                                onClick={deleteAccount}
+                                            >
+                                                Delete
+                                            </Button>
+
+                                        </DialogHeader>
+                                    </DialogContent>
+                                </Dialog>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </SidebarMenuItem>
