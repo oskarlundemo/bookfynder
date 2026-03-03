@@ -8,6 +8,7 @@ export async function resetPassword (formData: FormData) {
     const data = {
         password: formData.get('password') as string,
         confirmed: formData.get('confirmPassword') as string,
+        token: formData.get('token') as string,
     }
 
     if (data.password.length > 100 ||  data.confirmed.length > 100) {
@@ -26,7 +27,8 @@ export async function resetPassword (formData: FormData) {
         return { success: false, message: 'Passwords exceed the allowed length, no longer than 100 characters.' }
     }
 
-    const { error } = await supabase.auth.updateUser({password: data.password})
+    // @ts-ignore
+    const { error } = await supabase.auth.updateUser({accessToken: data.token, password: data.password})
 
     if (error) {
         console.error('Reset error:', error.message)
