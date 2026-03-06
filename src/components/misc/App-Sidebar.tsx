@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image";
 import {logout, deleteAccount} from "@/app/auth/login/actions";
 
 import {GalleryHorizontalEnd, Library, ChartPie, Plus, LogOut, Settings, Trash} from "lucide-react"
@@ -81,9 +82,13 @@ export function AppSidebar ({username}:Props) {
         <Sidebar collapsible="icon">
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Bookfynder</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
+
+
+                            <Image alt={'bookfynder-icon'} src={"/icon.png"} className={'mr-auto w-fit p-2'} width={10} height={10}/>
+
+
                             {items.map((item, index) => (
                                 <Tooltip key={index}>
                                     <TooltipTrigger asChild>
@@ -100,7 +105,6 @@ export function AppSidebar ({username}:Props) {
                                     <TooltipContent side="right">
                                         <p>{item.tooltip}</p>
                                     </TooltipContent>
-
                                 </Tooltip>
                             ))}
                         </SidebarMenu>

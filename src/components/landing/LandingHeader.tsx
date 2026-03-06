@@ -13,7 +13,6 @@ export function LandingHeader () {
             <nav style={{maxWidth: 'var(--max-width)'}} className={'rounded-b-2xl w-full mx-auto max-w-[1200px]'}>
 
                 <ul className={'flex flex-row justify-end gap-5 m-5'}>
-
                     <Button
                         className={'bg-transparent hover:bg-transparent text-black cursor-pointer'}
                         onClick={() => {

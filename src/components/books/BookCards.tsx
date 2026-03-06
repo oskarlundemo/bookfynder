@@ -25,6 +25,8 @@ export default function BookCards ({books} :props) {
     const [searchTerm, setSearchTerm] = useState<string>("")
     const [filteredBooks, setFilteredBooks] = useState<Books>(books)
 
+    console.log(books)
+
     useEffect(() => {
 
         if (!books.length)
@@ -74,7 +76,7 @@ export default function BookCards ({books} :props) {
                             <CardFooter>
                                 <div className="flex flex-wrap flex-row gap-2">
                                     {book.BookCategory.map((category, index) => (
-                                        <Button key={index}>{category.category.name}</Button>
+                                        <Button key={index}>{category.Category?.name ? category.Category?.name : "Nope"}</Button>
                                     ))}
                                 </div>
 

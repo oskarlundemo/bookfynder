@@ -18,7 +18,6 @@ import toast from "react-hot-toast";
 import {useRouter, useSearchParams} from "next/navigation";
 import {createClient} from "@/lib/supabase/client";
 
-
 export function ResetForm({
                               className,
                               ...props
@@ -44,11 +43,8 @@ export function ResetForm({
         if (!accessToken) {
             router.replace("/auth/login");
             return;
-        } else {
-            setLoadingComponent(false)
-            console.log("This is the token");
-            console.log(accessToken);
-        }
+        } else
+            setLoadingComponent(true)
 
         setToken(accessToken);
         setLoading(false);
@@ -60,7 +56,7 @@ export function ResetForm({
 
     const handleSubmit = async (e: React.FormEvent) => {
 
-        if (!samePasswords)
+        if (!samePasswords || !token)
             return;
 
         e.preventDefault()
@@ -77,6 +73,7 @@ export function ResetForm({
             toast.success("Password updated successfully!");
             router.replace("/auth/login");
         }
+
         setLoading(false)
     }
 

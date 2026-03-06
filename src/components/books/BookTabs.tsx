@@ -37,6 +37,7 @@ export const BookTabs = ({ readBooks, readingBooks, queuedBooks}: Books) => {
                 <TabsTrigger value="queue">Queue</TabsTrigger>
 
             </TabsList>
+
             <TabsContent value="read">
 
                 {readBooks && readBooks.length > 0 ? (
