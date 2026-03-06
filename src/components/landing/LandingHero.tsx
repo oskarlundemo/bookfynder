@@ -21,7 +21,7 @@ export default function LandingHero() {
     }, []);
 
     return (
-        <section className="flex flex-col items-center bg-muted h-screen w-screen">
+        <section className="flex flex-col mt-[60px] items-center bg-muted h-screen w-screen">
 
             <Logo/>
 

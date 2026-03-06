@@ -44,7 +44,7 @@ export function ResetForm({
             router.replace("/auth/login");
             return;
         } else
-            setLoadingComponent(true)
+            setLoadingComponent(false)
 
         setToken(accessToken);
         setLoading(false);
