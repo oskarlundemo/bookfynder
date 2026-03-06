@@ -15,7 +15,7 @@ export async function forgot (formData: FormData) {
     }
 
     const {error} = await supabase.auth.resetPasswordForEmail(data.email, {
-        redirectTo: 'https://bookfynder.com/auth/reset-password',
+        redirectTo: 'https://www.bookfynder.com/auth/reset-password',
     })
 
     if (error) {

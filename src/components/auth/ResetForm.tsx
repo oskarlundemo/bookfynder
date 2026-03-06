@@ -1,6 +1,5 @@
 "use client"
 
-import {resetPassword} from "@/app/auth/reset-password/action"
 import { Spinner } from "@/components/ui/spinner"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -16,24 +15,44 @@ import { Input } from "@/components/ui/input"
 
 import {useEffect, useState} from "react";
 import toast from "react-hot-toast";
-import {useParams, useRouter, useSearchParams} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
+import {createClient} from "@/lib/supabase/client";
 
 
-export function ResetForm ({
-                                className,
-                                ...props
-                            }: React.ComponentProps<"form">) {
+export function ResetForm({
+                              className,
+                              ...props
+                          }:  React.ComponentProps<"form">) {
+
+    const supabase = createClient();
 
     const router = useRouter();
     const [samePasswords, setSamePasswords] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
+    const [loadingComponent, setLoadingComponent] = useState<boolean>(true);
+
+    const [token, setToken] = useState<string | null>(null);
+    const searchParams = useSearchParams();
 
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
-    const searchParams = useSearchParams();
-    const accessToken = searchParams.get("access_token") || "";
+    useEffect(() => {
+        const accessToken = searchParams.get("code");
+
+        if (!accessToken) {
+            router.replace("/auth/login");
+            return;
+        } else {
+            setLoadingComponent(false)
+            console.log("This is the token");
+            console.log(accessToken);
+        }
+
+        setToken(accessToken);
+        setLoading(false);
+    }, [searchParams, router]);
 
     useEffect(() => {
         setSamePasswords(password === confirmPassword && confirmPassword.length > 0 && password.length > 0);
@@ -47,23 +66,22 @@ export function ResetForm ({
         e.preventDefault()
         setLoading(true)
 
-        const formData = new FormData()
-        formData.append('password', password)
-        formData.append('confirmPassword', confirmPassword)
-        formData.append('token', accessToken);
+        const { error } = await supabase.auth.updateUser(
+            { password },
+            { accessToken: token }
+        );
 
-        const result = await resetPassword(formData)
-
-        if (result.success) {
-            toast.success(result.message)
-            setLoading(false)
-            router.push('/auth/login')
+        if (error) {
+            toast.error(error.message);
         } else {
-            toast.error(result.message)
+            toast.success("Password updated successfully!");
+            router.replace("/auth/login");
         }
-
         setLoading(false)
     }
+
+    if (loadingComponent)
+        return (<Spinner/>)
 
     return (
         <form className={cn("flex flex-col gap-6", className)} {...props}>
@@ -117,7 +135,7 @@ export function ResetForm ({
                 </div>
 
                 <Field>
-                    <Button disabled={!samePasswords} onClick={(e) => handleSubmit(e)} type="submit" className="w-full">
+                    <Button disabled={!samePasswords || !token} onClick={(e) => handleSubmit(e)} type="submit" className="w-full">
 
                         {loading && (
                             <Spinner/>
