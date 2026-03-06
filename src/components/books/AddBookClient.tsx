@@ -67,7 +67,7 @@ export default function AddBookClient({ user }: { user: any }) {
 
     return (
         <main className="flex items-start justify-center h-full w-full">
-            <div style={{ maxWidth: "var(--max-form)" }} className="flex m-5 rounded-2xl flex-col w-full">
+            <div style={{ maxWidth: "var(--max-width)" }} className="flex m-5 mx-auto rounded-2xl flex-col w-full">
                 <SearchAPI setTitle={setTitle} setAuthorName={setAuthor} />
                 <BookForm
                     title={title}

@@ -1,22 +1,18 @@
-"use client"
+"use server"
 
-import { useEffect } from "react";
-import {useRouter, useSearchParams} from "next/navigation";
 import { ResetForm } from "@/components/auth/ResetForm";
 import { GalleryVerticalEnd } from "lucide-react";
-import {router} from "next/client";
+import {createClient} from "@/lib/supabase/server";
+import {redirect} from "next/navigation";
 
-export default function ResetPassword() {
+export default async function ResetPassword() {
 
-    const searchParams = useSearchParams();
-    const accessToken = searchParams.get("access_token") || "";
-    const router = useRouter();
+    const supabase = await createClient();
+    const { data } = await supabase.auth.getUser()
 
-    useEffect(() => {
-        if (!accessToken) {
-            router.push("/auth/login");
-        }
-    }, [accessToken, router]);
+    if (data?.user) {
+        redirect('/books')
+    }
 
     return (
         <div className="grid w-full lg:grid-cols-2">
@@ -34,7 +30,6 @@ export default function ResetPassword() {
                     </div>
                 </div>
             </div>
-
             <div className="bg-muted relative hidden lg:block" />
         </div>
     );

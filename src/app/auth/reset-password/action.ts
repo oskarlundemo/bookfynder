@@ -3,7 +3,7 @@ import {createClient} from "@/lib/supabase/server";
 
 export async function resetPassword (formData: FormData) {
 
-    const supabase = await createClient()
+    const supabase = await createClient();
 
     const data = {
         password: formData.get('password') as string,
