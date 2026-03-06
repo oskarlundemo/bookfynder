@@ -33,7 +33,7 @@ export default function Logo ({}) {
 
                 <div className={'flex flex-row relative'}>
                     <h1
-                        className="relative left-3 select-none text-gray-300 whitespace-nowrap"
+                        className="relative left-3 text-black/20 select-none  whitespace-nowrap"
                         style={{
                             fontSize: "clamp(2rem, 8vw, 6rem)",
                             lineHeight: "1"
@@ -43,7 +43,7 @@ export default function Logo ({}) {
                     </h1>
 
                     <h1
-                        className="absolute select-none whitespace-nowrap"
+                        className="absolute text-black select-none whitespace-nowrap"
                         style={{
                             left: "0.2em",
                             fontSize: "clamp(2rem, 8vw, 6rem)",
@@ -54,12 +54,12 @@ export default function Logo ({}) {
                     </h1>
                 </div>
 
-                <span className={'text-xl -top-8 text-gray-200 -right-5 absolute sm:text-2xl md:text-3xl'}>1.0 alpha</span>
+                <span className={'text-xl -top-8 text-black/20 -right-5 absolute sm:text-2xl md:text-3xl'}>1.0 alpha</span>
 
             </div>
 
             <div className="relative flex flex-col gap-5">
-                <h2 className="text-xl sm:text-2xl md:text-3xl">
+                <h2 className="text-xl text-black sm:text-2xl md:text-3xl">
                     Books that match your <strong>vibe</strong>
                 </h2>
             </div>

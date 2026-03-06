@@ -49,6 +49,7 @@ export default function BookTable({ books, subTitle, bookStatus }: Props) {
     const [searchTerm, setSearchTerm] = React.useState<string>("");
     const [globalFilter, setGlobalFilter] = React.useState("");
 
+    console.log(books)
 
     const globalFilterFn: FilterFn<any> = (row, _columnId, filterValue) => {
         const search = String(filterValue.toLowerCase());
@@ -121,7 +122,6 @@ export default function BookTable({ books, subTitle, bookStatus }: Props) {
         onGlobalFilterChange: setGlobalFilter,
         globalFilterFn,
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
     });

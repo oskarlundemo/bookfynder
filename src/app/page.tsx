@@ -2,10 +2,11 @@ import { createClient } from '@/lib/supabase/server'
 import {redirect} from "next/navigation";
 import {LandingHeader} from "@/components/landing/LandingHeader"
 import {AuthorDetails} from "@/components/landing/AuthorDetails";
-import Logo from "@/components/landing/Logo";
 import {MockChart} from "@/components/landing/MockChart";
 import MockDeck from "@/components/landing/MockDeck";
 import MockBookForm from "@/components/landing/MockBookForm";
+import LandingHero from "@/components/landing/LandingHero";
+import LandingFooter from "@/components/landing/LandingFooter";
 
 export default async function Home ({}) {
 
@@ -17,21 +18,25 @@ export default async function Home ({}) {
     }
 
     return (
-        <main className="flex  pt-40 flex-col items-center justify-start w-full text-center px-4">
+        <main className="flex overflow-x-hidden bg-muted flex-col items-center justify-start w-full h-full text-center">
 
             <LandingHeader/>
-            <Logo/>
+            <LandingHero/>
 
-            <section className="flex flex-col gap-20  md:gap-20 max-w-[1200px] w-full">
+            <section className="flex bg-white items-center flex-col gap-20  md:gap-20 w-full">
 
-                <MockBookForm/>
+                <div className={"flex my-30 items-center justify-center flex-col gap-20 max-w-[1200px] w-full"}>
+                    <MockBookForm/>
 
-                <MockDeck/>
+                    <MockDeck/>
 
-                <MockChart/>
+                    <MockChart/>
+                </div>
+
             </section>
 
-            <AuthorDetails />
+
+            <LandingFooter/>
 
         </main>
     );

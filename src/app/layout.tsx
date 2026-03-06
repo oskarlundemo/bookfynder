@@ -23,8 +23,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     const { data } = await supabase.auth.getUser();
 
     return (
-        <html lang="en">
-            <body className="w-full h-full">
+        <html className={"h-full"} lang="en">
+            <body className="min-h-screen">
                     <SidebarProvider>
                           {data?.user ? (
                               <>

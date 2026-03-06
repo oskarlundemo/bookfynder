@@ -40,7 +40,7 @@ export async function POST (req: NextRequest) {
             },
         });
 
-        const categories = book.categories.map((category) => ({
+        const categories = book.categories.map((category:any) => ({
             categoryId: category.id,
             bookId: newBook.id
         }))

@@ -29,6 +29,16 @@ export default function AddBookClient({ user }: { user: any }) {
         loadCategories();
     }, []);
 
+
+    useEffect(() => {
+        setAllowSubmit(
+            title.trim().length > 0 &&
+            author.trim().length > 0 &&
+            pages > 0 &&
+            selectedCategories.length > 0
+        );
+    }, [title, author, pages, selectedCategories]);
+
     useEffect(() => {
         if (currentPage > pages) setCurrentPage(pages);
     }, [pages]);

@@ -49,8 +49,8 @@ export default function UpdateBookClient({ bookId }: { bookId: string }) {
                 const { book } = await getBook(bookId);
                 setTitle(book.title);
                 setAuthor(book.author);
-                setPages(book.pages);
-                setCurrentPage(book.pagesRead);
+                setPages(book.pages ?? 100);
+                setCurrentPage(book.pagesRead ?? 0);
                 setSelectedCategories(book.bookCategories);
                 setCategories(book.categories);
                 setRating(book.rating || 1);
@@ -118,7 +118,7 @@ export default function UpdateBookClient({ bookId }: { bookId: string }) {
     return (
         <main className="flex items-end justify-center h-full w-full">
             <div
-                style={{ maxWidth: "var(--max-form)" }}
+                style={{ maxWidth: "var(--max-width)" }}
                 className="flex book-add-wrapper m-5 flex-col w-full justify-start"
             >
                 <BookForm

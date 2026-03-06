@@ -10,6 +10,8 @@ export async function updateBook (rawBookData: unknown) {
     const supabase = await createClient();
     const { data, error } = await supabase.auth.getUser()
 
+    console.log(rawBookData)
+
     if (error) {
         console.error('Update error:', error.message)
         redirect('/error')
@@ -18,13 +20,10 @@ export async function updateBook (rawBookData: unknown) {
     const parsed = bookSchema.safeParse(rawBookData);
 
     if (!parsed.success) {
-
         let errorMessage = "";
-
         for (const issue of parsed.error.issues) {
             const field = issue.path[0];
             const fieldName = field.charAt(0).toUpperCase() + field.slice(1);
-
             errorMessage += `${fieldName}: ${issue.message}\n`;
         }
 
@@ -37,82 +36,112 @@ export async function updateBook (rawBookData: unknown) {
 
 
     const bookData = parsed.data;
+    console.log(bookData)
     const userId = data.user?.id
 
-    // Starta en transaction
     await prisma.$transaction(async (tx) => {
 
-        if (bookData.bookStatus === 'READING') {
+        switch (bookData.bookStatus) {
 
-            const previousReadingSession = await tx.bookProgressEntry.findFirst({
-                where: {
-                    bookId: bookData.bookId,
-                    userId: userId,
-                },
-                orderBy: {
-                    createdAt: 'desc',
-                },
-            });
-
-            if (previousReadingSession && previousReadingSession.endPage > bookData.currentPage)
-            {
-                await tx.bookProgressEntry.deleteMany({
+            case "READING":
+                const previousReadingSession = await tx.bookProgressEntry.findFirst({
                     where: {
                         bookId: bookData.bookId,
                         userId: userId,
-                        endPage: {gt: bookData.currentPage}
+                    },
+                    orderBy: {
+                        createdAt: 'desc',
                     },
                 });
-            }
 
-            let updatedLatestSession = await tx.bookProgressEntry.findFirst({
-                where: {
-                    bookId: bookData.bookId,
-                    userId: userId,
+                if (previousReadingSession && previousReadingSession.endPage > bookData.currentPage) {
+                    await tx.bookProgressEntry.deleteMany({
+                        where: {
+                            bookId: bookData.bookId,
+                            userId: userId,
+                            endPage: { gt: bookData.currentPage },
+                        },
+                    });
                 }
-            });
 
-            const newEntry = await tx.bookProgressEntry.create({
-                data: {
-                    startPage:  updatedLatestSession?.endPage || 0,
-                    endPage: bookData.currentPage,
-                    pagesRead: bookData.currentPage - (updatedLatestSession?.endPage ?? 0),
-                    userId: userId,
-                    bookId: bookData.bookId,
-                },
-            });
+                const updatedLatestSession = await tx.bookProgressEntry.findFirst({
+                    where: {
+                        bookId: bookData.bookId,
+                        userId: userId,
+                    },
+                });
+
+                await tx.bookProgressEntry.create({
+                    data: {
+                        startPage: updatedLatestSession?.endPage || 0,
+                        endPage: bookData.currentPage,
+                        pagesRead: bookData.currentPage - (updatedLatestSession?.endPage ?? 0),
+                        userId: userId,
+                        bookId: bookData.bookId,
+                    },
+                });
+                break;
+
+            case "QUEUED":
+                await tx.book.update({
+                    where: {
+                        id: bookData.bookId,
+                    },
+                    data: {
+                        title: bookData.title,
+                        author: bookData.author,
+                        userId: userId,
+                        pages: bookData.pages,
+                        pagesRead: bookData.pages,
+                        rating: bookData.rating ?? 0,
+                        status: "QUEUED",
+                    },
+                });
+                break;
+
+            case "READ":
+                await tx.book.update({
+                    where: {
+                        id: bookData.bookId,
+                    },
+                    data: {
+                        title: bookData.title,
+                        author: bookData.author,
+                        userId: userId,
+                        pages: bookData.pages,
+                        pagesRead: bookData.pages,
+                        rating: bookData.rating ?? 0,
+                        status: "READ",
+                    },
+                });
+                break;
+
+            default:
+                console.warn(`Unknown bookStatus: ${bookData.bookStatus}`);
+                break;
         }
 
-        const updatedBook = await prisma.book.update({
-            where: {
-                id: bookData.bookId,
-                userId: userId,
-            },
+        // Update book and categories (your existing code)
+        const updatedBook = await tx.book.update({
+            where: { id: bookData.bookId, userId: userId },
             data: {
                 title: bookData.title,
                 author: bookData.author,
                 pages: bookData.pages,
-                status: bookData.currentPage >= bookData.pages ? "READ" :  bookData.bookStatus,
+                status: bookData.currentPage >= bookData.pages ? "READ" : bookData.bookStatus,
                 rating: bookData.rating,
                 pagesRead: bookData.currentPage,
             },
-        })
+        });
 
-        // Radera de gamla
-        await tx.bookCategory.deleteMany({
-            where: {
-                bookId: bookData.bookId,
-            }
-        })
-
-        // Lägg till de nya kategorierna
+        await tx.bookCategory.deleteMany({ where: { bookId: bookData.bookId } });
         await tx.bookCategory.createMany({
             data: bookData.categories.map(c => ({
                 bookId: bookData.bookId,
                 categoryId: c.id,
             })),
         });
-    })
+    });
 
     return {
         success: true,
@@ -172,7 +201,6 @@ export async function getBook (bookId: string) {
 
     const categories = await prisma.category.findMany()
     const bookCategories = book.BookCategory.map(bc => bc.Category);
-    console.log("Categories" + bookCategories)
 
     const formatedRespons = {
         author: book.author,

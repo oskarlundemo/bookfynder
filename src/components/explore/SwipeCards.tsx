@@ -181,13 +181,11 @@ const SwipeCards = ({userId} : props) => {
                     </button>
 
                     <button
-
                         onClick={() => {
                             if (!topCard) return;
                             setCards((prev) => prev.filter((card) => card.id !== topCard.id));
                             handleSave(topCard);
                         }}
-
                         style={{transition: '200ms ease-in-out', cursor: 'pointer'}}
                         className="w-16 h-16 rounded-full bg-green-500 hover:bg-green-600 flex items-center active:scale-95  justify-center shadow-lg transform hover:scale-110 transition-all">
                         <Heart stroke={'white'}/>

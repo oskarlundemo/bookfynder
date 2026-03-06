@@ -1,9 +1,9 @@
-"use server"
-
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import {prisma} from "../../../prisma/prisma";
 import {BookTabs} from "@/components/books/BookTabs";
+
+export const revalidate = 0;
 
 export default async function BooksPage() {
 
@@ -42,6 +42,7 @@ export default async function BooksPage() {
             }
         }
     })
+
 
     const readingBooks = await prisma.book.findMany({
         where: {
