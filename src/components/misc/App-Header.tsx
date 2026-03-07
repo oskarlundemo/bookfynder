@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 const getTitle = (pathname: string) => {
     switch (pathname) {
         case "/books": return "Books";
-        case "/statistics": return "Statistics";
+        case "/stats": return "Statistics";
         case "/explore": return "Explore";
         default: return "Default";
     }

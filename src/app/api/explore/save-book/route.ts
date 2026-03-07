@@ -13,8 +13,6 @@ export async function POST (req: NextRequest) {
 
     const {book} = await req.json();
 
-    console.log(book);
-
     if (!userId || !book) {
         return NextResponse.json({
             message: 'Insufficient parameters, please try again.',

@@ -13,7 +13,7 @@ export function LandingHeader () {
 
             <nav style={{maxWidth: 'var(--max-width)'}} className={'flex flex-row justify-between rounded-b-2xl w-full mx-auto max-w-[1200px]'}>
 
-                <Image className={'aspect-square my-auto'} width={20} height={20} src={'/icon.png'} alt={'logo'}/>
+                <Image className={'aspect-square my-auto mx-5'} width={20} height={20} src={'/icon.png'} alt={'logo'}/>
 
                 <ul className={'flex flex-row justify-end gap-5 m-5'}>
                     <Button

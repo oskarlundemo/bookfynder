@@ -1,11 +1,10 @@
 import {createClient} from "@/lib/supabase/server";
 import {redirect} from "next/navigation";
-import { startOfWeek, endOfWeek, format } from 'date-fns'
+import { format } from 'date-fns'
 import {prisma} from "../../../prisma/prisma";
 import {ChartPieDonutText} from "../../components/statistics/BookCategoryPieChart";
 import {PagesBarChart} from "../../components/statistics/PagesBarChart";
-import {ChartBarLabelCustom} from "../../components/statistics/BookReadChart";
-import {ChartAreaInteractive} from "../../components/statistics/AreaChartPages";
+import {BooksReadPerMonthWidget} from "../../components/statistics/BooksReadPerMonthWidget";
 
 
 export default async function StatisticsPag () {
@@ -39,26 +38,11 @@ export default async function StatisticsPag () {
             return acc;
         }, {} as Record<string, number>);
 
-
     const allCategories = Object.entries(categoryCounts).map(([name, value]) => ({
         name,
         value,
         color: 'var(--chart-1)'
     }));
-
-    const now = new Date()
-    const weekStart = startOfWeek(now, { weekStartsOn: 1 })
-    const weekEnd = endOfWeek(now, { weekStartsOn: 1 })
-
-    const pagesReadThisWeek = await prisma.bookProgressEntry.findMany({
-        where: {
-            userId: data?.user?.id,
-            createdAt: {
-                gte: weekStart,
-                lte: weekEnd,
-            },
-        },
-    })
 
     const booksRead = await prisma.book.findMany({
         where: {
@@ -70,56 +54,24 @@ export default async function StatisticsPag () {
     return (
         <main style={{maxWidth: 'var(--max-width)'}} className="flex mx-auto w-full flex-col p-5 gap-5 h-full ">
 
-            <PagesBarChart
-                startDate={weekStart}
-                endDate={weekEnd}
-                data={PagesReadDayAWeek(pagesReadThisWeek)}
-            />
+            <PagesBarChart/>
 
-            <ChartPieDonutText
-                title={'Books'}
-                numberOfBooks={allCategories.length || 0}
-                bookData={allCategories || []}
-                explanation={"Your reading genres"}
-            />
+            <section className={'flex flex-row! gap-10'}>
+                <BooksReadPerMonthWidget
+                    data={BooksReadPerMonth(booksRead)}
+                />
 
-            <ChartBarLabelCustom
-                data={BooksReadPerMonth(booksRead)}
-            />
-
+                <ChartPieDonutText
+                    title={'Books'}
+                    numberOfBooks={allCategories.length || 0}
+                    bookData={allCategories || []}
+                    explanation={"Your reading genres"}
+                />
+            </section>
         </main>
     )
 }
 
-
-
-export function PagesReadDayAWeek (data: any[]) {
-
-    const result = data.reduce((acc, entry) => {
-        const date = new Date(entry.createdAt)
-        const dayName = format(date, 'EEEE')
-        acc[dayName] = (acc[dayName] || 0) + entry.pagesRead
-        return acc
-    }, {} as Record<string, number>)
-
-
-    const allDays = [
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday',
-        'Sunday',
-    ]
-
-    const fullWeek = allDays.map(day => ({
-        day,
-        pages: result[day] || 0,
-    }))
-
-    return fullWeek
-}
 
 export function BooksReadPerMonth(data: any[]) {
 
