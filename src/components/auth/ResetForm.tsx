@@ -41,7 +41,7 @@ export function ResetForm({
         const accessToken = searchParams.get("code");
 
         if (!accessToken) {
-            router.replace("/auth/login");
+            router.push("/auth/login");
             return;
         } else
             setLoadingComponent(false)
@@ -70,10 +70,10 @@ export function ResetForm({
         if (error) {
             toast.error(error.message);
         } else {
+            await supabase.auth.signOut();
             toast.success("Password updated successfully!");
-            router.replace("/auth/login");
+            router.push("/auth/login");
         }
-
         setLoading(false)
     }
 

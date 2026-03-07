@@ -1,7 +1,6 @@
 "use client"
 
-import {useState, useEffect} from "react";
-import { TrendingUp } from "lucide-react"
+import {useEffect, useState} from "react";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts"
 
 import {
@@ -18,82 +17,179 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
-
-export const description = "A bar chart with a label"
-
-const chartData = [
-    { month: "January", desktop: 186 },
-    { month: "February", desktop: 305 },
-    { month: "March", desktop: 237 },
-    { month: "April", desktop: 73 },
-    { month: "May", desktop: 209 },
-    { month: "June", desktop: 214 },
-]
-
-const chartData2 = [
-    { day: 'Monday', pages: 10},
-    { day: 'Tuesday', pages: 11},
-    { day: 'Wednesday', pages: 12},
-    { day: 'Thursday', pages: 3},
-    { day: 'Friday', pages: 14},
-    { day: 'Saturday', pages: 15},
-    { day: 'Sunday', pages: 26},
-]
+import {Spinner} from "@/components/ui/spinner";
 
 const chartConfig = {
     desktop: {
         label: "Desktop",
-        color: "var(--chart-3)",
+        color: "black",
     },
 } satisfies ChartConfig
 
-type Props = {
-    data: any[],
-    startDate?: any,
-    endDate?: any,
+
+type PeriodProps = {
+    period: string;
+    onClick?: () => void;
+    selectedPeriod?: string;
 }
 
+export function PeriodSelector ({period, selectedPeriod, onClick}: PeriodProps) {
+    return (
+        <span
+            className={`${period === selectedPeriod ? 'bg-gray-200 text-black' : 'bg-black text-white'} 
+            cursor-pointer font-semibold  p-4 h-full w-full transition-colors duration-200`}
+            onClick={onClick}>
+            {period}
+        </span>
+    )
+}
 
-export function PagesBarChart ({data, startDate, endDate} :Props) {
+export function PagesBarChart ({}) {
 
-    const [firstDate, setFirstDate] = useState<any>(new Date(startDate))
-    const [secondDate, setSecondDate] = useState<any>(new Date(endDate))
+    const [firstDate, setFirstDate] = useState<string>("")
+    const [secondDate, setSecondDate] = useState<string>("")
+
+    const [period, setPeriod] = useState<string>("7d");
+    const [loading, setLoading] = useState<boolean>(false)
+    const [chartData, setChartData] = useState<any>(null);
+    const [error, setError] = useState<boolean>(false);
+    const [errorMsg, setErrorMsg] = useState<string>("");
+    const [description, setDescription] = useState<string>("Pages read this week");
+
+    const periods = [
+        {
+            period: "1y",
+            apiEndPoint: "api/stats/pages-read/year"
+        },
+        {
+            period: "1m",
+            apiEndPoint: "api/stats/pages-read/month"
+        },
+        {
+            period: "7d",
+            apiEndPoint: "api/stats/pages-read/week"
+        }
+    ]
+
+    useEffect(() => {
+
+        const fetchData = async () => {
+
+            setLoading(true);
+
+            try {
+                const res = await fetch("/api/stats/pages-read/week", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                if (!res.ok) {
+                    console.error("Something went wrong");
+                    return;
+                }
+
+                const result = await res.json();
+                setChartData(result.dataPoints);
+                setFirstDate(result.dateStart);
+                setSecondDate(result.dateEnd);
+                setDescription(result.description || "No description");
+
+            } catch (error) {
+                console.error("Fetch error:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+
+    }, []);
+
+    const fetchData = async (apiUrl:string, clickedPeriod:string) => {
+
+        if (!apiUrl || clickedPeriod === period)
+            return;
+
+        setLoading(true);
+
+        const res = await fetch(apiUrl, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+
+        setLoading(false);
+        const data = await res.json();
+        setChartData(data.dataPoints);
+        setFirstDate(data.dateStart);
+        setSecondDate(data.dateEnd);
+        setDescription(data.description || "No description");
+        console.log(data)
+    }
 
     return (
-        <Card >
-            <CardHeader>
-                <CardTitle>Pages read this week</CardTitle>
-                <CardDescription>
-                    {firstDate.toISOString().split("T")[0]} - {secondDate.toISOString().split("T")[0]}
-                </CardDescription>
+        <Card className={'relative'} >
+
+            {loading && (
+                <div className="absolute flex flex-col gap-4 items-center justify-center bg-gray-100/80 z-20 top-0 bottom-0 h-full w-full">
+                    <Spinner className={'size-20'} stroke={"black"}/>
+                </div>
+            )}
+
+            <CardHeader className="flex items-center flex-row justify-between">
+                <div className={'flex flex-col'}>
+                    <CardTitle>{description}</CardTitle>
+                    <CardDescription>
+                        {firstDate} - {secondDate}
+                    </CardDescription>
+                </div>
+
+                <div className={'flex h-full overflow-hidden rounded-2xl flex-row items-center justify-center'}>
+                    {periods.map((p, index) => (
+                        <PeriodSelector
+                            key={index}
+                            period={p.period}
+                            selectedPeriod={period}
+                            onClick={() => {
+                                setPeriod(p.period);
+                                fetchData(p.apiEndPoint, p.period);
+                            }}
+                        />
+                    ))}
+                </div>
+
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig}>
                     <BarChart
                         accessibilityLayer
-                        data={data}
+                        data={chartData}
                         margin={{
                             top: 20,
                         }}
                     >
                         <CartesianGrid vertical={false} />
                         <XAxis
-                            dataKey="day"
+                            dataKey="label"
                             tickLine={false}
                             tickMargin={10}
                             axisLine={false}
-                            tickFormatter={(value) => value.slice(0, 3)}
                         />
                         <ChartTooltip
                             cursor={false}
                             content={<ChartTooltipContent hideLabel />}
                         />
+
                         <Bar dataKey="pages" fill="var(--color-desktop)" radius={8}>
                             <LabelList
                                 position="top"
                                 offset={12}
                                 className="fill-foreground"
                                 fontSize={12}
+                                formatter={(value: number) => (value === 0 ? "" : value)}
                             />
                         </Bar>
                     </BarChart>

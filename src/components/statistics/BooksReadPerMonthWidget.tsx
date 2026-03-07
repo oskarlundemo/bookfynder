@@ -1,6 +1,5 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts"
 
 import {
@@ -17,15 +16,11 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
+import {Spinner} from "@/components/ui/spinner";
+import {useState} from "react";
+import {ChevronLeft, ChevronRight} from "lucide-react";
 
 export const description = "A bar chart with a custom label"
-
-const chartData = [
-    { month: "January", books: 2},
-    { month: "February", books: 3 },
-    { month: "March", books: 0},
-    { month: "April", desktop: 73 },
-]
 
 const chartConfig = {
     desktop: {
@@ -46,26 +41,51 @@ type Props = {
     data: any[];
 }
 
-export function ChartBarLabelCustom({data}:Props) {
+export function BooksReadPerMonthWidget({data}:Props) {
+
+    const year = new Date().getFullYear();
+    const [selectedYear, setSelectedYear] = useState<number>(year);
+    const [loading, setLoading] = useState<boolean>(false);
 
 
+    const handleDataFetch = () => {
+
+
+
+
+    }
 
 
     return (
-        <Card >
-            <CardHeader>
-                <CardTitle>Books read each month this year</CardTitle>
-                <CardDescription>January - December {new Date().getFullYear()}</CardDescription>
+        <Card  className="relative w-1/2 md:w-full">
+
+            <CardHeader className="flex flex-row items-center justify-between">
+
+                <div className="flex flex-col">
+                    <CardTitle>Books read</CardTitle>
+                    <CardDescription>January - December {selectedYear}</CardDescription>
+                </div>
+
+                <div className="flex flex-row gap-4 items-center justify-center bg-black rounded-2xl p-3 text-white">
+                    <ChevronLeft className={'cursor-pointer hover:scale-110 transition-all duration-200'}/>
+                    <span>{selectedYear}</span>
+                    <ChevronRight className={'cursor-pointer hover:scale-110 transition-all duration-200'}/>
+                </div>
+
             </CardHeader>
-            <CardContent>
+            <CardContent className="relative">
+
+                {loading && (
+                    <div className="absolute flex flex-col gap-4 items-center justify-center bg-gray-100/80 z-20 top-0 bottom-0 h-full w-full">
+                        <Spinner className={'size-20'} stroke={"black"}/>
+                    </div>
+                )}
+
                 <ChartContainer config={chartConfig}>
                     <BarChart
-                        accessibilityLayer
-                        data={data}
                         layout="vertical"
-                        margin={{
-                            right: 16,
-                        }}
+                        data={data}
+                        margin={{ right: 16 }}
                     >
                         <CartesianGrid horizontal={false} />
                         <YAxis
@@ -74,33 +94,28 @@ export function ChartBarLabelCustom({data}:Props) {
                             tickLine={false}
                             tickMargin={10}
                             axisLine={false}
-                            tickFormatter={(value) => value.slice(0, 3)}
-                            hide
+                            tickFormatter={(value) => value.slice(0,3)}
                         />
-                        <XAxis dataKey="books" type="number" hide />
+
+                        <XAxis type="number" hide={true} />
+
                         <ChartTooltip
                             cursor={false}
                             content={<ChartTooltipContent indicator="line" />}
                         />
+
                         <Bar
                             dataKey="books"
-                            layout="vertical"
-                            fill="var(--color-desktop)"
+                            fill="black"
                             radius={4}
                         >
-                            <LabelList
-                                dataKey="month"
-                                position="insideLeft"
-                                offset={8}
-                                className="fill-(--color-label)"
-                                fontSize={12}
-                            />
                             <LabelList
                                 dataKey="books"
                                 position="right"
                                 offset={8}
                                 className="fill-foreground"
                                 fontSize={12}
+                                formatter={(value: number) => (value === 0 ? "" : value)}
                             />
                         </Bar>
                     </BarChart>

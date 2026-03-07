@@ -19,5 +19,5 @@
   },
   "framework": "next",
   "typescript": true,
-  "iconLibrary": "lucide"npm
+  "iconLibrary": "lucide"
 }
