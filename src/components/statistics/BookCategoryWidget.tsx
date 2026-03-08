@@ -4,8 +4,7 @@ import * as React from "react"
 import { Label, Pie, PieChart } from "recharts"
 import {
     Card,
-    CardContent,
-    CardDescription,
+    CardContent, CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
@@ -16,6 +15,8 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
+import {useEffect, useState} from "react";
+import {Spinner} from "@/components/ui/spinner";
 
 const chartConfig = {
     visitors: {
@@ -53,13 +54,6 @@ const defaultColors = [
     "var(--chart-6)",
 ]
 
-type Props = {
-    title: string;
-    bookData?: any[];
-    numberOfBooks?: number;
-    explanation?: string;
-}
-
 function getRandomColor() {
 
     const hue = Math.floor(Math.random() * 360);
@@ -68,11 +62,16 @@ function getRandomColor() {
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 }
 
-export function ChartPieDonutText ({title, bookData, numberOfBooks} :Props) {
+export function BookCategoryWidget () {
 
 
-    const coloredData = bookData?.map((item, index) => {
+    const [loading, setLoading] = useState<boolean>(true);
+    const [title, setTitle] = useState<string>("")
+    const [description, setDescription] = useState<string>("")
+    const [bookData, setBookData] = useState<any>([]);
+    const [numberOfBooks, setNumberOfBooks] = useState<number>(0);
 
+    const coloredData = bookData?.map((item:any, index:number) => {
         const fillColor = defaultColors[index] || getRandomColor();
         return {
             ...item,
@@ -80,10 +79,63 @@ export function ChartPieDonutText ({title, bookData, numberOfBooks} :Props) {
         };
     }) || [];
 
+
+    const fetchData = async () => {
+
+        setLoading(true);
+
+        const res = await fetch("api/stats/book-category", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+
+        if (!res.ok) {
+            console.error("An error occured while fetching data")
+            setLoading(false);
+            return;
+        }
+
+
+        const data = await res.json();
+        setBookData(data.dataPoints);
+        setDescription(data.description);
+        setNumberOfBooks(data.numberOfBooks);
+
+
+
+        console.log(data);
+
+        setLoading(false);
+    }
+
+
+    useEffect(() => {
+        fetchData();
+    }, [])
+
     return (
-        <Card className="flex w-1/2 md:w-full flex-col">
+        <Card className="relative flex w-1/2 md:w-full flex-col">
+
+            {loading && (
+                <div className="absolute flex flex-col gap-4 items-center mr-10 justify-center bg-gray-100/80 z-20 top-0 bottom-0 h-full w-full">
+                    <Spinner className={'size-20'} stroke={"black"}/>
+                </div>
+            )}
+
             <CardHeader className="items-center pb-0">
-                <CardTitle>Books in genres</CardTitle>
+                {loading ? (
+                    <div className="flex flex-col gap-2">
+                        <div className="h-5 w-40 bg-gray-300 rounded animate-pulse"></div>
+                        <div className="h-4 w-56 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                ) : (
+                    <>
+                        <CardTitle>Books read</CardTitle>
+                        <CardDescription>{description}</CardDescription>
+                    </>
+                )}
             </CardHeader>
             <CardContent className="flex-1 pb-0">
                 <ChartContainer
@@ -91,12 +143,10 @@ export function ChartPieDonutText ({title, bookData, numberOfBooks} :Props) {
                     className="mx-auto aspect-square max-h-[250px]"
                 >
                     <PieChart>
-
                         <ChartTooltip
                             cursor={false}
                             content={<ChartTooltipContent hideLabel />}
                         />
-
                         <Pie
                             data={coloredData}
                             dataKey="value"
@@ -139,7 +189,7 @@ export function ChartPieDonutText ({title, bookData, numberOfBooks} :Props) {
 
                 {coloredData?.length > 0 && (
                     <CardFooter className="flex my-auto flex-wrap gap-4">
-                        {coloredData?.map((item, index) => (
+                        {coloredData?.map((item:any, index:number) => (
                             <div className={'flex text-sm flex-row gap-2 items-center justify-center'} key={index}>
                                 <p>{item.name ? item.name : 'No category'} <span className={'text-gray-400'}>({item.value})</span></p>
                                 <div style={{background: item.fill}} className={"rounded h-5 w-5"}/>

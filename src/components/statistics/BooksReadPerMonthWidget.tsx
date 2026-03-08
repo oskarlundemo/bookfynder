@@ -17,10 +17,9 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart"
 import {Spinner} from "@/components/ui/spinner";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {ChevronLeft, ChevronRight} from "lucide-react";
-
-export const description = "A bar chart with a custom label"
+import {Button} from "@/components/ui/button";
 
 const chartConfig = {
     desktop: {
@@ -37,54 +36,96 @@ const chartConfig = {
 } satisfies ChartConfig
 
 
-type Props = {
-    data: any[];
-}
-
-export function BooksReadPerMonthWidget({data}:Props) {
+export function BooksReadPerMonthWidget() {
 
     const year = new Date().getFullYear();
     const [selectedYear, setSelectedYear] = useState<number>(year);
     const [loading, setLoading] = useState<boolean>(false);
+    const [textMessage, setTextMessage] = useState<string>("");
+    const [error, setError] = useState<boolean>(false);
+    const [barData, setBarData] = useState<any>([]);
+    const [description, setDescription] = useState<string>("");
 
+    const handleDataFetch = async () => {
 
-    const handleDataFetch = () => {
+        setLoading(true);
 
+        const res = await fetch(`api/stats/books-read?year=${selectedYear}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        } )
 
+        if (!res.ok) {
+            setLoading(false);
+            setError(true);
+            return;
+        }
 
+        const data = await res.json();
+        setBarData(data.dataPoints);
+        setDescription(data.description);
 
+        setLoading(false);
     }
 
+    useEffect(() => {
+        handleDataFetch()
+    }, [selectedYear]);
 
     return (
-        <Card  className="relative w-1/2 md:w-full">
+        <Card className="relative w-1/2 md:w-full">
+
+            {loading && (
+                <div className="absolute flex flex-col gap-4 items-center mr-10 justify-center bg-gray-100/80 z-20 top-0 bottom-0 h-full w-full">
+                    <Spinner className={'size-20'} stroke={"black"}/>
+                </div>
+            )}
 
             <CardHeader className="flex flex-row items-center justify-between">
 
                 <div className="flex flex-col">
-                    <CardTitle>Books read</CardTitle>
-                    <CardDescription>January - December {selectedYear}</CardDescription>
+                    {loading ? (
+                        <div className="flex flex-col gap-2">
+                            <div className="h-5 w-40 bg-gray-300 rounded animate-pulse"></div>
+                            <div className="h-4 w-56 bg-gray-200 rounded animate-pulse"></div>
+                        </div>
+                    ) : (
+                        <>
+                        <CardTitle>Books read</CardTitle>
+                        <CardDescription>January - December {selectedYear}</CardDescription>
+                        </>
+                    )}
                 </div>
 
-                <div className="flex flex-row gap-4 items-center justify-center bg-black rounded-2xl p-3 text-white">
-                    <ChevronLeft className={'cursor-pointer hover:scale-110 transition-all duration-200'}/>
-                    <span>{selectedYear}</span>
-                    <ChevronRight className={'cursor-pointer hover:scale-110 transition-all duration-200'}/>
+                <div className="flex items-center gap-4 bg-black rounded-2xl p-2 text-white">
+
+                    <Button variant="ghost" size="icon"
+                            onClick={() => setSelectedYear(y => y - 1)}>
+                        <ChevronLeft />
+                    </Button>
+
+                    <span className="px-2">{selectedYear}</span>
+
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        disabled={selectedYear >= year}
+                        onClick={() => setSelectedYear(y => y + 1)}
+                    >
+                        <ChevronRight />
+                    </Button>
+
                 </div>
 
             </CardHeader>
-            <CardContent className="relative">
-
-                {loading && (
-                    <div className="absolute flex flex-col gap-4 items-center justify-center bg-gray-100/80 z-20 top-0 bottom-0 h-full w-full">
-                        <Spinner className={'size-20'} stroke={"black"}/>
-                    </div>
-                )}
+            <CardContent className="relative overflow-hidden">
 
                 <ChartContainer config={chartConfig}>
                     <BarChart
                         layout="vertical"
-                        data={data}
+                        data={barData}
                         margin={{ right: 16 }}
                     >
                         <CartesianGrid horizontal={false} />
