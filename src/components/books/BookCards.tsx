@@ -59,7 +59,7 @@ export default function BookCards ({books} :props) {
 
             {filteredBooks.length > 0 ? (
                 (filteredBooks.map((book, index) => (
-                        <Card onClick={() => router.push(`/books/${book.id}`)} key={index}>
+                        <Card className={'gap-2'} onClick={() => router.push(`/books/${book.id}`)} key={index}>
                             <CardHeader>
                                 <CardTitle>{book.title}</CardTitle>
                                 <CardDescription>{book.author}</CardDescription>

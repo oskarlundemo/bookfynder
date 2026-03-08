@@ -50,11 +50,11 @@ export function PagesBarChart ({}) {
     const [secondDate, setSecondDate] = useState<string>("")
 
     const [period, setPeriod] = useState<string>("7d");
-    const [loading, setLoading] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(true)
     const [chartData, setChartData] = useState<any>(null);
     const [error, setError] = useState<boolean>(false);
     const [errorMsg, setErrorMsg] = useState<string>("");
-    const [description, setDescription] = useState<string>("Pages read this week");
+    const [description, setDescription] = useState<string>("");
 
     const periods = [
         {
@@ -72,44 +72,12 @@ export function PagesBarChart ({}) {
     ]
 
     useEffect(() => {
-
-        const fetchData = async () => {
-
-            setLoading(true);
-
-            try {
-                const res = await fetch("/api/stats/pages-read/week", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
-
-                if (!res.ok) {
-                    console.error("Something went wrong");
-                    return;
-                }
-
-                const result = await res.json();
-                setChartData(result.dataPoints);
-                setFirstDate(result.dateStart);
-                setSecondDate(result.dateEnd);
-                setDescription(result.description || "No description");
-
-            } catch (error) {
-                console.error("Fetch error:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-
+        fetchData("/api/stats/pages-read/week", period)
     }, []);
 
-    const fetchData = async (apiUrl:string, clickedPeriod:string) => {
+    const fetchData = async (apiUrl:string, clickedPeriod:string, init?: boolean) => {
 
-        if (!apiUrl || clickedPeriod === period)
+        if (!apiUrl)
             return;
 
         setLoading(true);
@@ -127,7 +95,6 @@ export function PagesBarChart ({}) {
         setFirstDate(data.dateStart);
         setSecondDate(data.dateEnd);
         setDescription(data.description || "No description");
-        console.log(data)
     }
 
     return (
@@ -141,10 +108,19 @@ export function PagesBarChart ({}) {
 
             <CardHeader className="flex items-center flex-row justify-between">
                 <div className={'flex flex-col'}>
-                    <CardTitle>{description}</CardTitle>
-                    <CardDescription>
-                        {firstDate} - {secondDate}
-                    </CardDescription>
+                    {loading ? (
+                        <div className="flex flex-col gap-2">
+                            <div className="h-5 w-40 bg-gray-300 rounded animate-pulse"></div>
+                            <div className="h-4 w-56 bg-gray-200 rounded animate-pulse"></div>
+                        </div>
+                    ) : (
+                        <>
+                            <CardTitle>{description}</CardTitle>
+                            <CardDescription>
+                                {firstDate} / {secondDate}
+                            </CardDescription>
+                        </>
+                    )}
                 </div>
 
                 <div className={'flex h-full overflow-hidden rounded-2xl flex-row items-center justify-center'}>

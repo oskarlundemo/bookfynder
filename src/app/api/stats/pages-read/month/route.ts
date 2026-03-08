@@ -32,6 +32,9 @@ export async function GET (req: NextRequest) {
         })
     }
 
+
+    // Måste hämta reading när den blev klar, inte när den vart created
+
     const currentDate = new Date();
     const firstDayOfMonth = addDays(startOfMonth(currentDate), 1);
     const lastDayOfMonth = endOfMonth(currentDate);
