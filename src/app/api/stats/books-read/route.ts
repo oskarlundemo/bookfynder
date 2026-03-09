@@ -5,7 +5,6 @@ import {createClient} from "@/lib/supabase/server";
 import {prisma} from "../../../../../prisma/prisma";
 import {format, getYear, startOfYear, endOfYear} from "date-fns";
 
-
 export async function GET (req: NextRequest) {
 
     const supabase = await createClient();
@@ -46,38 +45,54 @@ export async function GET (req: NextRequest) {
         }
     })
 
+    const readBooksIds = booksRead.map(book => book.id)
+
+    const finalReadingSessions = await prisma.bookProgressEntry.findMany({
+        where: {
+            userId,
+            bookId: {
+                in: readBooksIds
+            },
+            createdAt: {
+                gte: start,
+                lte: end
+            }
+        },
+        include: {
+            Book: true
+        },
+        orderBy: {
+            createdAt: "desc"
+        },
+        distinct: ["bookId"]
+    });
+
     return NextResponse.json({
         message: 'End point pages read this year',
         success: true,
         description: "Books read ",
         subTitle: `January - December ${parsedYear}`,
-        dataPoints: BooksReadPerMonth(booksRead)
+        dataPoints: BooksReadPerMonth(finalReadingSessions),
     });
 }
 
-
-function BooksReadPerMonth (data: any[]) {
+function BooksReadPerMonth(data: any[]) {
 
     const result = data.reduce((acc, entry) => {
-        const date = new Date(entry.createdAt)
-        const monthName = format(date, 'MMMM') // e.g. "October"
+        const monthName = format(new Date(entry.createdAt), "MMMM")
 
-        if (entry.status === 'READ') {
-            acc[monthName] = (acc[monthName] || 0) + 1
-        }
+        acc[monthName] = (acc[monthName] || 0) + 1
 
         return acc
     }, {} as Record<string, number>)
 
     const allMonths = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
+        "January","February","March","April","May","June",
+        "July","August","September","October","November","December"
     ]
 
-    const fullMonths = allMonths.map(month => ({
+    return allMonths.map(month => ({
         month,
-        books: result[month] || 0,
+        books: result[month] || 0
     }))
-
-    return fullMonths
 }

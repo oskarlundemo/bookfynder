@@ -18,6 +18,7 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart"
 import {Spinner} from "@/components/ui/spinner";
+import {Button} from "@/components/ui/button";
 
 const chartConfig = {
     desktop: {
@@ -26,6 +27,16 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
+
+const mockData = [
+    { label: "Mon", pages: 32 },
+    { label: "Tue", pages: 18 },
+    { label: "Wed", pages: 45 },
+    { label: "Thu", pages: 12 },
+    { label: "Fri", pages: 27 },
+    { label: "Sat", pages: 60 },
+    { label: "Sun", pages: 20 },
+];
 
 type PeriodProps = {
     period: string;
@@ -50,11 +61,11 @@ export function PagesBarChart ({}) {
     const [secondDate, setSecondDate] = useState<string>("")
 
     const [period, setPeriod] = useState<string>("7d");
-    const [loading, setLoading] = useState<boolean>(true)
+    const [loading, setLoading] = useState<boolean>(false)
     const [chartData, setChartData] = useState<any>(null);
-    const [error, setError] = useState<boolean>(false);
-    const [errorMsg, setErrorMsg] = useState<string>("");
     const [description, setDescription] = useState<string>("");
+
+    const [error, setError] = useState<boolean>(false);
 
     const periods = [
         {
@@ -71,34 +82,57 @@ export function PagesBarChart ({}) {
         }
     ]
 
-    useEffect(() => {
-        fetchData("/api/stats/pages-read/week", period)
-    }, []);
-
-    const fetchData = async (apiUrl:string, clickedPeriod:string, init?: boolean) => {
+    const fetchData = async (apiUrl:string) => {
 
         if (!apiUrl)
             return;
 
         setLoading(true);
+        setError(false);
 
-        const res = await fetch(apiUrl, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
+        try {
+            const res = await fetch(apiUrl, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+
+            if (!res.ok) {
+                setError(true);
+                throw new Error(res.statusText);
             }
-        })
 
-        setLoading(false);
-        const data = await res.json();
-        setChartData(data.dataPoints);
-        setFirstDate(data.dateStart);
-        setSecondDate(data.dateEnd);
-        setDescription(data.description || "No description");
+            const data = await res.json();
+
+            setChartData(data.dataPoints);
+            setFirstDate(data.dateStart);
+            setSecondDate(data.dateEnd);
+            setDescription(data.description || "No description");
+
+        } catch (error) {
+            setError(true);
+            console.log("An error occured: " + error)
+        } finally {
+            setLoading(false);
+        }
     }
+
+    useEffect(() => {
+       fetchData("/api/stats/pages-read/week")
+    }, []);
 
     return (
         <Card className={'relative'} >
+
+            {error && (
+                <div className="absolute flex flex-col gap-4 items-center mr-10 justify-center bg-gray-100/80 z-20 top-0 bottom-0 h-full w-full">
+                    <p>An error occurred! Please try again or contact support</p>
+                    <Button className={'cursor-pointer'} onClick={() => fetchData(
+                        periods.find(p => p.period === period)?.apiEndPoint || ""
+                    )} type={"button"}>Try again</Button>
+                </div>
+            )}
 
             {loading && (
                 <div className="absolute flex flex-col gap-4 items-center justify-center bg-gray-100/80 z-20 top-0 bottom-0 h-full w-full">
@@ -130,8 +164,12 @@ export function PagesBarChart ({}) {
                             period={p.period}
                             selectedPeriod={period}
                             onClick={() => {
+
+                                if (loading)
+                                    return;
+
                                 setPeriod(p.period);
-                                fetchData(p.apiEndPoint, p.period);
+                                fetchData(p.apiEndPoint);
                             }}
                         />
                     ))}
@@ -159,8 +197,12 @@ export function PagesBarChart ({}) {
                             content={<ChartTooltipContent hideLabel />}
                         />
 
-                        <Bar dataKey="pages" fill="var(--color-desktop)" radius={8}>
+                        <Bar
+                            dataKey="pages"
+                             fill="var(--chart-3)"
+                             radius={8}>
                             <LabelList
+
                                 position="top"
                                 offset={12}
                                 className="fill-foreground"

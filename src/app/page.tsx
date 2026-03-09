@@ -7,6 +7,7 @@ import MockDeck from "@/components/landing/MockDeck";
 import MockBookForm from "@/components/landing/MockBookForm";
 import LandingHero from "@/components/landing/LandingHero";
 import LandingFooter from "@/components/landing/LandingFooter";
+import PerkSection from "@/components/landing/PerkSection";
 
 export default async function Home ({}) {
 
@@ -18,14 +19,17 @@ export default async function Home ({}) {
     }
 
     return (
-        <main className="flex overflow-x-hidden bg-muted flex-col items-center justify-start w-full h-full text-center">
+        <main className="flex relative overflow-x-hidden bg-muted flex-col items-center justify-start w-full h-full text-center">
 
             <LandingHeader/>
             <LandingHero/>
 
-            <section className="flex bg-white items-center flex-col gap-20  md:gap-20 w-full">
+            <section className="flex bg-white z-30 items-center flex-col gap-20  md:gap-20 w-full">
 
-                <div className={"flex my-30 items-center justify-center flex-col gap-20 max-w-[1200px] w-full"}>
+                <div className={"flex items-center justify-center mb-40 flex-col gap-20 max-w-[1200px] w-full"}>
+
+                    <PerkSection/>
+
                     <MockBookForm/>
 
                     <MockDeck/>

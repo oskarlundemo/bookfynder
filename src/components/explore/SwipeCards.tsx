@@ -8,6 +8,7 @@ import {Book} from "@prisma/client";
 import ErrorPage from "@/components/misc/ErrorPage"
 import { Info, Heart, X } from 'lucide-react';
 import MoreInfo from "@/components/explore/MoreInfo"
+import ErrorModule from "@/components/misc/ErrorModule";
 
 type CardProps = CardData & {
     cards: CardData[];
@@ -37,33 +38,37 @@ const SwipeCards = ({userId} : props) => {
     const [topCard, setTopCard] = useState<any>(null);
     const storageKey = `cards_${userId}`;
 
-    const getRecommendations = async () => {
-        const res = await fetch("/api/explore/recommend-books", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-        });
-        return res.json();
+    const fetchRecommendations = async () => {
+
+        setLoading(true);
+
+        try {
+            const res = await fetch("/api/explore/recommend-books", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+            });
+
+            if (!res.ok) {
+                throw new Error(`HTTP error! Status: ${res.status}`);
+            }
+
+            const data = await res.json();
+
+            setCards(data.recommendations.recommendations || []);
+            localStorage.setItem(storageKey, JSON.stringify(data.recommendations?.recommendations));
+
+        } catch (err) {
+            console.error("Failed to fetch recommendations:", err);
+            setError(true);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    // Load cached cards or fetch new recommendations
+
     useEffect(() => {
 
         const cachedCards = localStorage.getItem(storageKey);
-
-        const fetchRecommendations = async () => {
-            setLoading(true);
-            try {
-                const response = await getRecommendations();
-                const newCards = response.data?.recommendations || [];
-                localStorage.setItem(storageKey, JSON.stringify(newCards));
-                setCards(newCards);
-            } catch (err) {
-                setError(true);
-                console.error("Error fetching recommendations:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
 
         if (cachedCards) {
             setCards(JSON.parse(cachedCards));
@@ -81,23 +86,6 @@ const SwipeCards = ({userId} : props) => {
         }
     }, [cards, storageKey]);
 
-
-    const fetchNew = async () => {
-
-        setLoading(true);
-
-        try {
-            const response = await getRecommendations();
-            console.log(response.data.recommendations);
-            setCards(response.data.recommendations || []);
-        } catch (err:any) {
-            setError(true);
-            console.error('Error while retrieving books', err);
-        } finally {
-            setLoading(false);
-        }
-    }
-
     useEffect(() => {
         if (cards.length === 0) {
             setTopCard(null);
@@ -114,15 +102,14 @@ const SwipeCards = ({userId} : props) => {
 
     if (error) {
         return (
-            <ErrorPage
-                title={'Error'}
-                details={'An error occurred while fetching recommendations from Open AI. Please try again later!'}
+            <ErrorModule
+                subTitle={"An error occurred while fetching data from Open AI, please try again later"}
             />
         )
     }
 
     return (
-        <div className="flex flex-col flex-grow items-center justify-center w-full">
+        <div className="flex flex-col grow items-center justify-center w-full">
 
             {cards.length > 0 && (
                 <div className="flex flex-row gap-10 translate-x-30 justify-center my-5">
@@ -153,7 +140,7 @@ const SwipeCards = ({userId} : props) => {
                      </h3>
                      <div className="flex space-x-4 mt-4">
                          <Button
-                             onClick={() => fetchNew()}
+                             onClick={() => fetchRecommendations()}
                              variant="secondary"
                              className="cursor-pointer transform transition-transform duration-200 hover:scale-105"
                          >
@@ -215,6 +202,7 @@ export const handleSave = async (book:Book) => {
         } else {
             toast.error(`An error occurred while adding "${book.title}".`);
         }
+
     } catch (error) {
         console.error("Error saving book:", error);
         toast.error(`Failed to save "${book.title}". Please try again.`);
@@ -233,8 +221,6 @@ const CardComponent = ({ id, book, zIndex, cards, setCards }: CardProps) => {
         const offset = isFront ? 0 : id % 2 ? 6 : -6;
         return `${rotateRaw.get() + offset}deg`;
     })
-
-    console.log(book)
 
     const handleDragEnd = async () => {
 

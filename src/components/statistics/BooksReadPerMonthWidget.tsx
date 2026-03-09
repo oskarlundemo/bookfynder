@@ -21,6 +21,21 @@ import {useEffect, useState} from "react";
 import {ChevronLeft, ChevronRight} from "lucide-react";
 import {Button} from "@/components/ui/button";
 
+const mockData = [
+    { month: "January", books: 1 },
+    { month: "February", books: 2 },
+    { month: "March", books: 3 },
+    { month: "April", books: 1 },
+    { month: "May", books: 0 },
+    { month: "June", books: 2 },
+    { month: "July", books: 4 },
+    { month: "August", books: 3 },
+    { month: "September", books: 2 },
+    { month: "October", books: 1 },
+    { month: "November", books: 2 },
+    { month: "December", books: 5 }
+];
+
 const chartConfig = {
     desktop: {
         label: "Desktop",
@@ -31,7 +46,7 @@ const chartConfig = {
         color: "var(--chart-2)",
     },
     label: {
-        color: "var(--background)",
+        color: "var(--chart-6)",
     },
 } satisfies ChartConfig
 
@@ -41,33 +56,40 @@ export function BooksReadPerMonthWidget() {
     const year = new Date().getFullYear();
     const [selectedYear, setSelectedYear] = useState<number>(year);
     const [loading, setLoading] = useState<boolean>(false);
-    const [textMessage, setTextMessage] = useState<string>("");
-    const [error, setError] = useState<boolean>(false);
     const [barData, setBarData] = useState<any>([]);
     const [description, setDescription] = useState<string>("");
+
+    const [error, setError] = useState<boolean>(false);
 
     const handleDataFetch = async () => {
 
         setLoading(true);
+        setError(false);
 
-        const res = await fetch(`api/stats/books-read?year=${selectedYear}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
+        try {
+            const res = await fetch(`api/stats/books-read?year=${selectedYear}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            } )
+
+            if (!res.ok) {
+                setLoading(false);
+                setError(true);
+                return;
             }
-        } )
 
-        if (!res.ok) {
-            setLoading(false);
+            const data = await res.json();
+            setBarData(data.dataPoints);
+            setDescription(data.description);
+
+        } catch (eror) {
             setError(true);
-            return;
+            console.error("An error occured when loading the data" + eror);
+        } finally {
+            setLoading(false);
         }
-
-        const data = await res.json();
-        setBarData(data.dataPoints);
-        setDescription(data.description);
-
-        setLoading(false);
     }
 
     useEffect(() => {
@@ -76,6 +98,13 @@ export function BooksReadPerMonthWidget() {
 
     return (
         <Card className="relative w-1/2 md:w-full">
+
+            {error && (
+                <div className="absolute flex flex-col gap-4 items-center mr-10 justify-center bg-gray-100/80 z-20 top-0 bottom-0 h-full w-full">
+                    <p>An error occurred! Please try again or contact support</p>
+                    <Button className={'cursor-pointer'} onClick={() => handleDataFetch()} type={"button"}>Try again</Button>
+                </div>
+            )}
 
             {loading && (
                 <div className="absolute flex flex-col gap-4 items-center mr-10 justify-center bg-gray-100/80 z-20 top-0 bottom-0 h-full w-full">
@@ -147,7 +176,7 @@ export function BooksReadPerMonthWidget() {
 
                         <Bar
                             dataKey="books"
-                            fill="black"
+                            fill={"var(--chart-2)"}
                             radius={4}
                         >
                             <LabelList
