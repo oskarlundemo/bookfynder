@@ -25,8 +25,6 @@ export default function BookCards ({books} :props) {
     const [searchTerm, setSearchTerm] = useState<string>("")
     const [filteredBooks, setFilteredBooks] = useState<Books>(books)
 
-    console.log(books)
-
     useEffect(() => {
 
         if (!books.length)
@@ -44,7 +42,7 @@ export default function BookCards ({books} :props) {
     return (
         <section className="flex flex-col px-2 gap-2">
 
-            <div className="flex items-center gap-5">
+            <div className="flex items-center my-2 gap-5">
                 <Search className="w-4 h-4 aspect-square" />
                 <Input
                     placeholder="Filter by title or author..."
@@ -76,12 +74,12 @@ export default function BookCards ({books} :props) {
                             <CardFooter>
                                 <div className="flex flex-wrap flex-row gap-2">
                                     {book.BookCategory.map((category, index) => (
-                                        <Button key={index}>{category.Category?.name ? category.Category?.name : "Nope"}</Button>
+                                        <Button key={index}>{category.Category?.name ? category.Category?.name : "No category"}</Button>
                                     ))}
                                 </div>
 
                                 {(book.status === 'READ' || book.status === 'QUEUED') && book.rating && (
-                                    <div className={'flex flex-row ml-auto gap-2 items-center'}>
+                                    <div className={'flex flex-col ml-auto items-center'}>
                                         <p>{book.status === 'READ' ? 'Rating' : 'Priority'}</p>
                                         <p>{book.rating} / 5</p>
                                     </div>

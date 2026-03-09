@@ -4,6 +4,8 @@ import OpenAI from "openai";
 import { prisma } from "../../../../../prisma/prisma";
 import {createClient} from "@/lib/supabase/server";
 
+
+
 const openai = new OpenAI({
     apiKey: process.env.NEXT_OPEN_AI_KEY,
 });
@@ -15,10 +17,6 @@ export async function POST (req: NextRequest) {
     const { data, error } = await supabase.auth.getUser()
 
     const userId = data.user?.id
-
-    console.log('Skickar en request till Open AI');
-
-    // Prepare the book JSON as a string for the prompt
 
     const books = await prisma.book.findMany({
         where: {
@@ -32,24 +30,30 @@ export async function POST (req: NextRequest) {
             rating: "desc",
         },
         take: 5,
+
+        include: {
+            BookCategory: {
+                include: {
+                    Category: {
+                        select: {
+                            id: true,
+                            name: true
+                        }
+                    }
+                }
+            }
+        }
     });
 
     const favoriteBooks = JSON.stringify(
         books.map(book => ({
             title: book.title,
             author: book.author,
+            categories: book.BookCategory.map(bookCategory => ({
+                categoryId: bookCategory.Category.id,
+                categoryName: bookCategory.Category.name,
+            }))
         })),
-        null,
-        2
-    );
-
-    const categories = JSON.stringify(
-        await prisma.category.findMany({
-            select: {
-                id: true,
-                name: true,
-            },
-        }),
         null,
         2
     );
@@ -69,8 +73,6 @@ export async function POST (req: NextRequest) {
 
     Input:
     User’s liked books: ${favoriteBooks}
-
-    Allowed categories: ${categories}
 
     Your response must be a valid JSON object in this format:
 
@@ -97,7 +99,11 @@ export async function POST (req: NextRequest) {
 
     const completion = await openai.chat.completions.create({
         model: "gpt-5-mini",
-        messages: [{ role: "user", content: prompt }]
+        messages: [
+            { role: "system", content: "You are a book recommendation assistant. Return JSON only." },
+            { role: "user", content: prompt }
+        ],
+        response_format: { type: "json_object" },
     });
 
     const responseText = completion.choices[0].message?.content || "[]";
@@ -105,8 +111,7 @@ export async function POST (req: NextRequest) {
 
     return NextResponse.json({
         success: true,
-        message:
-            "Recommendations fetched successfully",
-        data:recommendations
+        message: "Recommendations fetched successfully",
+        recommendations: recommendations,
     });
 }
