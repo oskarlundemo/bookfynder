@@ -5,8 +5,7 @@ import toast from "react-hot-toast";
 import {LoadingRequest} from "./LoadingRequest"
 import {Button} from "@/components/ui/button"
 import {Book} from "@prisma/client";
-import ErrorPage from "@/components/misc/ErrorPage"
-import { Info, Heart, X } from 'lucide-react';
+import { Heart, X } from 'lucide-react';
 import MoreInfo from "@/components/explore/MoreInfo"
 import ErrorModule from "@/components/misc/ErrorModule";
 
@@ -153,18 +152,14 @@ const SwipeCards = ({userId} : props) => {
 
             {cards.length > 0 && (
                 <div className="flex flex-row gap-10 justify-center mt-6">
-
                     <button
-
                         onClick={() => {
                             if (!topCard) return;
                             setCards((prev) => prev.filter((card) => card.id !== topCard.id));
                         }}
 
                         style={{transition: '200ms ease-in-out', cursor: 'pointer'}} className="w-16 h-16 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center shadow-lg active:scale-95 transform hover:scale-110 transition-all">
-
                         <X stroke={'white'} />
-
                     </button>
 
                     <button
