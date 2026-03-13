@@ -78,15 +78,16 @@ const MockDeck = () => {
     const [cards, setCards] = useState<CardData[]>(cardData);
 
     return (
-        <section className="
+        <section
+            style={{
+                backgroundColor: "#F3E8FF",
+            }}
+            className="
             flex w-full
             flex-col md:flex-row
             rounded-2xl p-10
             items-start
             gap-10
-
-            border border-white/40
-
            ">
             <LandingText
                 title={"Swipe on your next favorites"}
@@ -94,7 +95,7 @@ const MockDeck = () => {
                     <>
                         <p className={'text-left text-lg leading-relaxed'}>
                             Once you have added a couple books, start swiping on new exciting reads based on your preferances. With this
-                            UX it becomes a lot funnier. The recommendation are created with the help of <span className={'border-b-4 border-black'}>Open AI</span>
+                            UX it becomes a lot funnier. The recommendation are created with the help of <span className={'underline decoration-wavy decoration-2 decoration-black underline-offset-2'}>Open AI</span>
                         </p>
                     </>
                 }
