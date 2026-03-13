@@ -48,14 +48,19 @@ const chartConfig = {
 export function MockChart ({}) {
 
     return (
-        <div className="
+        <div
+            style={{
+                backgroundColor: "#F3E8FF",
+            }}
+
+            className="
                 flex w-full
                 flex-col
                 md:flex-row
                 rounded-2xl p-10
-                h-[600px]
                 items-start justify-between
-                md:h-[400px]  ">
+
+                ">
                 <LandingText
                     title={"Watch your reading come to life with charts"}
                     breadText={
@@ -63,7 +68,7 @@ export function MockChart ({}) {
                             <p className="text-left text-lg leading-relaxed">
                                 Watch your progress come to life with the help of different charts! The UI is built using the beautiful UI-library {' '}
                                 <a
-                                    className="border-b-4 border-black"
+                                    className="underline decoration-wavy decoration-2 decoration-black underline-offset-3"
                                     href="https://ui.shadcn.com/"
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -79,7 +84,7 @@ export function MockChart ({}) {
 
                 <ChartContainer
                     config={chartConfig}
-                    className="mx-auto aspect-square max-h-[300px]"
+                    className="mx-auto my-auto aspect-square max-h-[300px]"
                 >
                     <PieChart>
 
@@ -128,7 +133,6 @@ export function MockChart ({}) {
                     </PieChart>
 
                     <article className="flex gap-2 flex-wrap">
-
                         {chartData.map((item, i) => (
                             <div
                                 className={'flex items-center justify-center m-auto  flex-row gap-3 '}

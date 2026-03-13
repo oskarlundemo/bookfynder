@@ -1,41 +1,50 @@
+
+
+import {motion} from "framer-motion";
+
+
+
 export default function Logo ({}) {
 
 
     return (
-        <div className="flex my-auto flex-col w-full items-center justify-center" style={{ maxWidth: 'var(--max-width)' }}>
+        <motion.div
+
+            initial={{ opacity: 0}}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 2 }}
+
+            className="flex my-auto flex-col w-full items-center justify-center" style={{ maxWidth: 'var(--max-width)' }}>
 
             <div className="relative flex flex-row items-center gap-5 mb-6">
-
-                <div className={'flex flex-row relative'}>
-                    <h1
-                        className="relative left-3 text-black/20 select-none  whitespace-nowrap"
-                        style={{
-                            fontSize: "clamp(2rem, 8vw, 6rem)",
-                            lineHeight: "1"
-                        }}
-                    >
-                        Bookfynder
-                    </h1>
-
-                    <h1
-                        className="absolute text-black select-none whitespace-nowrap"
-                        style={{
-                            left: "0.2em",
-                            fontSize: "clamp(2rem, 8vw, 6rem)",
-                            lineHeight: "1"
-                        }}
-                    >
-                        Bookfynder
-                    </h1>
-                </div>
+                <h1
+                    className="font-bold tracking-light text-black"
+                    style={{
+                        fontSize: "clamp(2.5rem, 7vw, 5.5rem)",
+                        lineHeight: "0.95",
+                    }}
+                >
+                    Bookfynder
+                </h1>
             </div>
 
             <div className="relative flex flex-col gap-5">
-                <h2 className="text-xl text-black sm:text-2xl md:text-3xl">
-                    Discover your next favorite book with AI.
+                <h2 className="text-xl font-semibold text-gray-800 sm:text-2xl md:text-3xl leading-snug ">
+                    Discover your next favorite book with{' '}
+                    <span
+                        className="font-extrabold uppercase tracking-wide"
+                        style={{
+                            background: 'linear-gradient(90deg, #6366f1, #a78bfa, #4f46e5)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                        }}
+                    >
+                    AI
+                    </span>
                 </h2>
             </div>
 
-        </div>
+        </motion.div>
     )
 }

@@ -8,8 +8,9 @@ export function AuthorDetails () {
 
     return (
         <footer className="text-center py-20 my-10">
-            <p className="text-black/90 hover:underline cursor-pointer text-2xl mt-1">
-               <span  onClick={() => router.push('http://www.oskarlundemo.com')}>LUNDEMO © 2026</span>
+            <p className="text-white text-2xl mt-1 underline decoration-wavy decoration-white underline-offset-4 hover:decoration-indigo-500 cursor-pointer">            <span onClick={() => router.push('http://www.oskarlundemo.com')}>
+            LUNDEMO  2026
+            </span>
             </p>
         </footer>
     );

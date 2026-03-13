@@ -4,6 +4,7 @@ import {InputField} from "@/components/misc/InputField";
 import {useState, useRef, useEffect} from "react";
 import {BookStatus} from "@/components/books/BookStatus"
 import LandingText from "@/components/misc/LandingText";
+import { useInView } from "framer-motion";
 
 export default function MockBookForm  () {
 
@@ -11,12 +12,25 @@ export default function MockBookForm  () {
     const [author, setAuthor] = useState<string>('');
     const [title, setTitle] = useState<string>('');
     const [pages, setPages] = useState<number>(0);
-    const [bookStatus, setBookStatus] = useState<string>('READING');
+    const [startAnimation, setStartAnimation] = useState<boolean>(false);
+
+    const animationRef = useRef(null);
+    const isInView = useInView(animationRef, { once: true });
 
     const timeouts = useRef<NodeJS.Timeout[]>([]);
     const intervals = useRef<NodeJS.Timeout[]>([]);
 
     useEffect(() => {
+        if (!isInView) return;
+
+        setStartAnimation(true);
+
+    }, [isInView]);
+
+    useEffect(() => {
+
+        if (!startAnimation)
+            return;
 
         const mockTitle = "East of eden";
         const mockAuthor = "John Steinbeck";
@@ -52,10 +66,15 @@ export default function MockBookForm  () {
             timeouts.current.forEach(clearTimeout);
             intervals.current.forEach(clearInterval);
         };
-    }, []);
+    }, [startAnimation]);
 
     return (
-        <section className="
+        <section
+            ref={animationRef}
+            style={{
+                backgroundColor: "#F3E8FF",
+            }}
+            className="
             flex w-full
             flex-col md:flex-row
             rounded-2xl p-10
@@ -71,10 +90,10 @@ export default function MockBookForm  () {
                             Start by adding some of the books you have already read. Be sure to rate them as well,
                             so the algorithm can make better predictions. Most books can be found using the{' '}
                             <a
-                                className="border-b-4 border-black"
+                                className="underline decoration-wavy decoration-2 decoration-black underline-offset-3"
                                 href="https://openlibrary.org/developers/api"
                             >
-                                OpenLibrary API
+                                OpenLibraryAPI
                             </a>
                             {' '} otherwise, you can add them manually.
                         </p>
@@ -83,7 +102,7 @@ export default function MockBookForm  () {
                 number={1}
             />
 
-            <div className="flex flex-col md:w-1/2 w-full items-center gap-5">
+            <div className="flex bg-white p-5 rounded-2xl flex-col md:w-1/2 w-full items-center gap-5">
 
                 <div className="flex mx-auto w-full flex-col gap-4">
 

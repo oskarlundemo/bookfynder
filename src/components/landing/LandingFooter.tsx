@@ -4,7 +4,7 @@ export default function LandingFooter () {
 
     return (
         <footer
-            className={'bg-muted w-full p-0 z-10 relative h-[800px]'}
+            className={'bg-black text-white w-full p-0 z-10 relative h-[1000px]'}
             style={{clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)"}}
         >
             <div className="relative h-[calc(100vh+800px)] -top-[100vh]">
