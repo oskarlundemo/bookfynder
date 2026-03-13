@@ -28,7 +28,7 @@ export default function FAQ() {
     return (
         <section className="flex flex-col items-start justify-start gap-4 w-full">
 
-            <h4 className="font-semibold text-[clamp(1rem,2vw,2rem)]">Questions you might have</h4>
+            <h4 className="p-5 text-[clamp(1rem,2vw,2rem)] font-bold">Questions you might have</h4>
 
             {faqItems.map((item, i) => (
                 <DropDownItem key={i} title={item.title} text={item.text} />
@@ -47,17 +47,16 @@ function DropDownItem({ title, text }: DropDownProp) {
 
     return (
         <div
-            className="border-gray-200 rounded-lg w-full flex flex-col items-start  p-5 cursor-pointer bg-white"
+            className="border-gray-200 rounded-lg flex flex-col items-start p-5 cursor-pointer bg-white"
             onClick={() => setOpen(!isOpen)}
         >
-            <h4 className="font-semibold flex flex-row items-center justify-start my-2 gap-2 text-[clamp(1rem,1.5vw,1.5rem)] ">
-
+            <h4
+                style={{
+                    fontSize: "clamp(1rem, 1.5vw, 1.5rem)"
+                }}
+                className="font-semibold text-nowrap text-gray-800 flex flex-row items-center my-2 gap-2 text-[clamp(1rem,1.5vw,1.5rem)] ">
                 {title}
-
-
-
-                <ChevronUp className={`${isOpen ? 'rotate-180' : 'rotate-0'} transition-all`} size={24} />
-
+                <ChevronUp className={`${isOpen ? 'rotate-180' : 'rotate-0'} transition-all duration-300`} size={24} />
             </h4>
 
             <AnimatePresence initial={false}>
@@ -70,7 +69,7 @@ function DropDownItem({ title, text }: DropDownProp) {
                         style={{ overflow: "hidden" }}
                         className={'bg-muted rounded-xl overflow-hidden'}
                     >
-                        <p className="w-full p-5 text-left text-gray-600">{text}</p>
+                        <p className="p-5 text-left text-gray-600">{text}</p>
                     </motion.div>
                 )}
             </AnimatePresence>

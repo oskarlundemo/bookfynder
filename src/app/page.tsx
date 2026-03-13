@@ -27,11 +27,11 @@ export default async function Home ({}) {
 
             <section className="flex bg-white z-30 items-center flex-col gap-20  md:gap-20 w-full">
 
-                <div className={"flex px-10 items-center justify-center mb-40 flex-col gap-20 max-w-[1200px] w-full"}>
+                <div className={"flex items-center justify-center mb-40 flex-col gap-20 max-w-[1200px] w-full"}>
 
                     <PerkSection/>
 
-                    <div className={"grid grid-rows-[1fr_1fr_1fr] gap-20"}>
+                    <div className={"grid m-5 grid-rows-[1fr_1fr_1fr] gap-20"}>
                         <MockBookForm/>
 
                         <MockDeck/>

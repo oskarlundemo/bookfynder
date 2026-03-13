@@ -58,8 +58,8 @@ export function MockChart ({}) {
                 flex-col
                 md:flex-row
                 rounded-2xl p-10
-                items-start justify-between
-
+                items-start
+                justify-start
                 ">
                 <LandingText
                     title={"Watch your reading come to life with charts"}
@@ -84,7 +84,7 @@ export function MockChart ({}) {
 
                 <ChartContainer
                     config={chartConfig}
-                    className="mx-auto my-auto aspect-square max-h-[300px]"
+                    className="  h-full w-1/2 aspect-square min-w-[300px] max-h-[300px]"
                 >
                     <PieChart>
 
@@ -130,9 +130,10 @@ export function MockChart ({}) {
                                 }}
                             />
                         </Pie>
+
                     </PieChart>
 
-                    <article className="flex gap-2 flex-wrap">
+                    <article className="flex shadow-2xs bg-white p-5 rounded-2xl grow gap-2 flex-wrap">
                         {chartData.map((item, i) => (
                             <div
                                 className={'flex items-center justify-center m-auto  flex-row gap-3 '}
@@ -143,10 +144,11 @@ export function MockChart ({}) {
                                         backgroundColor: `${item.fill}`
                                     }}
                                 />
-                                <span>{item.genre} ({item.count})</span>
+                                <span>{item.genre} <span className={'font-bold text-gray-400'}>({item.count})</span></span>
                             </div>
                         ))}
                     </article>
+
 
                 </ChartContainer>
 

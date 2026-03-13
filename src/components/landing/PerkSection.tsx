@@ -59,12 +59,14 @@ export default function PerkSection() {
     return (
         <section className="flex flex-col justify-center items-center w-full py-20">
             {isMobile ? (
-                <div className="flex flex-col rounded-2xl  mx-5! gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mx-5 rounded-2xl">
                     {perks.map((perk, i) => (
-                        <div key={i} className="flex flex-col items-start justify-center gap-4 p-4 rounded-2xl shadow-sm">
-
-                            <div className={'flex flex-col-reverse gap-4 justify-center w-full items-center'}>
-                                <h3 className="font-semibold text-left text-lg">{perk.title}</h3>
+                        <div
+                            key={i}
+                            className="flex flex-col aspect-square max-w-[200px] items-center justify-center gap-4 p-4 rounded-2xl shadow-sm"
+                        >
+                            <div className="flex flex-col-reverse gap-4 w-full items-center">
+                                <h3 className="font-semibold text-center text-lg">{perk.title}</h3>
                                 {perk.icon}
                             </div>
 
@@ -107,7 +109,7 @@ function Perk({ title, icon, subTitle, color }: PerkProps) {
                 {icon}
 
                 <h3
-                    className="font-semibold leading-tight"
+                    className="font-semibold text-wrap text-center leading-tight"
                     style={{ fontSize: "clamp(1rem, 2.5vw, 1.25rem)" }}
                 >
                     {title}
