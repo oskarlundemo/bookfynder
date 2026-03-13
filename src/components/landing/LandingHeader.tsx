@@ -9,8 +9,12 @@ export function LandingHeader () {
     const router = useRouter();
 
     return (
-        <header className="fixed top-0 h-[60px] mr-[10px]! z-50 w-full rounded-b-2xl flex items-center bg-white/30 backdrop-blur-md border-b border-white/20">
-
+        <header className="fixed top-0 left-2 right-2 h-[60px] z-50
+                            flex items-center
+                            bg-white/40 backdrop-blur-xl
+                            border border-white/30
+                            rounded-b-2xl shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
+        >
             <nav style={{maxWidth: 'var(--max-width)'}} className={'flex flex-row justify-between rounded-b-2xl w-full mx-auto max-w-[1200px]'}>
 
                 <div className="flex items-center">

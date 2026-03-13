@@ -30,7 +30,12 @@ export default function Logo ({}) {
             </div>
 
             <div className="relative flex flex-col gap-5">
-                <h2 className="text-xl font-semibold text-gray-800 sm:text-2xl md:text-3xl leading-snug ">
+                <h2
+                    style={{
+                        fontSize: "clamp(1rem, 3vw, 2rem)",
+                    }}
+
+                    className="font-semibold text-gray-800 leading-snug ">
                     Discover your next favorite book with{' '}
                     <span
                         className="font-extrabold uppercase tracking-wide"
